@@ -2,21 +2,21 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet.response;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-//TYPE 2
+/**
+ * Packet type 2 : Response
+ * 
+ * @author andreabiasi
+ *
+ */
 public class Response extends Packet{
-	public Response(byte data){ //Piu che data andrebbe messo un tipo risposta
-		//byte[] header;
-		this.syncByte = 0x55;
-		//dataLenght = 0x01;
-		optLenght = 0x00;
-		packetType = 0x02;
-		//header[0] = dataLenght;
-		//header[1] = optLenght;
-		//header[2] = packetType;
-		//this.CRC8H = CRC8.calc(header, 4);
-		this.data[0] = data;
-		//this.optData ;       QUESTO CAMPO NON LO METTO O LO INIZIALIZZO A NULL?
-		//this.CRC8D = CRC8.calc(data, dataLenght);		
+	// Optional data
+	private static byte[] optional;
+
+	// The byte vector dataValue
+	private static byte[] dataValue;
+	public Response(byte returnCode){ //Piu che data andrebbe messo un tipo risposta
+		super(1, 0, (byte)0x02, dataValue, optional);
+		dataValue[0] = returnCode;
 	}
 
 	// Metodi che restituiscono TRUE o FALSE per stabilire velocemente di che risposta si stratta

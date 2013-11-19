@@ -3,11 +3,10 @@
  */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
+import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
 
-/**
+
+/* **
  * A class for representing EnOcean Serial Protocol version 3 packets
  * 
  * @author Andrea Biasi
@@ -59,16 +58,32 @@ public abstract class Packet
 	 * @param optData
 	 * @param cRC8D
 	 */
-	public  Packet(byte syncByte, byte[] dataLenght, byte optLenght, byte packetType, byte crc8h, byte[] data, byte[] optData, byte crc8d)
+	public  Packet(int dataLenght, int optLenght, byte packetType, byte[] data, byte[] optData)
 	{
-		this.syncByte = syncByte;
-		this.dataLenght = dataLenght;
-		this.optLenght = optLenght;
+		byte header[] = new byte[4];
+		byte vectData[] = new byte [65536+256]; //Lo so che non si inizializza ma altrimenti mi da errore
+		this.syncByte = 0x55;
+		this.dataLenght[0] = (byte) (dataLenght & 0xff); //Parte bassa dei 2 byte
+		this.dataLenght[1] = (byte) ((dataLenght & 0xff00)>>8); //Parte alta dei due byte
+		this.optLenght = (byte) (optLenght & 0xff);;
 		this.packetType = packetType;
-		this.crc8h = crc8h;
+		header[0] = this.dataLenght[0];
+		header[1] = this.dataLenght[1];
+		header[2] = this.optLenght;
+		header[3] = packetType;
+		this.crc8h = Crc8.calc(header, header.length);
 		this.data = data;
-		this.optData = optData;
-		this.crc8d = crc8d;
+		this.optData = optData;	
+		for(int i=0 ; i<data.length; i++){
+			vectData[i] = data[i];
+		}
+		if(optLenght != 0){
+			// ATTENZIONE: se non ho dati opzionali nel campo optData metto 0x00 quindi non mettendo l'IF andrebbe a mettere in vectData[0] il valore 0x00 falsandolo
+			for(int i=0 ; i<data.length; i++){
+				vectData[i+data.length] = optData[i];
+			}
+		}
+		this.crc8d = Crc8.calc(vectData,vectData.length); // Creare la funzione CRC8
 	}
 
 	/**

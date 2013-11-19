@@ -2,16 +2,20 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet.radioadvanced;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-//TYPE 10
+/**
+ * Packet type 10 Radio Advanced: the advanced radio protocol telegram (raw data without LEN and CRC) is embedded into the ESP3 packet
+ * 
+ * @author andreabiasi
+ *
+ */
 public class RadioAdvanced extends Packet{
-	public RadioAdvanced(byte data, byte SubTelNum, byte dBm){
-		this.syncByte = 0x55;
-		//this.dataLenght = data.length;
-		this.packetType  = 0x0A;
-		//this.CRC8H = CRC8.calc(header, 4);
-		//this.data = data;
-		this.optData[0] = SubTelNum; 
-		this.optData[1] = dBm;
-		//this.CRC8D = CRC8.calc(data, data.lenght+2);
+	// The byte vector optional may contains the optional data, in this packet type is empty
+	private static byte[] optional;
+
+	public RadioAdvanced(byte rawData[], byte subTelNum, byte dBm){
+		super(rawData.length, 2, (byte)0x07, rawData, optional);
+
+		optional[0] = subTelNum;
+		optional[1] = dBm;
 	}
 }

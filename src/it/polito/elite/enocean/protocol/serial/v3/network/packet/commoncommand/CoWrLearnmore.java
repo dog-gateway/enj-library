@@ -1,27 +1,26 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-
+/*
+ * Enables or disables learn mode of controller
+ */
 public class CoWrLearnmore extends Packet{
-	@SuppressWarnings("null")
-	public CoWrLearnmore(byte enable, byte[] timeout, byte channel){
-		byte header[] = null;
-		syncByte = 0x55;
-		dataLenght[0]=0x00;
-		dataLenght[1]=0x06;
-		optLenght = 0x01; // <-- ATTENZIONE ERRORE NEL DATASHEET
-		packetType = 0x05;
-		header[0] = dataLenght[0];
-		header[1] = dataLenght[1];
-		header[2] = optLenght;
-		header[3] = packetType;
-		//this.CRC8H = CRC8.calc(header, 3);
-		data[0] = 0x17; //Command code
-		data[1] = enable;
-		//for(i=0 ; i<4 ; i++){
-			//this.data[i+2] = timeout[i];
-		//}
-		optData[0] = channel;
-		//this.CRC8D = CRC8.calc(data + optData, dataLenght);
+	/*
+	 * The byte vector optional may contains the optional data, in this packet type is empty
+	 */
+	private static byte[] optional;
+	/*
+	 * The byte vector dataValue
+	 */
+	private static byte[] dataValue;
+	public CoWrLearnmore(byte enable, int timeout, byte channel){
+		super(6, 1, (byte)0x05, dataValue, optional);
+		dataValue[0] = 0x17;
+		dataValue[1] = enable;
+		dataValue[2] = (byte) (timeout & 0xff);
+		dataValue[3] = (byte) ((timeout & 0xff00)>>8);
+		dataValue[4] = (byte) ((timeout & 0xff0000)>>16);
+		dataValue[5] = (byte) ((timeout & 0xff000000)>>32);
+		optional[0] = channel;
 	}
 }

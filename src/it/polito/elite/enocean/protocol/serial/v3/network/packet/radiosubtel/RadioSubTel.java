@@ -2,20 +2,31 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet.radiosubtel;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-//TYPE 3
+/**
+ * Packet type 3 : Radio Sub Tel
+ * 
+ * @author andreabiasi
+ *
+ */
 public class RadioSubTel extends Packet{
-	public RadioSubTel(short dataLenght, byte optLenght, byte data[], byte optData[]){
-		byte[] header;
-		syncByte = 0x55;
-		this.dataLenght = dataLenght;
-		optLenght = 0x07;
-		packetType = 0x03;
-		header[0] = dataLenght;
-		header[1] = optLenght;
-		header[2] = packetType;
-		this.CRC8H = CRC8.calc(header, 4);
-		this.data = data;
-		this.optData = optData;
-		this.CRC8D = CRC8.calc(data+optdata, data.length+optData.length);		
+
+	// Optional data
+	private static byte[] optional;
+
+	public RadioSubTel(byte data[], byte subTelNum, int destinationId, byte dBm, byte securityLevel, byte timeStamp, byte tickSubTel, byte dBmSubTel, byte statusSubTel){
+		super(data.length, 12, (byte)0x03, data, optional);
+		optional[0] = subTelNum;
+		optional[1] = (byte) (destinationId & 0xff);
+		optional[2] = (byte) ((destinationId & 0xff00)>>8);
+		optional[3] = (byte) ((destinationId & 0xff0000)>>16);
+		optional[4] = (byte) ((destinationId & 0xff000000)>>32);
+		optional[5] = dBm;
+		optional[6] = securityLevel;
+		optional[7] = (byte) (timeStamp & 0xff);
+		optional[8] = (byte) ((timeStamp & 0xff00)>>8);
+		
+		optional[9] = tickSubTel;
+		optional[10] = dBmSubTel;
+		optional[11] = statusSubTel;
 	}
 }

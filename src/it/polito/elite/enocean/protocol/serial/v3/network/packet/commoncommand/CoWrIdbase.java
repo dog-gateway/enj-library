@@ -1,23 +1,29 @@
+/**
+ * 
+ * @author andreabiasi
+ *
+ */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-
+/*
+ * Write ID range base number
+ */
 public class CoWrIdbase extends Packet{
-	@SuppressWarnings("null")
-	public CoWrIdbase(){
-		byte header[] = null;
-		syncByte = 0x55;
-		dataLenght[0]=0x00;
-		dataLenght[1]=0x05;
-		optLenght = 0x00;
-		packetType = 0x05;
-		header[0] = dataLenght[0];
-		header[1] = dataLenght[1];
-		header[2] = optLenght;
-		header[3] = packetType;
-		//this.crc8h = CRC8.calc(header, 3);
-		this.data[0] = 0x07; //Command code
-		//this.optData ;       QUESTO CAMPO NON LO METTO O LO INIZIALIZZO A NULL?
-		//this.crc8d = CRC8.calc(data, dataLenght);
+	/*
+	 * The byte vector optional may contains the optional data, in this packet type is empty
+	 */
+	private static byte[] optional;
+	/*
+	 * The byte vector dataValue contains an integer number in range between 0xFF800000 and 0xFFFFFF80
+	 */
+	private static byte[] dataValue;
+	public CoWrIdbase(int baseId){
+		super(5,0,(byte) 0x05,dataValue,optional);
+		dataValue[0] = 0x07;
+		dataValue[1] = (byte) (baseId & 0xff00);
+		dataValue[2] = (byte) ((baseId & 0xff00)>>8);
+		dataValue[3] = (byte) ((baseId & 0xff0000)>>16);
+		dataValue[4] = (byte) 0xff;
 	}
 }

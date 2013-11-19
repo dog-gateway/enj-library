@@ -1,25 +1,25 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-
+/*
+ * Delete secure device from controller. It is only possible to delete ALL rockets of a secure device.
+ */
 public class CoWrSecuredeviceDel extends Packet{
-	@SuppressWarnings("null")
-	public CoWrSecuredeviceDel(byte[] id){
-		byte header[] = null;
-		syncByte = 0x55;
-		dataLenght[0]=0x00;
-		dataLenght[1]=0x06;
-		optLenght = 0x00;
-		packetType = 0x05;
-		header[0] = dataLenght[0];
-		header[1] = dataLenght[1];
-		header[2] = optLenght;
-		header[3] = packetType;
-		//this.CRC8H = CRC8.calc(header, 3);
-		data[0] = 0x1A; //Command code
-		for(int i=0 ; i<4 ; i++){
-			this.data[i+1] = id[i];
-		}
-		//this.CRC8D = CRC8.calc(data, dataLenght);		
+	/*
+	 * The byte vector optional may contains the optional data, in this packet type is empty
+	 */
+	private static byte[] optional;
+	/*
+	 * The byte vector dataValue
+	 */
+	private static byte[] dataValue;	
+	
+	public CoWrSecuredeviceDel(int id){
+		super(5, 0, (byte)0x05, dataValue, optional);
+		dataValue[0] = 0x1A;
+		dataValue[1] = (byte) (id & 0xff);
+		dataValue[2] = (byte) ((id & 0xff00)>>8);
+		dataValue[3] = (byte) ((id & 0xff0000)>>16);
+		dataValue[4] = (byte) ((id & 0xff000000)>>32); 
 	}
 }

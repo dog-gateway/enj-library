@@ -1,16 +1,21 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-
+/**
+ * Code 2 : Reads the learnmode state of Smart Ack Controller
+ * 
+ * @author andreabiasi
+ *
+ */
 public class SaRdLearnmode extends Packet{
+	// The byte vector optional may contains the optional data, in this packet type is empty
+	private static byte[] optional;
+
+	// The byte vector dataValue
+	private static byte[] dataValue;
 	public SaRdLearnmode(){
-		//byte header[];
-		//this.dataLenght = 0x0001;
-		this.optLenght = 0x00;
-		//header[0] = dataLenght;
-		//header[1] = optLenght;
-		//this.CRC8H = CRC8.calc(header, header.length);
-		this.data[0] = 0x02;
-		//this.CRC8D = CRC8.calc(data, dataLenght); 
+		super(1, 0, (byte)0x06, dataValue, optional);
+		//Smart ack code
+		dataValue[0] = 0x02; 
 	}
 }

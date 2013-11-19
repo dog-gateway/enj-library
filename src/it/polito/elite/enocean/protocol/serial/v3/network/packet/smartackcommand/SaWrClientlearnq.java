@@ -1,25 +1,26 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-
+/**
+ * Code 4 : Sends smart ack learn request telegram to smart ack controller. This function will only be in a Smart Ack Client
+ * 
+ * @author andreabiasi
+ *
+ */
 public class SaWrClientlearnq extends Packet{
-	public SaWrClientlearnq(byte campo_sconosciuto, byte manufactorID, byte[] EEP){
-		@SuppressWarnings("unused")
-		byte header[];
-		syncByte = 0x55;
-		//dataLenght = 0x06;
-		optLenght = 0x00;
-		packetType = 0x06;
-		//header[0] = dataLenght;
-		//header[1] = optLenght;
-		//header[2] = packetType;
-		//this.CRC8H = CRC8.calc(header, 3);
-		data[0] = 0x04; //Command code
-		data[1] = campo_sconosciuto; // <-- Cosa fa questo campo?
-		data[2] = manufactorID;
-		for(int i=0 ; i<3 ; i++){
-			this.data[i+8] = EEP[i];
-		}
-		//this.CRC8D = CRC8.calc(data, dataLenght);
+	// The byte vector optional may contains the optional data, in this packet type is empty
+	private static byte[] optional;
+
+	// The byte vector dataValue
+	private static byte[] dataValue;
+	public SaWrClientlearnq(byte MsbManufactorId, byte LsbManufactorId, int EEP){
+		super(12, 0, (byte)0x06, dataValue, optional);
+		//Smart ack code
+		dataValue[0] = 0x04; 
+		dataValue[1] = MsbManufactorId;
+		dataValue[2] = LsbManufactorId;
+		dataValue[4] = (byte) (EEP & 0xff);
+		dataValue[5] = (byte) ((EEP & 0xff00)>>8);
+		dataValue[6] = (byte) ((EEP & 0xff0000)>>16); 
 	}
 }

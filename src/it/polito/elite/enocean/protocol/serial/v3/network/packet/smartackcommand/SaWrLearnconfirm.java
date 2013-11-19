@@ -3,28 +3,21 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcomman
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
 public class SaWrLearnconfirm extends Packet{
-	public SaWrLearnconfirm (byte[] response_time, byte confirm_code, byte[] postmaster_candidate_ID, byte sartack_client_ID){
-		@SuppressWarnings("unused")
-		byte header[];
-		syncByte = 0x55;
-		//dataLenght = 0x0C;
-		optLenght = 0x00;
-		packetType = 0x06;
-		//header[0] = dataLenght;
-		//header[1] = optLenght;
-		//header[2] = packetType;
-		//this.CRC8H = CRC8.calc(header, 3);
-		data[0] = 0x03; //Command code
-		for(int i=0 ; i<3 ; i++){
-			this.data[i+2] = response_time[i];
-		}
-		data[3] = confirm_code;
-		//for(int i=0 ; i<4 ; i++){
-			//this.data[i+4] = postmaster_candidate_ID;
-		//}
-		//for(int i=0 ; i<4 ; i++){
-			//this.data[i+8] = smartack_client_ID;
-		//}
-		//this.CRC8D = CRC8.calc(data, dataLenght);
+	// The byte vector optional may contains the optional data, in this packet type is empty
+	private static byte[] optional;
+
+	// The byte vector dataValue
+	private static byte[] dataValue;
+	public SaWrLearnconfirm (int responseTime, byte confirmCode, byte[] postmaster_candidate_ID, byte sartack_client_ID){
+		super(12, 0, (byte)0x06, dataValue, optional);
+		//Smart ack code
+		dataValue[0] = 0x03; 
+		dataValue[1] = (byte) (responseTime & 0xff);
+		dataValue[2] = (byte) ((responseTime & 0xff00)>>8);
+		dataValue[3] = confirmCode;
+		dataValue[4] = (byte) (responseTime & 0xff);
+		dataValue[5] = (byte) ((responseTime & 0xff00)>>8);
+		dataValue[6] = (byte) ((responseTime & 0xff0000)>>16); 
+		dataValue[7] = (byte) ((responseTime & 0xff000000)>>32);
 	}
 }
