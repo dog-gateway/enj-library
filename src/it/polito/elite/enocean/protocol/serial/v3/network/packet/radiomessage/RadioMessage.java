@@ -15,7 +15,7 @@ public class RadioMessage extends Packet{
 	// The byte vector dataValue
 	private static byte[] dataValue;
 	public RadioMessage(byte messageRorg, byte mexData[], int destinationId, int sourceId, byte dBm, byte sendWithDelay){
-		super(1+mexData.length, 9, (byte)0x07, dataValue, optional);
+		super((byte)0x07, dataValue, optional);
 		dataValue[0] = messageRorg;
 		for(int i=0 ; i<mexData.length ; i++)
 		{

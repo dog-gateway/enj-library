@@ -9,12 +9,12 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  */
 public class SaWrClientlearnq extends Packet{
 	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional;
+	private static byte[] optional = null;
 
 	// The byte vector dataValue
 	private static byte[] dataValue;
 	public SaWrClientlearnq(byte MsbManufactorId, byte LsbManufactorId, int EEP){
-		super(12, 0, (byte)0x06, dataValue, optional);
+		super((byte)0x06, dataValue, optional);
 		//Smart ack code
 		dataValue[0] = 0x04; 
 		dataValue[1] = MsbManufactorId;

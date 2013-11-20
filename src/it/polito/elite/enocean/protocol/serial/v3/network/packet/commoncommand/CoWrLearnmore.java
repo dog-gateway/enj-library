@@ -8,13 +8,13 @@ public class CoWrLearnmore extends Packet{
 	/*
 	 * The byte vector optional may contains the optional data, in this packet type is empty
 	 */
-	private static byte[] optional;
+	private static byte[] optional = null;
 	/*
 	 * The byte vector dataValue
 	 */
 	private static byte[] dataValue;
 	public CoWrLearnmore(byte enable, int timeout, byte channel){
-		super(6, 1, (byte)0x05, dataValue, optional);
+		super((byte)0x05, dataValue, optional);
 		dataValue[0] = 0x17;
 		dataValue[1] = enable;
 		dataValue[2] = (byte) (timeout & 0xff);

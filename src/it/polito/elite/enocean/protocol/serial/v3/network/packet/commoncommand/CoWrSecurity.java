@@ -12,13 +12,13 @@ public class CoWrSecurity extends Packet {
 	/*
 	 * The byte vector optional may contains the optional data, in this packet type is empty
 	 */
-	private static byte[] optional;
+	private static byte[] optional = null;
 	/*
 	 * The byte vector dataValue
 	 */
 	private static byte[] dataValue;
 	public CoWrSecurity(byte secLevel, int key, int rollingCode){
-		super(10, 0, (byte)0x05, dataValue, optional);
+		super((byte)0x05, dataValue, optional);
 		dataValue[0] = 0x16;
 		dataValue[1] = secLevel;
 		dataValue[2] = (byte) (key & 0xff);

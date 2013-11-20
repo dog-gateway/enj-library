@@ -10,9 +10,9 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  */
 public class Radio extends Packet{
 	// Optional data
-	private static byte[] optional;
+	private static byte[] optional = null;
 	public Radio(byte data[], byte subTelNum, int destinationId , byte dBm, byte securityLevel){
-		super(data.length, 7, (byte)0x01, data, optional);
+		super((byte)0x01, data, optional);
 		optional[0] = subTelNum;
 		optional[1] = (byte) (destinationId & 0xff);
 		optional[2] = (byte) ((destinationId & 0xff00)>>8);

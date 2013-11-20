@@ -8,13 +8,13 @@ public class CoRdMem extends Packet{
 	/*
 	 * The byte vector optional may contains the optional data, in this packet type is empty
 	 */
-	private static byte[] optional;
+	private static byte[] optional = null;
 	/*
 	 * The byte vector dataValue
 	 */
 	private static byte[] dataValue;
 	public CoRdMem(byte memoryType, int memoryAddress, int dataLenght){
-		super(8, 0, (byte)0x05, dataValue, optional);
+		super((byte)0x05, dataValue, optional);
 		dataValue[0] = 0x13;
 		dataValue[1] = memoryType;
 		dataValue[2] = (byte) (memoryAddress & 0xff);

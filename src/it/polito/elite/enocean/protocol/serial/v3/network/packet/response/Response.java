@@ -10,12 +10,12 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  */
 public class Response extends Packet{
 	// Optional data
-	private static byte[] optional;
+	private static byte[] optional = null;
 
 	// The byte vector dataValue
 	private static byte[] dataValue;
 	public Response(byte returnCode){ //Piu che data andrebbe messo un tipo risposta
-		super(1, 0, (byte)0x02, dataValue, optional);
+		super((byte)0x02, dataValue, optional);
 		dataValue[0] = returnCode;
 	}
 

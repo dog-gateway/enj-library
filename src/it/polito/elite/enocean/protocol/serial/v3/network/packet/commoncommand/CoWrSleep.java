@@ -14,7 +14,7 @@ public class CoWrSleep extends Packet{
 	/*
 	 * The byte vector optional may contains the optional data, in this packet type is empty
 	 */
-	private static byte[] optional;
+	private static byte[] optional = null;
 	/*
 	 * The byte vector dataValue contains the sleep period
 	 */
@@ -26,7 +26,7 @@ public class CoWrSleep extends Packet{
 	 * Max value = 00FFFFFF(~46h)
 	 */
 	public CoWrSleep(int deepSleepPeriod){
-		super(5,0,(byte) 0x05,dataValue,optional); //NB Non ho optional value e non passo nulla
+		super((byte) 0x05,dataValue,optional); //NB Non ho optional value e non passo nulla
 		dataValue[0] = (byte) (deepSleepPeriod & 0xff); //Command code
 		dataValue[1] = (byte) ((deepSleepPeriod & 0xff00)>>8);
 		dataValue[2] = (byte) ((deepSleepPeriod & 0xff0000)>>16);

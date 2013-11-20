@@ -6,7 +6,7 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
 
 
-/* **
+/**
  * A class for representing EnOcean Serial Protocol version 3 packets
  * 
  * @author Andrea Biasi
@@ -58,22 +58,24 @@ public abstract class Packet
 	 * @param optData
 	 * @param cRC8D
 	 */
-	public  Packet(int dataLenght, int optLenght, byte packetType, byte[] data, byte[] optData)
+	public  Packet(byte packetType, byte[] data, byte[] optData)
 	{
 		byte header[] = new byte[4];
 		byte vectData[] = new byte [65536+256]; //Lo so che non si inizializza ma altrimenti mi da errore
 		this.syncByte = 0x55;
-		this.dataLenght[0] = (byte) (dataLenght & 0xff); //Parte bassa dei 2 byte
-		this.dataLenght[1] = (byte) ((dataLenght & 0xff00)>>8); //Parte alta dei due byte
-		this.optLenght = (byte) (optLenght & 0xff);;
+		this.dataLenght[0] = (byte) (data.length & 0xff); //Parte bassa dei 2 byte
+		this.dataLenght[1] = (byte) ((data.length & 0xff00)>>8); //Parte alta dei due byte
+		this.optLenght = (byte) (optData.length);
 		this.packetType = packetType;
 		header[0] = this.dataLenght[0];
 		header[1] = this.dataLenght[1];
 		header[2] = this.optLenght;
-		header[3] = packetType;
-		this.crc8h = Crc8.calc(header, header.length);
+		header[3] = this.packetType;
+		
+		this.crc8h = Crc8.calc(header);
 		this.data = data;
 		this.optData = optData;	
+		
 		for(int i=0 ; i<data.length; i++){
 			vectData[i] = data[i];
 		}
@@ -83,7 +85,7 @@ public abstract class Packet
 				vectData[i+data.length] = optData[i];
 			}
 		}
-		this.crc8d = Crc8.calc(vectData,vectData.length); // Creare la funzione CRC8
+		this.crc8d = Crc8.calc(vectData); // Creare la funzione CRC8
 	}
 
 	/**

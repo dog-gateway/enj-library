@@ -9,12 +9,12 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  */
 public class RemoteManCommand extends Packet{
 	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional;
+	private static byte[] optional = null;
 
 	// The byte vector dataValue
 	private static byte[] dataValue;
 	public RemoteManCommand(int functionNumber, int manufacturerId, byte mexData[], int destinationId, int sourceId, byte dBm, byte sendWithDelay){
-		super(4+mexData.length, 10, (byte)0x07, dataValue, optional);
+		super((byte)0x07, dataValue, optional);
 		dataValue[0] = (byte) (functionNumber & 0xff);
 		dataValue[1] = (byte) ((functionNumber & 0xff00)>>8);
 		dataValue[2] = (byte) (manufacturerId & 0xff);
@@ -23,15 +23,15 @@ public class RemoteManCommand extends Packet{
 		{
 			dataValue[4+i] = mexData[i];			
 		}
-		optional[0] = (byte) (destinationId & 0xff);
-		optional[1] = (byte) ((destinationId & 0xff00)>>8);
-		optional[2] = (byte) ((destinationId & 0xff0000)>>16);
-		optional[3] = (byte) ((destinationId & 0xff000000)>>32);
-		optional[4] = (byte) (sourceId & 0xff);
-		optional[5] = (byte) ((sourceId & 0xff00)>>8);
-		optional[6] = (byte) ((sourceId & 0xff0000)>>16);
-		optional[7] = (byte) ((sourceId & 0xff000000)>>32);
-		optional[8] = dBm;
-		optional[9] = sendWithDelay;
+		dataValue[mexData.length] = (byte) (destinationId & 0xff);
+		dataValue[mexData.length + 1] = (byte) ((destinationId & 0xff00)>>8);
+		dataValue[mexData.length + 2] = (byte) ((destinationId & 0xff0000)>>16);
+		dataValue[mexData.length + 3] = (byte) ((destinationId & 0xff000000)>>32);
+		dataValue[mexData.length + 4] = (byte) (sourceId & 0xff);
+		dataValue[mexData.length + 5] = (byte) ((sourceId & 0xff00)>>8);
+		dataValue[mexData.length + 6] = (byte) ((sourceId & 0xff0000)>>16);
+		dataValue[mexData.length + 7] = (byte) ((sourceId & 0xff000000)>>32);
+		dataValue[mexData.length + 8] = dBm;
+		dataValue[mexData.length + 9] = sendWithDelay;
 	}
 }
