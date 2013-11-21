@@ -18,7 +18,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.serialcomunication.*;
  */
 public class SerialConnection {
 
-	void connect ( String portName ) throws Exception //Preso dall'esempio su RXTX
+	public SerialPort connect ( String portName ) throws Exception //Preso dall'esempio su RXTX
 	{      
 		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 
@@ -36,14 +36,18 @@ public class SerialConnection {
 
 				InputStream in = serialPort.getInputStream();
 				OutputStream out = serialPort.getOutputStream();
+				
 
-				(new Thread(new SerialReader(in,buffer))).start();    //Thread RX     
-				(new Thread(new SerialWriter(out))).start();  //Thread TX
+				/*(new Thread(new SerialReader(in))).start();    //Thread RX     
+				byte[] buffer = new byte[256];
+				(new Thread(new SerialWriter(out, buffer))).start();  //Thread TX
+				*/
 			}
 			else
 			{
 				System.out.println("Error: Only serial ports are handled by this example.");
 			}
 		}
+		return serialPort;
 	}
 }

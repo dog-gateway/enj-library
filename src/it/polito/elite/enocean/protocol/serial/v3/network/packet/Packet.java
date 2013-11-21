@@ -12,6 +12,9 @@ import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
  * @author Andrea Biasi
  * 
  */
+
+// ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
+
 public abstract class Packet
 {
 	// serial synchronization byte
