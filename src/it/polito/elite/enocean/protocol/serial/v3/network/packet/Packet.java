@@ -1,17 +1,13 @@
-/**
- * 
- */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
-
-
 /**
  * A class for representing EnOcean Serial Protocol version 3 packets
  * 
- * @author Andrea Biasi
- * 
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
+ *
  */
+
 
 // ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
 

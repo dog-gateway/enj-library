@@ -33,15 +33,6 @@ public class SerialConnection {
 			{
 				SerialPort serialPort = (SerialPort) commPort;
 				serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-
-				InputStream in = serialPort.getInputStream();
-				OutputStream out = serialPort.getOutputStream();
-				
-
-				/*(new Thread(new SerialReader(in))).start();    //Thread RX     
-				byte[] buffer = new byte[256];
-				(new Thread(new SerialWriter(out, buffer))).start();  //Thread TX
-				*/
 			}
 			else
 			{

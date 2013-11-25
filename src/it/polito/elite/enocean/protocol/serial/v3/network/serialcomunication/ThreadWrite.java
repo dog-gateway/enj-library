@@ -29,7 +29,4 @@ public class ThreadWrite extends Thread{
 			e.printStackTrace();
 		}
 	}
-	public OutputStream writeOutput(){
-		return  out;
-	}
 }
