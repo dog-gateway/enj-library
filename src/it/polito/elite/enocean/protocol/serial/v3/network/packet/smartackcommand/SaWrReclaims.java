@@ -9,15 +9,15 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 public class SaWrReclaims extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
-
-	// The byte vector dataValue
-	private static byte[] dataValue;
+	/**
+	 * @param reclaimCount : Presetting for the number of required reclaim tries
+	 */
 	public SaWrReclaims(byte reclaimCount){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x06;
 		//Smart ack code
-		dataValue[0] = 0x07;
-		dataValue[1] = reclaimCount;
+		this.data[0] = 0x07;
+		this.data[1] = reclaimCount;
+		this.buildPacket();
 	}
 }

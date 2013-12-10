@@ -1,26 +1,24 @@
-/**
- * 
- * @author andreabiasi
- *
- */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-public class CoWrSubtel extends Packet {
-	/*
-	 * The byte vector optional may contains the optional data, in this packet
-	 * type is empty
-	 */
-	private static byte[] optional = null;
-	/*
-	 * The byte vector dataValue
-	 */
-	private static byte[] dataValue;
+/**
+ * Enable/Disable transmitting additional subtelegram info.
+ * 
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
+ *
+ */
 
+public class CoWrSubtel extends Packet {
+	/**
+	 * @param enable : Enable = 1 Disable = 0
+	 */
 	public CoWrSubtel(byte enable) {
-		super((byte) 0x05, dataValue, optional);
-		dataValue[0] = 0x11;
-		dataValue[1] = enable;
+		super();
+		this.packetType = 0x05;
+		// Command code
+		this.data[0] = 0x11;
+		this.data[1] = enable;
+		this.buildPacket();
 	}
 }

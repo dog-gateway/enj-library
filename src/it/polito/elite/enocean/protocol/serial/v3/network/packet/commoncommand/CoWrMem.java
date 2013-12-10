@@ -1,34 +1,37 @@
-/**
- * 
- * @author andreabiasi
- *
- */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-public class CoWrMem extends Packet {
-	/*
-	 * The byte vector optional may contains the optional data, in this packet
-	 * type is empty
-	 */
-	private static byte[] optional = null;
-	/*
-	 * The byte vector dataValue
-	 */
-	private static byte[] dataValue;
+/**
+ * Write x bytes of the Flash, RAM0, DATA, IDATA, XDATA.
+ * 
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
+ *
+ */
 
-	public CoWrMem(int dataLenght, byte memoryType, int memoryAddress,
-			byte[] memoryData) {
-		super((byte) 0x05, dataValue, optional);
-		dataValue[0] = 0x12;
-		dataValue[1] = memoryType;
-		dataValue[2] = (byte) (memoryAddress & 0xff);
-		dataValue[3] = (byte) ((memoryAddress & 0xff00) >> 8);
-		dataValue[4] = (byte) ((memoryAddress & 0xff0000) >> 16);
-		dataValue[5] = (byte) ((memoryAddress & 0xff000000) >> 32);
-		for (int i = 0; i < memoryData.length; i++) {
-			dataValue[6 + i] = memoryData[i];
+public class CoWrMem extends Packet {
+	/**
+	 * @param memoryType : 	Flash 0x00 
+	 * 					   	RAM 0 0x01 
+	 * 						data RAM 0x02 
+	 * 						idata RAM 0x03 
+	 * 						xdata RAM 0x04
+	 * @param memoryAddress : Start address to write
+	 * @param memoryData : Data content to write
+	 */
+	public CoWrMem(byte memoryType, int memoryAddress, byte[] memoryData) {
+		super();
+		this.packetType = 0x05;
+		//Command code
+		this.data[0] = 0x12;
+		this.data[1] = memoryType;
+		this.data[2] = (byte) (memoryAddress & 0xff);
+		this.data[3] = (byte) ((memoryAddress & 0xff00) >> 8);
+		this.data[4] = (byte) ((memoryAddress & 0xff0000) >> 16);
+		this.data[5] = (byte) ((memoryAddress & 0xff000000) >> 32);
+		for (int i = 6; i < memoryData.length + 6; i++) {
+			this.data[i] = memoryData[i];
 		}
+		this.buildPacket();
 	}
 }

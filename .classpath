@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="/Users/andreabiasi/Downloads/eclipse/plugins/gnu.io.rxtx.solaris.sparc_2.1.7.3_v20071015.jar"/>
 	<classpathentry kind="lib" path="/Users/andreabiasi/Downloads/eclipse/plugins/gnu.io.rxtx.win32.x86_2.1.7.3_v20071015.jar"/>
 	<classpathentry kind="lib" path="/Users/andreabiasi/Downloads/eclipse/features/gnu.io.rxtx_2.1.7.4_v20071016-7B57e7UAXMAAqGAGf.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

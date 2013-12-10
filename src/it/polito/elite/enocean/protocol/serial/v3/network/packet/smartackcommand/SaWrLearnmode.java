@@ -2,25 +2,37 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcomman
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
+/**
+ * Enables or disables learn mode of Smart Ack Controller.
+ * 
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
+ *
+ */
+
 public class SaWrLearnmode extends Packet{
-	
-	 // The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
-	
-	// The byte vector dataValue
-	private static byte[] dataValue;
+	/**
+	 * @param enable Start Learnmode = 1 
+	 * 				 End Learnmode = 0
+	 * @param extended 	Simple Learnmode = 0 
+	 * 					Advance Learnmode = 1 
+	 * 					Advance Learnmode select Rep. = 2
+	 * @param timeout	Time-Out for the learn mode in ms. 
+	 * 					When time is 0 then default period of 60Õ000 ms is used
+	 */
 	public SaWrLearnmode(byte enable, byte extended, int timeout){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x06;
 		//Smart ack code
-		dataValue[0] = 0x01;
+		this.data[0] = 0x01;
 		//Enable
-		dataValue[1] = enable;
+		this.data[1] = enable;
 		//Extended
-		dataValue[2] = extended;
+		this.data[2] = extended;
 		//Timeout
-		dataValue[3] = (byte) (timeout & 0xff);
-		dataValue[4] = (byte) ((timeout & 0xff00)>>8);
-		dataValue[5] = (byte) ((timeout & 0xff0000)>>16);
-		dataValue[6] = (byte) ((timeout & 0xff000000)>>32);
+		this.data[3] = (byte) (timeout & 0xff);
+		this.data[4] = (byte) ((timeout & 0xff00)>>8);
+		this.data[5] = (byte) ((timeout & 0xff0000)>>16);
+		this.data[6] = (byte) ((timeout & 0xff000000)>>32);
+		this.buildPacket();
 	}
 }

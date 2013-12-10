@@ -2,22 +2,33 @@ package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcomman
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-public class SaWrLearnconfirm extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
+/**
+ * Send smart ack learn answer to modify mailbox at postmaster.
+ * 
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
+ *
+ */
 
-	// The byte vector dataValue
-	private static byte[] dataValue;
+public class SaWrLearnconfirm extends Packet{
+	/**
+	 * @param responseTime : Response time for sensor in ms in which the controller can prepare the data and send it to the postmaster. Only actual, if learn return code is Learn IN. 
+	 * @param confirmCode : Learn IN: 0x00 
+	 * 						Learn OUT: 0x20
+	 * @param postmaster_candidate_ID : Device ID of the used Post master
+	 * @param sartack_client_ID : Device ID of the learned IN/OUT Smart Ack Client
+	 */
 	public SaWrLearnconfirm (int responseTime, byte confirmCode, byte[] postmaster_candidate_ID, byte sartack_client_ID){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x06;
 		//Smart ack code
-		dataValue[0] = 0x03; 
-		dataValue[1] = (byte) (responseTime & 0xff);
-		dataValue[2] = (byte) ((responseTime & 0xff00)>>8);
-		dataValue[3] = confirmCode;
-		dataValue[4] = (byte) (responseTime & 0xff);
-		dataValue[5] = (byte) ((responseTime & 0xff00)>>8);
-		dataValue[6] = (byte) ((responseTime & 0xff0000)>>16); 
-		dataValue[7] = (byte) ((responseTime & 0xff000000)>>32);
+		this.data[0] = 0x03; 
+		this.data[1] = (byte) (responseTime & 0xff);
+		this.data[2] = (byte) ((responseTime & 0xff00)>>8);
+		this.data[3] = confirmCode;
+		this.data[4] = (byte) (responseTime & 0xff);
+		this.data[5] = (byte) ((responseTime & 0xff00)>>8);
+		this.data[6] = (byte) ((responseTime & 0xff0000)>>16); 
+		this.data[7] = (byte) ((responseTime & 0xff000000)>>32);
+		this.buildPacket();
 	}
 }

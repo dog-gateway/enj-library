@@ -1,6 +1,3 @@
-/**
- * 
- */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
@@ -12,14 +9,11 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 public class SaRdLearnedclients extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
-
-	// The byte vector dataValue
-	private static byte[] dataValue;
 	public SaRdLearnedclients(){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x05;
 		//Smart ack code
-		dataValue[0] = 0x06; 		
+		this.data[0] = 0x06;
+		this.buildPacket();
 	}
 }

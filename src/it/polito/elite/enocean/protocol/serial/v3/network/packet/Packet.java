@@ -1,13 +1,13 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
+
 /**
  * A class for representing EnOcean Serial Protocol version 3 packets
  * 
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-
 
 // ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
 
@@ -59,33 +59,37 @@ public abstract class Packet
 	 */
 	public  Packet(byte packetType, byte[] data, byte[] optData)
 	{
-		byte header[] = new byte[4];
-		byte vectData[] = new byte [65536+256]; //Lo so che non si inizializza ma altrimenti mi da errore
 		this.syncByte = 0x55;
+		this.packetType = packetType;
+		this.data = data;
+		this.optData = optData;
+		this.buildPacket();
+	}
+
+	public void buildPacket(){
 		this.dataLenght[0] = (byte) (data.length & 0xff); //Parte bassa dei 2 byte
 		this.dataLenght[1] = (byte) ((data.length & 0xff00)>>8); //Parte alta dei due byte
 		this.optLenght = (byte) (optData.length);
-		this.packetType = packetType;
+		byte header[] = new byte[4];
 		header[0] = this.dataLenght[0];
 		header[1] = this.dataLenght[1];
 		header[2] = this.optLenght;
 		header[3] = this.packetType;
-		
-		this.crc8h = Crc8.calc(header);
-		this.data = data;
-		this.optData = optData;	
-		
+
+		this.crc8h = Crc8.calc(header);		
+		byte vectData[] = new byte[data.length+optData.length];
 		for(int i=0 ; i<data.length; i++){
 			vectData[i] = data[i];
 		}
+		// Se non ho dati opzionali non metto pi nulla nel vettore
 		if(optLenght != 0){
-			// ATTENZIONE: se non ho dati opzionali nel campo optData metto 0x00 quindi non mettendo l'IF andrebbe a mettere in vectData[0] il valore 0x00 falsandolo
-			for(int i=0 ; i<data.length; i++){
-				vectData[i+data.length] = optData[i];
+			for(int i = data.length ; i<optData.length+data.length; i++){
+				vectData[i] = optData[i];
 			}
 		}
-		this.crc8d = Crc8.calc(vectData); // Creare la funzione CRC8
+		this.crc8d = Crc8.calc(vectData);
 	}
+
 
 	/**
 	 * @return the syncByte
@@ -230,7 +234,7 @@ public abstract class Packet
 		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length + this.optData.length;
 
 		byte[] packetAsBytes = new byte[packetLengthInBytes]; 
-
+		
 		packetAsBytes[0] = this.syncByte;
 		packetAsBytes[1] = this.dataLenght[0];
 		packetAsBytes[1] = this.dataLenght[1];
@@ -261,15 +265,13 @@ public abstract class Packet
 	 * ------------- Metodi di GET ---------------------------------
 	 */
 
-	void getPacket(byte[] buffer)
-	{ // Ok Buffer o metto in?
+	public void parsePacket(byte[] buffer)
+	{ 
 		// "Inpacchetto" cio che arriva in ingresso
 
 		this.syncByte = buffer[0];
 		this.dataLenght[0] = buffer[1]; 
 		this.dataLenght[1] = buffer[2];
-		// Lasciato volutamente in errore, voglio mettere 2 Byte in uno
-		// short, forse ï¿½ meglio dichiarare un vettore di 2 byte?
 		this.optLenght = buffer[3];
 		packetType = buffer[4];
 		this.crc8h = buffer[5];
@@ -291,17 +293,21 @@ public abstract class Packet
 		}
 		this.crc8d = buffer[6 + dataLenght + optLenght];
 
-	} // Fine getPacket
+	} // Fine parsePacket
 
 	// Metodi per discriminare che tipo di pacchetto ho ricevuto
-	boolean isResponse()
+	public boolean isResponse()
 	{
 		return packetType == 0x02;
 	}
 
-	boolean isEvent()
+	public boolean isEvent()
 	{
 		return packetType == 0x04;
+	}
+	
+	public boolean isRadio(){
+		return packetType == 0x01;
 	}
 
 }

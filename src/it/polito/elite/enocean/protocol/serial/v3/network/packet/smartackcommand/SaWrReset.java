@@ -1,29 +1,26 @@
-/**
- * 
- */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
 /**
- * Code 5 : Send reset command to a Smart Ack Client
+ * Send reset command to a Smart Ack Client
  * 
  * @author andreabiasi
  *
  */
 public class SaWrReset extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
-
-	// The byte vector dataValue
-	private static byte[] dataValue;
+	/**
+	 * @param deviceId : Device ID of the Smart Ack Client
+	 */
 	public SaWrReset(int deviceId){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x06;
 		//Smart ack code
-		dataValue[0] = 0x05;
-		dataValue[1] = (byte) (deviceId & 0xff);
-		dataValue[2] = (byte) ((deviceId & 0xff00)>>8);
-		dataValue[3] = (byte) ((deviceId & 0xff0000)>>16);
-		dataValue[4] = (byte) ((deviceId & 0xff000000)>>32);
+		this.data[0] = 0x05;
+		this.data[1] = (byte) (deviceId & 0xff);
+		this.data[2] = (byte) ((deviceId & 0xff00)>>8);
+		this.data[3] = (byte) ((deviceId & 0xff0000)>>16);
+		this.data[4] = (byte) ((deviceId & 0xff000000)>>32);
+		this.buildPacket();
 	}
 }

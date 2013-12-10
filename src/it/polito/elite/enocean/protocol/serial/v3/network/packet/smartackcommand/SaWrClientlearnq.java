@@ -8,19 +8,21 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 public class SaWrClientlearnq extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
-
-	// The byte vector dataValue
-	private static byte[] dataValue;
+	/**
+	 * @param MsbManufactorId : nnn = Most significant 3 bits of the Manufacturer ID 11111 = reserved / default values
+	 * @param LsbManufactorId : Least significant bits of the Manufacturer ID
+	 * @param EEP EEP of the Smart Ack client, who wants to Teach IN.
+	 */
 	public SaWrClientlearnq(byte MsbManufactorId, byte LsbManufactorId, int EEP){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x06;
 		//Smart ack code
-		dataValue[0] = 0x04; 
-		dataValue[1] = MsbManufactorId;
-		dataValue[2] = LsbManufactorId;
-		dataValue[4] = (byte) (EEP & 0xff);
-		dataValue[5] = (byte) ((EEP & 0xff00)>>8);
-		dataValue[6] = (byte) ((EEP & 0xff0000)>>16); 
+		this.data[0] = 0x04; 
+		this.data[1] = MsbManufactorId;
+		this.data[2] = LsbManufactorId;
+		this.data[4] = (byte) (EEP & 0xff);
+		this.data[5] = (byte) ((EEP & 0xff00)>>8);
+		this.data[6] = (byte) ((EEP & 0xff0000)>>16);
+		this.buildPacket();
 	}
 }

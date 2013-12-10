@@ -1,34 +1,39 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-
 /**
- * Packet type 9 : The radio message (payload data without any radio telegram contents) is embedded into the ESP3 packet
+ * The radio message (payload data without any radio telegram contents) is embedded into the ESP3 packet
  * 
- * @author andreabiasi
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class RadioMessage extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional;
 
-	// The byte vector dataValue
-	private static byte[] dataValue;
-	public RadioMessage(byte messageRorg, byte mexData[], int destinationId, int sourceId, byte dBm, byte sendWithDelay){
-		super((byte)0x07, dataValue, optional);
-		dataValue[0] = messageRorg;
+public class RadioMessage extends Packet{
+	/**
+	 * @param messageRorg : RORG
+	 * @param mexData : Message Data Content
+	 * @param destinationId : Destination ID Broadcast ID: FF FF FF FF
+	 * @param sourceId : Receive case: Source ID of the sender Send case: 0x00000000
+	 * @param dBm : Send case: 0xFF 
+	 * 				Receive case: Best RSSI value of all received sub telegrams (value decimal without minus)
+	 */
+	public RadioMessage(byte messageRorg, byte mexData[], int destinationId, int sourceId, byte dBm){	
+		super();
+		this.packetType=0x09;
+		this.data[0] = messageRorg;
 		for(int i=0 ; i<mexData.length ; i++)
 		{
-			dataValue[1+i] = mexData[i];			
+			this.data[1+i] = mexData[i];			
 		}
-		optional[0] = (byte) (destinationId & 0xff);
-		optional[1] = (byte) ((destinationId & 0xff00)>>8);
-		optional[2] = (byte) ((destinationId & 0xff0000)>>16);
-		optional[3] = (byte) ((destinationId & 0xff000000)>>32);
-		optional[4] = (byte) (sourceId & 0xff);
-		optional[5] = (byte) ((sourceId & 0xff00)>>8);
-		optional[6] = (byte) ((sourceId & 0xff0000)>>16);
-		optional[7] = (byte) ((sourceId & 0xff000000)>>32);
-		optional[8] = dBm;
+		this.optData[0] = (byte) (destinationId & 0xff);
+		this.optData[1] = (byte) ((destinationId & 0xff00)>>8);
+		this.optData[2] = (byte) ((destinationId & 0xff0000)>>16);
+		this.optData[3] = (byte) ((destinationId & 0xff000000)>>32);
+		this.optData[4] = (byte) (sourceId & 0xff);
+		this.optData[5] = (byte) ((sourceId & 0xff00)>>8);
+		this.optData[6] = (byte) ((sourceId & 0xff0000)>>16);
+		this.optData[7] = (byte) ((sourceId & 0xff000000)>>32);
+		this.optData[8] = dBm;
+		this.buildPacket();
 	}
 }

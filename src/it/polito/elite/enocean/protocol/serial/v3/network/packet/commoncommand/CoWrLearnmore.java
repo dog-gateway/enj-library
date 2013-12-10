@@ -6,24 +6,24 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * Enables or disables learn mode of controller
  */
 public class CoWrLearnmore extends Packet {
-	/*
-	 * The byte vector optional may contains the optional data, in this packet
-	 * type is empty
+	/**
+	 * @param enable : Start Learn mode = 1 End Learn mode = 0
+	 * @param timeout : Time-Out for the learn mode in ms. When time is 0 then default period of 60Õ000 ms is used
+	 * @param channel : 0..0xFD = Channel No. absolute 
+	 * 					0xFE = Previous channel relative 
+	 * 					0xFF = Next channel relative
 	 */
-	private static byte[] optional = null;
-	/*
-	 * The byte vector dataValue
-	 */
-	private static byte[] dataValue;
-
 	public CoWrLearnmore(byte enable, int timeout, byte channel) {
-		super((byte) 0x05, dataValue, optional);
-		dataValue[0] = 0x17;
-		dataValue[1] = enable;
-		dataValue[2] = (byte) (timeout & 0xff);
-		dataValue[3] = (byte) ((timeout & 0xff00) >> 8);
-		dataValue[4] = (byte) ((timeout & 0xff0000) >> 16);
-		dataValue[5] = (byte) ((timeout & 0xff000000) >> 32);
-		optional[0] = channel;
+		super();
+		this.packetType = 0x05;
+		//Command code
+		this.data[0] = 0x17;
+		this.data[1] = enable;
+		this.data[2] = (byte) (timeout & 0xff);
+		this.data[3] = (byte) ((timeout & 0xff00) >> 8);
+		this.data[4] = (byte) ((timeout & 0xff0000) >> 16);
+		this.data[5] = (byte) ((timeout & 0xff000000) >> 32);
+		this.optData[0] = channel;
+		this.buildPacket();
 	}
 }

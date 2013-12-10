@@ -1,33 +1,22 @@
-/**
- * 
- * @author andreabiasi
- *
- */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
-/*
+/**
  * Write ID range base number
+ * 
+ * @author Andrea Biasi <biasiandrea04@gmail.com>
+ *
  */
-public class CoWrIdbase extends Packet {
-	/*
-	 * The byte vector optional may contains the optional data, in this packet
-	 * type is empty
-	 */
-	private static byte[] optional = null;
-	/*
-	 * The byte vector dataValue contains an integer number in range between
-	 * 0xFF800000 and 0xFFFFFF80
-	 */
-	private static byte[] dataValue;
 
+public class CoWrIdbase extends Packet {
 	public CoWrIdbase(int baseId) {
-		super((byte) 0x05, dataValue, optional);
-		dataValue[0] = 0x07;
-		dataValue[1] = (byte) (baseId & 0xff00);
-		dataValue[2] = (byte) ((baseId & 0xff00) >> 8);
-		dataValue[3] = (byte) ((baseId & 0xff0000) >> 16);
-		dataValue[4] = (byte) 0xff;
+		super();
+		this.data[0] = 0x07;
+		this.data[1] = (byte) (baseId & 0xff00);
+		this.data[2] = (byte) ((baseId & 0xff00) >> 8);
+		this.data[3] = (byte) ((baseId & 0xff0000) >> 16);
+		this.data[4] = (byte) 0xff;
+		this.buildPacket();
 	}
 }

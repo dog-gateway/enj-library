@@ -10,18 +10,10 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 public class Response extends Packet{
-	/*
-	 * The byte vector optional may contains the optional data, in this packet
-	 * type is empty
-	 */
-	private static byte[] optional = null;
-	/*
-	 * The byte vector dataValue contains the response code
-	 */
-	private static byte[] dataValue;
 	public Response(byte respCode){
-		super((byte)0x02, dataValue, optional);
-		dataValue[0] = respCode;
+		super();
+		this.data[0]= respCode;
+		this.buildPacket();
 	}
 
 	/**

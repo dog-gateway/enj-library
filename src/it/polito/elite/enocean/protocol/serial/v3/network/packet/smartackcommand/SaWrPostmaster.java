@@ -9,15 +9,15 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 public class SaWrPostmaster extends Packet{
-	// The byte vector optional may contains the optional data, in this packet type is empty
-	private static byte[] optional = null;
-
-	// The byte vector dataValue
-	private static byte[] dataValue;
+	/**
+	 * @param mailboxCount :Enables/Disables postmaster function of device.
+	 */
 	public SaWrPostmaster(byte mailboxCount){
-		super((byte)0x06, dataValue, optional);
+		super();
+		this.packetType = 0x06;
 		//Smart ack code
-		dataValue[0] = 0x08;
-		dataValue[1] = mailboxCount;
+		this.data[0] = 0x08;
+		this.data[1] = mailboxCount;
+		this.buildPacket();
 	}
 }
