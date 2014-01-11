@@ -12,6 +12,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoWrIdbase extends Packet {
 	public CoWrIdbase(int baseId) {
 		super();
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x07;
 		this.data[1] = (byte) (baseId & 0xff00);
 		this.data[2] = (byte) ((baseId & 0xff00) >> 8);

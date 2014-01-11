@@ -26,6 +26,13 @@ public class Event extends Packet{
 		this.data[0]=respCode;
 		this.buildPacket();
 	}
+	
+	// --------- CONSTANT FIELD ----------
+	public static int SA_RECLAIM_NOT_SUCCESFUL = 1;
+	public static int SA_CONFIRM_LEARN = 2;
+	public static int SA_LEARN_ACK = 3;
+	public static int CO_READY = 4;
+	public static int CO_EVENT_SECUREDEVICE = 5;
 
 	/**
 	 * @return TRUE if the event is SA_RECLAIM_NOT_SUCCESSFUL

@@ -15,7 +15,7 @@ public class CoWrLearnmore extends Packet {
 	 */
 	public CoWrLearnmore(byte enable, int timeout, byte channel) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		//Command code
 		this.data[0] = 0x17;
 		this.data[1] = enable;

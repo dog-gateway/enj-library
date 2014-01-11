@@ -25,16 +25,8 @@ public class Radio extends Packet{
 	 * 						  n = type of encryption (not supported any more)
 	 */
 	public Radio(byte data[], byte subTelNum, int destinationId , byte dBm, byte securityLevel){
-	/*	super((byte)0x01, data, optional);
-		optional[0] = subTelNum;
-		optional[1] = (byte) (destinationId & 0xff);
-		optional[2] = (byte) ((destinationId & 0xff00)>>8);
-		optional[3] = (byte) ((destinationId & 0xff0000)>>16);
-		optional[4] = (byte) ((destinationId & 0xff000000)>>32);
-		optional[5] = dBm;
-		optional[6] = securityLevel;*/
 		super();
-		this.packetType=0x01;
+		this.packetType = RADIO;
 		this.data=data;
 		this.optData[0] = subTelNum;
 		this.optData[1] = (byte) (destinationId & 0xff);

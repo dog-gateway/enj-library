@@ -12,6 +12,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoWrBist extends Packet {
 	public CoWrBist() {
 		super();
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x06;
 		this.buildPacket();

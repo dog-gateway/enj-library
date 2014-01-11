@@ -17,6 +17,7 @@ public class CoWrRepeater extends Packet {
 	 */
 	public CoWrRepeater(byte repEnable, byte repLevel) {
 		super();
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x09;
 		this.data[1] = repEnable;
 		this.data[2] = repLevel;

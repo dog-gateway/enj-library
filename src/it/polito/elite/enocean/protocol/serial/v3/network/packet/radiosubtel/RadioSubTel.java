@@ -24,6 +24,7 @@ public class RadioSubTel extends Packet{
 	 */
 	public RadioSubTel(byte data[], byte subTelNum, int destinationId, byte dBm, byte securityLevel, byte timeStamp, byte tickSubTel, byte dBmSubTel, byte statusSubTel){
 		super();
+		this.packetType = RADIO_SUB_TEL;
 		this.optData[0] = subTelNum;
 		this.optData[1] = (byte) (destinationId & 0xff);
 		this.optData[2] = (byte) ((destinationId & 0xff00)>>8);

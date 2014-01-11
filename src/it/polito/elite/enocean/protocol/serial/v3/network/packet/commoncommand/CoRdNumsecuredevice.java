@@ -12,7 +12,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoRdNumsecuredevice extends Packet {
 	public CoRdNumsecuredevice() {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x1D;
 		this.buildPacket();
 	}

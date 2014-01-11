@@ -19,7 +19,7 @@ public class RadioMessage extends Packet{
 	 */
 	public RadioMessage(byte messageRorg, byte mexData[], int destinationId, int sourceId, byte dBm){	
 		super();
-		this.packetType=0x09;
+		this.packetType = RADIO_MESSAGE;
 		this.data[0] = messageRorg;
 		for(int i=0 ; i<mexData.length ; i++)
 		{

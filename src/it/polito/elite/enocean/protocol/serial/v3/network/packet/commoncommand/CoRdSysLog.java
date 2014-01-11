@@ -17,6 +17,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoRdSysLog extends Packet {
 	public CoRdSysLog() {
 		super();
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x04;
 		this.buildPacket();

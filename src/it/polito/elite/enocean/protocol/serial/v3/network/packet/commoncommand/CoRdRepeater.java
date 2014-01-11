@@ -12,7 +12,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoRdRepeater extends Packet {
 	public CoRdRepeater() {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		// Event type
 		this.data[0] = 0x0A;
 		this.buildPacket();

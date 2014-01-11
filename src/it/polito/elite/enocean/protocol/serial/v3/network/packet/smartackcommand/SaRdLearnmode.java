@@ -10,7 +10,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class SaRdLearnmode extends Packet{
 	public SaRdLearnmode(){
 		super();
-		this.packetType = 0x06;
+		this.packetType = SMART_ACK_COMMAND;
 		//Smart ack code
 		this.data[0] = 0x02; 
 		this.buildPacket();

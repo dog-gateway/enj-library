@@ -17,7 +17,7 @@ public class CoWrFilterEnable extends Packet {
 	 */
 	public CoWrFilterEnable(byte filterOnoff, byte filterOperator) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x0E;
 		this.data[1] = filterOnoff;

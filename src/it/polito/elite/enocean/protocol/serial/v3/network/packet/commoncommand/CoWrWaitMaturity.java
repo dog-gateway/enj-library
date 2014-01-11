@@ -14,7 +14,7 @@ public class CoWrWaitMaturity extends Packet {
 	 */
 	public CoWrWaitMaturity(byte waitEndMaturity) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x10;
 		this.data[1] = waitEndMaturity;
 		this.buildPacket();

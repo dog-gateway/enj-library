@@ -11,7 +11,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class SaRdLearnedclients extends Packet{
 	public SaRdLearnedclients(){
 		super();
-		this.packetType = 0x05;
+		this.packetType = SMART_ACK_COMMAND;
 		//Smart ack code
 		this.data[0] = 0x06;
 		this.buildPacket();

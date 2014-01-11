@@ -15,7 +15,7 @@ public class CoWrSubtel extends Packet {
 	 */
 	public CoWrSubtel(byte enable) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x11;
 		this.data[1] = enable;

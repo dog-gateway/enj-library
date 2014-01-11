@@ -16,7 +16,7 @@ public class CoWrFilterDel extends Packet {
 	 */
 	public CoWrFilterDel(byte filterType, int filterValue) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		//Command code
 		this.data[0] = 0x0C;
 		this.data[1] = filterType;

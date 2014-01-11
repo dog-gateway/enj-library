@@ -12,7 +12,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoRdLearnmore extends Packet {
 	public CoRdLearnmore() {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x18;
 		this.buildPacket();

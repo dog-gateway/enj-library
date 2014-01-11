@@ -20,7 +20,7 @@ public class CoWrMode extends Packet {
 	 */
 	public CoWrMode(byte mode) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x1C;
 		this.data[1] = mode;
 		this.buildPacket();

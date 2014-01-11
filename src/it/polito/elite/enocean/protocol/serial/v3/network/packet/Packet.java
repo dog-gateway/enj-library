@@ -1,6 +1,7 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet;
 
 import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 
 /**
  * A class for representing EnOcean Serial Protocol version 3 packets
@@ -13,6 +14,18 @@ import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
 
 public abstract class Packet
 {
+	// --------------- Packet types -----------------
+	
+	public static final int RADIO = 1;
+	public static byte RESPONSE = 2;
+	public static byte RADIO_SUB_TEL = 3;
+	public static byte EVENT = 4;
+	public static byte COMMON_COMMAND = 5;
+	public static byte SMART_ACK_COMMAND = 6;
+	public static byte REMOTE_MAN_COMMAND = 7;
+	public static byte RADIO_MESSAGE = 9;
+	public static byte RADIO_ADVANCED = 10;
+	
 	// serial synchronization byte
 	protected byte syncByte; // Il problema � che byte � signed
 
@@ -36,6 +49,7 @@ public abstract class Packet
 
 	// checksum for DATA and OPTIONAL_DATA
 	protected byte crc8d;
+	
 
 	// --------------- Constructors --------------------
 
@@ -298,16 +312,19 @@ public abstract class Packet
 	// Metodi per discriminare che tipo di pacchetto ho ricevuto
 	public boolean isResponse()
 	{
-		return packetType == 0x02;
+		return packetType == RESPONSE;
 	}
 
 	public boolean isEvent()
 	{
-		return packetType == 0x04;
+		return packetType == EVENT;
 	}
 	
 	public boolean isRadio(){
-		return packetType == 0x01;
+		return packetType == RADIO;
 	}
 
+	public boolean requireResponse(){
+		return this.isEvent()&&( (this.packetType==Event.SA_RECLAIM_NOT_SUCCESFUL) || (this.packetType==Event.SA_CONFIRM_LEARN) || (this.packetType==Event.SA_LEARN_ACK));
+	}
 }

@@ -14,6 +14,7 @@ public class CoRdSecuredevice extends Packet {
  */
 public CoRdSecuredevice(byte index) {
 		super();
+		this.packetType = COMMON_COMMAND;
 		this.packetType = 0x05;
 		this.data[0] = 0x1B;
 		this.data[1] = index;

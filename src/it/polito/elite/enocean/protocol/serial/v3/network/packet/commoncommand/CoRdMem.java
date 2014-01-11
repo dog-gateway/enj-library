@@ -21,7 +21,7 @@ public class CoRdMem extends Packet {
 	 */
 	public CoRdMem(byte memoryType, int memoryAddress, int dataLenght) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		//Command code
 		this.data[0] = 0x13;
 		this.data[1] = memoryType;

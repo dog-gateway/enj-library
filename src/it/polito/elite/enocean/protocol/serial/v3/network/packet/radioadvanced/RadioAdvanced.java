@@ -16,8 +16,8 @@ public class RadioAdvanced extends Packet{
 	 */
 	public RadioAdvanced(byte rawData[], byte subTelNum, byte dBm){
 		super();
-		this.packetType=0x07;
-		this.data=rawData;		
+		this.packetType = RADIO_ADVANCED;
+		this.data=rawData;
 		this.optData[0] = subTelNum;
 		this.optData[1] = dBm;
 		this.buildPacket();

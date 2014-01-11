@@ -23,6 +23,7 @@ public class RemoteManCommand extends Packet{
 	
 	public RemoteManCommand(int functionNumber, int manufacturerId, byte mexData[], int destinationId, int sourceId, byte dBm, byte sendWithDelay){
 		super();
+		this.packetType = REMOTE_MAN_COMMAND;
 		this.data[0] = (byte) (functionNumber & 0xff);
 		this.data[1] = (byte) ((functionNumber & 0xff00)>>8);
 		this.data[2] = (byte) (manufacturerId & 0xff);

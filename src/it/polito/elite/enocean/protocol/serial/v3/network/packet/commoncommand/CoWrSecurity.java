@@ -17,7 +17,7 @@ public class CoWrSecurity extends Packet {
 	 */
 	public CoWrSecurity(byte secLevel, int key, int rollingCode) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x16;
 		this.data[1] = secLevel;

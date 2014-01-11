@@ -19,7 +19,7 @@ public class SaWrLearnconfirm extends Packet{
 	 */
 	public SaWrLearnconfirm (int responseTime, byte confirmCode, byte[] postmaster_candidate_ID, byte sartack_client_ID){
 		super();
-		this.packetType = 0x06;
+		this.packetType = SMART_ACK_COMMAND;
 		//Smart ack code
 		this.data[0] = 0x03; 
 		this.data[1] = (byte) (responseTime & 0xff);

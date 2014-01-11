@@ -17,7 +17,7 @@ public class CoWrFilterAdd extends Packet {
 	 */
 	public CoWrFilterAdd(byte filterType, int filterValue, byte filterKind) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x0B;
 		this.data[1] = filterType;
 		this.data[2] = (byte) (filterValue & 0xff);

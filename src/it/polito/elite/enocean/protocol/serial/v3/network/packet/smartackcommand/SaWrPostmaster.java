@@ -14,7 +14,7 @@ public class SaWrPostmaster extends Packet{
 	 */
 	public SaWrPostmaster(byte mailboxCount){
 		super();
-		this.packetType = 0x06;
+		this.packetType = SMART_ACK_COMMAND;
 		//Smart ack code
 		this.data[0] = 0x08;
 		this.data[1] = mailboxCount;

@@ -14,7 +14,7 @@ public class SaWrReset extends Packet{
 	 */
 	public SaWrReset(int deviceId){
 		super();
-		this.packetType = 0x06;
+		this.packetType = SMART_ACK_COMMAND;
 		//Smart ack code
 		this.data[0] = 0x05;
 		this.data[1] = (byte) (deviceId & 0xff);

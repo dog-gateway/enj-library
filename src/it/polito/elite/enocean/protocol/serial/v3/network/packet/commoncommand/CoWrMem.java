@@ -21,7 +21,7 @@ public class CoWrMem extends Packet {
 	 */
 	public CoWrMem(byte memoryType, int memoryAddress, byte[] memoryData) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		//Command code
 		this.data[0] = 0x12;
 		this.data[1] = memoryType;

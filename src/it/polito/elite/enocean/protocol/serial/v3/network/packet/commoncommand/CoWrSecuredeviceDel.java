@@ -14,7 +14,7 @@ public class CoWrSecuredeviceDel extends Packet {
 	 */
 	public CoWrSecuredeviceDel(int id) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x1A;
 		this.data[1] = (byte) (id & 0xff);
 		this.data[2] = (byte) ((id & 0xff00) >> 8);

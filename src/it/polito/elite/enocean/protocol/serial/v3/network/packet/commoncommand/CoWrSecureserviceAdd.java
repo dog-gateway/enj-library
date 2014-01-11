@@ -20,7 +20,7 @@ public class CoWrSecureserviceAdd extends Packet {
  */
 public CoWrSecureserviceAdd(byte slf, int id, byte[] privateKey, int rollingCode , byte direction) {
 		super();
-		this.packetType = 0x05;
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = 0x19;
 		this.data[1] = slf;
 

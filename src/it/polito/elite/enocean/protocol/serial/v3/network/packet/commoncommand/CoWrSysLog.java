@@ -11,6 +11,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 public class CoWrSysLog extends Packet {
 	public CoWrSysLog() {
 		super();
+		this.packetType = COMMON_COMMAND;
 		// Command code
 		this.data[0] = 0x01;
 		this.buildPacket();

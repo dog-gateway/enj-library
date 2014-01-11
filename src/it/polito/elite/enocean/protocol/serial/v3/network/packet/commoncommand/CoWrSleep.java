@@ -15,6 +15,7 @@ public class CoWrSleep extends Packet {
 	 */
 	public CoWrSleep(int deepSleepPeriod) {
 		super();
+		this.packetType = COMMON_COMMAND;
 		this.data[0] = (byte) (deepSleepPeriod & 0xff); // Command code
 		this.data[1] = (byte) ((deepSleepPeriod & 0xff00) >> 8);
 		this.data[2] = (byte) ((deepSleepPeriod & 0xff0000) >> 16);

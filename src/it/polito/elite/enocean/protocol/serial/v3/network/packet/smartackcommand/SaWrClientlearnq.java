@@ -15,7 +15,7 @@ public class SaWrClientlearnq extends Packet{
 	 */
 	public SaWrClientlearnq(byte MsbManufactorId, byte LsbManufactorId, int EEP){
 		super();
-		this.packetType = 0x06;
+		this.packetType = SMART_ACK_COMMAND;
 		//Smart ack code
 		this.data[0] = 0x04; 
 		this.data[1] = MsbManufactorId;
