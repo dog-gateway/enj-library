@@ -10,7 +10,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
  *
  */
 
-// ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
+// Versione corretta il 14/01
 
 public abstract class Packet
 {
@@ -27,10 +27,10 @@ public abstract class Packet
 	public static byte RADIO_ADVANCED = 10;
 	
 	// serial synchronization byte
-	protected byte syncByte; // Il problema ï¿½ che byte ï¿½ signed
+	protected byte syncByte; // Il problema e che byte e signed
 
 	// number of bytes in the data part of the packet (DATA_LENGHT)
-	protected byte dataLenght[]; // 2 byte
+	protected byte dataLenght[] = new byte[2]; // 2 byte
 
 	// number of bytes of optional data (OPTIONAL_LENGHT)
 	protected byte optLenght;
@@ -42,10 +42,10 @@ public abstract class Packet
 	protected byte crc8h;
 
 	// data payload (DATA)
-	protected byte data[];
+	protected byte data[] = new byte[1]; //ATTENZIONE A QUESTA INIZIALIZZAZIONE!!!!
 
 	// additional data extending the data payload (OPTIONAL_DATA)
-	protected byte[] optData;
+	protected byte[] optData = new byte[0]; //ATTENZIONE HO MESSO 0 PER TESTARE CO_rd_version
 
 	// checksum for DATA and OPTIONAL_DATA
 	protected byte crc8d;
@@ -58,7 +58,7 @@ public abstract class Packet
 	 */
 	public Packet()
 	{
-		// empty
+		this.syncByte = 0x55;
 	}
 
 	/**
@@ -85,8 +85,8 @@ public abstract class Packet
 		this.dataLenght[1] = (byte) ((data.length & 0xff00)>>8); //Parte alta dei due byte
 		this.optLenght = (byte) (optData.length);
 		byte header[] = new byte[4];
-		header[0] = this.dataLenght[0];
-		header[1] = this.dataLenght[1];
+		header[0] = this.dataLenght[1];//ATTENZIONE BIG ENDIAN! devo mandare prima dataLenght[1] poi dataLenght[0]
+		header[1] = this.dataLenght[0];
 		header[2] = this.optLenght;
 		header[3] = this.packetType;
 
@@ -95,7 +95,7 @@ public abstract class Packet
 		for(int i=0 ; i<data.length; i++){
 			vectData[i] = data[i];
 		}
-		// Se non ho dati opzionali non metto pi nulla nel vettore
+		// Se non ho dati opzionali non metto piu nulla nel vettore
 		if(optLenght != 0){
 			for(int i = data.length ; i<optData.length+data.length; i++){
 				vectData[i] = optData[i];
@@ -245,13 +245,14 @@ public abstract class Packet
 	{
 		// 1 syncByte + 2 dataLenght + 1 optLenght + 1 packetType + 1 crcr8h +
 		// 1crc8d + dataLength + optDataLenght
-		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length + this.optData.length;
+		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length + this.optData.length; //Ci va 5 e non 6 come lunghezza iniziale
 
 		byte[] packetAsBytes = new byte[packetLengthInBytes]; 
 		
+		//Header
 		packetAsBytes[0] = this.syncByte;
-		packetAsBytes[1] = this.dataLenght[0];
-		packetAsBytes[1] = this.dataLenght[1];
+		packetAsBytes[1] = this.dataLenght[1]; //Attenzione mando prima la parte alta
+		packetAsBytes[2] = this.dataLenght[0];
 		packetAsBytes[3] = this.optLenght;
 		packetAsBytes[4] = this.packetType;
 		packetAsBytes[5] = this.crc8h;
@@ -266,12 +267,17 @@ public abstract class Packet
 		{
 			packetAsBytes[6 + i] = this.data[i];
 		}
-		for (int i = 0; i < optLenght; i++)
-		{
-			packetAsBytes[6 + dataLenght + i] = this.optData[i];
+		
+		if(optLenght>0){
+			for (int i = 0; i < optLenght; i++)
+			{
+				packetAsBytes[6 + dataLenght + i] = this.optData[i];
+			}	
 		}
-
-		//return the packet as byte array
+		
+		packetAsBytes[6 + dataLenght + optLenght] = this.crc8d;
+		
+		//return the packet as byte array		
 		return packetAsBytes;
 	} 
 

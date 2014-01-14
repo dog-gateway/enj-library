@@ -34,13 +34,13 @@ public class ThreadWrite extends Thread{
 		this.expectedResponse = expectedResponse;
 	}
 
-	// Coda di messaggi ad alta priorità (Risposte da inviare)
+	// Coda di messaggi ad alta priorita (Risposte da inviare)
 	ConcurrentLinkedQueue<Packet> highPriorityTxQueue;
 
-	// Coda di messaggi a bassa priorità
+	// Coda di messaggi a bassa priorita
 	ConcurrentLinkedQueue<ElementQueue> lowPriorityTxQueue;
 
-	// Elemento estratto dalla coda a bassa priotità, contiene pacchetto e un contatore
+	// Elemento estratto dalla coda a bassa priotita, contiene pacchetto e un contatore
 	ElementQueue element;
 
 	// Pacchetto ESP3
@@ -69,9 +69,9 @@ public class ThreadWrite extends Thread{
 		long startTime = 0;
 		
 		while(canRun){
-			// Se la coda ad alta priorità non è vuota, invia prima i dati ad alta priorità
+			// Se la coda ad alta priorita non e vuota, invia prima i dati ad alta priorita
 			if (!highPriorityTxQueue.isEmpty()){
-				// Prelevo il pacchetto dalla coda e lo scrivo sulla seriale
+				// Prelevo il pacchetto dalla coda ad alta priorita e lo scrivo sulla seriale
 				try {
 					out.write(this.highPriorityTxQueue.poll().getBytes());
 				} catch (IOException e) {
@@ -79,27 +79,32 @@ public class ThreadWrite extends Thread{
 					e.printStackTrace();
 				}
 			}
-			//Se la coda ad alta priorità è vuota posso mandare dati a bassa priorità
+			//Se la coda ad alta priorita a vuota posso mandare dati a bassa priorita
 			else{
 				// Se non aspetto risposta
 				if(this.expectedResponse.availablePermits()>0){ // Equivale a risp attesa = FALSE
 
-					//Se il pacchetto è già stato inviato correttamente al primo tentativo posso eliminarlo dalla coda
+					//Se il pacchetto e gia stato inviato correttamente al primo tentativo posso eliminarlo dalla coda
 					if(this.lowPriorityTxQueue.peek().counter<3) this.lowPriorityTxQueue.poll();
 
-					// Se c'è qualcosa nella coda a bassa priorità
+					// Se c'e qualcosa nella coda a bassa priorita
 					if(!this.lowPriorityTxQueue.isEmpty()){
 
 						// Estraggo il pacchetto senza eliminarlo e lo invio
 						try {
-							out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
+							ElementQueue elProva = this.lowPriorityTxQueue.peek();
+							Packet pktProva= elProva.pkt;
+							byte b[] = pktProva.getBytes();
+							int lungB = b.length;
+							//out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
+							out.write(b);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 
 						// Setto risp attesa = true
 						try {
-							this.expectedResponse.acquire();
+							this.expectedResponse.acquire(); //NB quando faccio l'acquire passo da 1 a 0
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -116,13 +121,13 @@ public class ThreadWrite extends Thread{
 				
 				// Se sto ancora attendendo la risposta al comando inviato				
 				else{
-					// Se sono passati più di 500 ms e non ho ricevuto risposta
+					// Se sono passati piu di 500 ms e non ho ricevuto risposta
 					if((System.currentTimeMillis() - startTime)>500){
 						
 					// Se ho esaurito i tentativi di invio segnalo il fallimento della trasmissione
 						if(this.lowPriorityTxQueue.peek().counter==0){
 							this.lowPriorityTxQueue.poll();
-							System.out.print("Trasmissione fallita dopo 3 tentativi");
+							System.out.println("Trasmissione fallita dopo 3 tentativi");
 						}
 						// Altrimenti re invio il pacchetto
 						else{
