@@ -16,8 +16,6 @@ import java.io.OutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
-//Corretto il 14/01
-
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
@@ -55,12 +53,17 @@ public class TestingMainClass {
 			CoRdVersion cmd = new CoRdVersion();
 			lowPriorityTxQueue.add( new ElementQueue(cmd,3) );
 			
-//			(new HighPriorityThread( highPriorityTxQueue, highPriorityRxQueue, expectedResponse)).run();
-			(new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse)).run();
-			SerialListener serialListener = new SerialListener(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
-
-			serialPort.addEventListener(serialListener);
+			//SerialListener serialListener = new SerialListener(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
+			//serialPort.addEventListener(serialListener);
+			
+			serialPort.addEventListener(new SerialListener(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse));
 			serialPort.notifyOnDataAvailable(true);
+			
+//			(new HighPriorityThread( highPriorityTxQueue, highPriorityRxQueue, expectedResponse)).run();
+			
+			
+			(new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse)).run();
+
         }
         catch ( Exception e )
         {

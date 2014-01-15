@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 
 public class ThreadWrite extends Thread{
-	
+
 	/**
 	 * @param highPriorityQueue
 	 * @param lowPriorityQueue
@@ -56,6 +56,7 @@ public class ThreadWrite extends Thread{
 	Semaphore expectedResponse;
 
 	public void run(){
+
 		try {
 			// Ottieni lo stream di dati in uscita
 			out = serialPort.getOutputStream();
@@ -63,11 +64,12 @@ public class ThreadWrite extends Thread{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+
 		// Flag per segnalare continuazione del thread
 		boolean canRun = true;
-		
+
 		long startTime = 0;
-		
+
 		while(canRun){
 			// Se la coda ad alta priorita non e vuota, invia prima i dati ad alta priorita
 			if (!highPriorityTxQueue.isEmpty()){
@@ -79,7 +81,7 @@ public class ThreadWrite extends Thread{
 					e.printStackTrace();
 				}
 			}
-			//Se la coda ad alta priorita a vuota posso mandare dati a bassa priorita
+			//Se la coda ad alta priorita e vuota posso mandare dati a bassa priorita
 			else{
 				// Se non aspetto risposta
 				if(this.expectedResponse.availablePermits()>0){ // Equivale a risp attesa = FALSE
@@ -87,17 +89,13 @@ public class ThreadWrite extends Thread{
 					//Se il pacchetto e gia stato inviato correttamente al primo tentativo posso eliminarlo dalla coda
 					if(this.lowPriorityTxQueue.peek().counter<3) this.lowPriorityTxQueue.poll();
 
-					// Se c'e qualcosa nella coda a bassa priorita
+					// Se c'e qualcosa nella coda a bassa priorite
 					if(!this.lowPriorityTxQueue.isEmpty()){
 
 						// Estraggo il pacchetto senza eliminarlo e lo invio
 						try {
-							ElementQueue elProva = this.lowPriorityTxQueue.peek();
-							Packet pktProva= elProva.pkt;
-							byte b[] = pktProva.getBytes();
-							int lungB = b.length;
-							//out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
-							out.write(b);
+							out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
+							System.out.println("Ho scritto sulla seriale");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -114,47 +112,40 @@ public class ThreadWrite extends Thread{
 
 						//Start timer
 						startTime = System.currentTimeMillis();
-				
+
 					}//Fine if(!this.lowPriorityQueue.isEmpty())
-			
+
 				} // Fine if(this.expectedResponse.availablePermits()>0)
-				
+
 				// Se sto ancora attendendo la risposta al comando inviato				
 				else{
 					// Se sono passati piu di 500 ms e non ho ricevuto risposta
-					if((System.currentTimeMillis() - startTime)>500){
-						
-					// Se ho esaurito i tentativi di invio segnalo il fallimento della trasmissione
-						if(this.lowPriorityTxQueue.peek().counter==0){
+					if((System.currentTimeMillis() - startTime)>1000){ //ATTENZIONE metto 1 sec solo per testare
+
+						// Se ho esaurito i tentativi di invio segnalo il fallimento della trasmissione
+						if(this.lowPriorityTxQueue.peek().counter==0){ //Segnala un java.lang.NullPointerException perch?
 							this.lowPriorityTxQueue.poll();
 							System.out.println("Trasmissione fallita dopo 3 tentativi");
 						}
 						// Altrimenti re invio il pacchetto
 						else{
-						
-						//Invio il pacchetto
-						try {
-							out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
 
-						// Setto risp attesa = true
-						try {
-							this.expectedResponse.acquire();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+							//Invio il pacchetto
+							try {
+								out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
+								System.out.println("Ho scritto nuovamente sulla seriale");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 
-						// Decremento il contatore numero di invii tentati
-						this.lowPriorityTxQueue.peek().counter--;
+							// Decremento il contatore numero di invii tentati
+							this.lowPriorityTxQueue.peek().counter--;
 
-						//Start timer
-						startTime = System.currentTimeMillis();
-						
+							//Start timer
+							startTime = System.currentTimeMillis();
 						}
 					} // Fine if((System.currentTimeMillis() - startTime)>500)
-				
+
 				} // Fine else if(this.expectedResponse.availablePermits()>0)
 
 			}// Fine else if (!highPriorityQueue.isEmpty())
@@ -166,7 +157,7 @@ public class ThreadWrite extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}// Fine while(canRun)
 	}
 }
