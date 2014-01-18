@@ -10,14 +10,14 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
  *
  */
 
-// Versione corretta il 14/01
+// ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
 
 public abstract class Packet
 {
 	// --------------- Packet types -----------------
 	
 	public static final int RADIO = 1;
-	public static byte RESPONSE = 2;
+	public static byte RESPONSE = 0x02;
 	public static byte RADIO_SUB_TEL = 3;
 	public static byte EVENT = 4;
 	public static byte COMMON_COMMAND = 5;

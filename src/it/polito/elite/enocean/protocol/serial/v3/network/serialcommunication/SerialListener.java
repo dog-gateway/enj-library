@@ -40,7 +40,7 @@ public class SerialListener implements SerialPortEventListener{
 	InputStream in;	
 
 	// Buffer di byte per immagazzinare i byte in arrivo dalla seriale
-	byte[] buffer = new byte[100]; //Attenzione ho inizializzato per poter andare avanti nel debug
+	byte[] buffer = new byte[45]; //Attenzione ho inizializzato per poter andare avanti nel debug
 
 	// Coda di messaggi ad alta priorita
 	ConcurrentLinkedQueue<Packet> highPriorityRxQueue;
@@ -121,22 +121,25 @@ public class SerialListener implements SerialPortEventListener{
 			}
 
 			System.out.println("Ho letto i dati");
-			
-			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
-			pkt.parsePacket(this.buffer);
-
+			System.out.println("");
+			System.out.println(new String(buffer,0,buffer.length));
+			System.out.println("");
 			/*
-			 * Per il debug futuro stampo a video cio che ricevo
+			 * Per il debug stampo a video cio che ricevo
 			 */
-			/*for(int i1=0 ; i1<buffer.length ; i1++){
+			for(int i1=0 ; i1<buffer.length ; i1++){
+				System.out.print("byte: "+i1+": ");
 				System.out.println((byte)buffer[i1]); //Sara giusto per stampare un vettore di HEX ?
 			}
-			*/
+			
+			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
+			pkt.parsePacket(this.buffer); // ATTENZIONE parsepacket non funziona perch gli elementi de buffer di dati ricevuti sono scritti in indici sbagliat 
 
 			
 			//Se il pacchetto ricevuto e una risposta
 			if(pkt.isResponse()){
-				
+				System.out.println("Il pacchetto  una risposta");
+
 				// Libero il flag risposta attesa
 				this.expectedResponse.release();
 				

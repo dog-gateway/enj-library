@@ -28,6 +28,7 @@ public class SerialPortFactory {
 		 *
 		 */
 		
+		//System.setProperty("java.library.path", "/usr/lib/jni");
 		System.setProperty("gnu.io.rxtx.SerialPorts", portName); 
 		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 		
@@ -41,7 +42,7 @@ public class SerialPortFactory {
 			if ( commPort instanceof SerialPort )
 			{
 				serialPort = (SerialPort) commPort;
-				//Setto i parametri della UART Baudarate: 57600 bps, 8 bit di dato, 1 bit di STOP, No paritˆ 
+				//Setto i parametri della UART Baudarate: 57600 bps, 8 bit di dato, 1 bit di STOP, No parita 
 				serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 			}
 			else
