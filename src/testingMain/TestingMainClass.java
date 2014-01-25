@@ -24,16 +24,7 @@ public class TestingMainClass {
         {
 			System.out.println("Sono nel main ....");		
 			SerialPort serialPort = (new SerialPortFactory()).getPort("/home/utente/com1", 1000);
-			
-			/*
-			InputStream in = serialPort.getInputStream();
-			OutputStream out = serialPort.getOutputStream();
-
-			(new Thread(new SerialReader(in))).start();        
-			(new Thread(new SerialWriter(out))).start();
-			*/
-			
-			
+					
 			//Code ad alta priorita
 			ConcurrentLinkedQueue<Packet> highPriorityTxQueue = new ConcurrentLinkedQueue<Packet>();
 			ConcurrentLinkedQueue<Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<Packet>();

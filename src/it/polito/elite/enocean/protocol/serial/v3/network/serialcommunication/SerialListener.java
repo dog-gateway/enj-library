@@ -7,6 +7,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -40,7 +41,8 @@ public class SerialListener implements SerialPortEventListener{
 	InputStream in;	
 
 	// Buffer di byte per immagazzinare i byte in arrivo dalla seriale
-	byte[] buffer = new byte[45]; //Attenzione ho inizializzato per poter andare avanti nel debug
+	byte[] buffer1 = new byte[45]; //Attenzione ho inizializzato per poter andare avanti nel debug
+	ArrayList<Byte> buffer = new ArrayList<Byte>(6);
 
 	// Coda di messaggi ad alta priorita
 	ConcurrentLinkedQueue<Packet> highPriorityRxQueue;
@@ -51,90 +53,50 @@ public class SerialListener implements SerialPortEventListener{
 	// Flag per risposta attesa
 	Semaphore expectedResponse;
 
-	/*
-	 * 
-	 * Va fatta dalla classe che inizializza la porta che quindi richiama il listener seriale:
-	 * 
-	 * Registra come ascoltatore un oggetto di tipo SerialPortEventListener, in questo caso questa classe
-	 * serialPort.addEventListener(this);
-	 * 
-	 * Notifica la presenza di dati in ingresso all'oggetto di tipo SerialPortEventListener inpostato con addEventListener
-	 * serialPort.notifyOnDataAvailable(true);
-	 * 
-	 */
-
 	public void serialEvent(SerialPortEvent event) {
-		
 		try {
 			in = serialPort.getInputStream();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		System.out.println("Sono in SerialListener");
-		
+
 		// Se il tipo di evento e: dati disponibili sulla seriale
 		if(event.getEventType()==SerialPortEvent.DATA_AVAILABLE){
 
 			// Flag di stato per segnalre fine della lettura dalla seriale
-			//int readstatus = 0;
-			//int i = 0;
-
-			
-			try {
-				in.read(this.buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			int readedIntValue = 0;
+			int i=0;
 			//Finche ho qualocosa leggo
-			//while( readstatus > -1){
-				//Faccio partire il cronometro per i 100 ms
-				//long startTime = System.currentTimeMillis();
-				//try {
-					//Leggo solo un byte per poter controllare che tra un byte e l'altro non passino piu di 100 ms, restituisce -1 se non c'e piu nulla da leggere
-					//readstatus = in.read(this.buffer, i, 1);
-				//} catch (IOException e) {
-					//e.printStackTrace();
-				//}
-				/*
+			while( readedIntValue > -1){
 				try {
-					readstatus = in.read(this.buffer);
+					// Leggo dall'input stream
+					readedIntValue = in.read();
+
+					// Converto i dati interi in Byte
+					byte readedByteValue = (byte) (readedIntValue & 0xff);
+
+					// Aggiungo all'arraylist
+					this.buffer.add(Byte.valueOf(readedByteValue));
+					
+					// Stampa il valore letto in esadecimale
+					System.out.println("" + String.format("%x", buffer.get(i).byteValue()));
+					i++;
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				*/
-				//Tempo trascorso per l'operazione di lettura
-				//long opTime = System.currentTimeMillis() - startTime;
-				//i++;
+			}
 
-				//Se il tempo per la lettura e maggiore al timeout di 100 ms
-				/*if(opTime > 100) {
-					// Setto readstatus per uscire dal while
-					readstatus = -1; //Bisognera gestire le eccezioni con il throw
-
-					System.out.println("Attenzione superati i 100 ms di timeout tra due dati ricevuti sulla seriale"); //Per ora mando solo un messaggio a video ma bisognera agire di conseguenza 
-				}*/
+			for(int i1=0 ; i1<this.buffer.size() ; i1++){
+				this.buffer1[i1] = this.buffer.remove(i1).byteValue();
 			}
 
 			System.out.println("Ho letto i dati");
-			System.out.println("");
-			System.out.println(new String(buffer,0,buffer.length));
-			System.out.println("");
-			/*
-			 * Per il debug stampo a video cio che ricevo
-			 */
-			for(int i1=0 ; i1<buffer.length ; i1++){
-				System.out.print("byte: "+i1+": ");
-				System.out.println((byte)buffer[i1]); //Sara giusto per stampare un vettore di HEX ?
-			}
-			
-			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
-			pkt.parsePacket(this.buffer); // ATTENZIONE parsepacket non funziona perch gli elementi de buffer di dati ricevuti sono scritti in indici sbagliat 
 
+			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
+			pkt.parsePacket(this.buffer1);
 			
 			//Se il pacchetto ricevuto e una risposta
 			if(pkt.isResponse()){
@@ -142,7 +104,7 @@ public class SerialListener implements SerialPortEventListener{
 
 				// Libero il flag risposta attesa
 				this.expectedResponse.release();
-				
+
 				//Aggiungo il paccketto alla coda dati a bassa prioritˆ
 				this.lowPriorityRxQueue.add(new ElementQueue(pkt, 3));
 			}
@@ -156,5 +118,5 @@ public class SerialListener implements SerialPortEventListener{
 				}
 			} // Fine isResponse
 		}
-	//}
+	}
 }
