@@ -35,7 +35,7 @@ public class SerialListener implements SerialPortEventListener{
 	SerialPort serialPort;
 
 	// Pacchetto ricevuto
-	Packet pkt;
+	Packet pkt = new Packet();
 
 	// flusso di dati in ingresso alla porta seriale
 	InputStream in;	
@@ -61,43 +61,46 @@ public class SerialListener implements SerialPortEventListener{
 			e1.printStackTrace();
 		}
 
-		System.out.println("Sono in SerialListener");
-
 		// Se il tipo di evento e: dati disponibili sulla seriale
 		if(event.getEventType()==SerialPortEvent.DATA_AVAILABLE){
 
 			// Flag di stato per segnalre fine della lettura dalla seriale
 			int readedIntValue = 0;
-			int i=0;
+			//int i=0;
 			//Finche ho qualocosa leggo
-			while( readedIntValue > -1){
-				try {
-					// Leggo dall'input stream
+			try {
+				while( (in.available())>0 ){
+					// Leggo i dati dall'inputstream della seriale
 					readedIntValue = in.read();
-
+					
 					// Converto i dati interi in Byte
 					byte readedByteValue = (byte) (readedIntValue & 0xff);
 
 					// Aggiungo all'arraylist
 					this.buffer.add(Byte.valueOf(readedByteValue));
-					
-					// Stampa il valore letto in esadecimale
-					System.out.println("" + String.format("%x", buffer.get(i).byteValue()));
-					i++;
-				} catch (IOException e) {
-					e.printStackTrace();
+
+					// Stampa il valore letto in esadecimale NB solo per debug a video poi si pu˜ togliere
+					//System.out.println("" + String.format("%x", buffer.get(i).byteValue()));
+					//i++;
 				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			// Libero il semaforo risposta attesa (lo setto nuovamente = 1)
+			//this.expectedResponse.release();
 
 			for(int i1=0 ; i1<this.buffer.size() ; i1++){
-				this.buffer1[i1] = this.buffer.remove(i1).byteValue();
+				this.buffer1[i1] = this.buffer.get(i1).byteValue();
 			}
-
+			this.buffer.removeAll(buffer);
+			
 			System.out.println("Ho letto i dati");
 
 			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
-			pkt.parsePacket(this.buffer1);
 			
+			pkt.parsePacket(this.buffer1);
+
 			//Se il pacchetto ricevuto e una risposta
 			if(pkt.isResponse()){
 				System.out.println("Il pacchetto  una risposta");

@@ -12,8 +12,15 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 
 // ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
 
-public abstract class Packet
+public class Packet
 {
+	/*
+	 * Attenzione ho tolto la classe Abstract la uso come una normale, perchè cosi posso impacchettare come generico Packet e
+	 * successivamente discriminarne il tipo
+	 * 
+	 */
+	
+	
 	// --------------- Packet types -----------------
 	
 	public static byte RADIO = 1;
@@ -42,10 +49,10 @@ public abstract class Packet
 	protected byte crc8h;
 
 	// data payload (DATA)
-	protected byte data[] = new byte[1]; //ATTENZIONE A QUESTA INIZIALIZZAZIONE!!!!
+	protected byte[] data;
 
 	// additional data extending the data payload (OPTIONAL_DATA)
-	protected byte[] optData = new byte[0]; //ATTENZIONE HO MESSO 0 PER TESTARE CO_rd_version
+	protected byte[] optData;
 
 	// checksum for DATA and OPTIONAL_DATA
 	protected byte crc8d;
@@ -297,16 +304,22 @@ public abstract class Packet
 		this.crc8h = buffer[5];
 
 		//byte array to unsigned int conversion
-		int dataLenght = ((this.dataLenght[1] << 8) & 0xff00) + ((this.dataLenght[0]) & 0xff);
+		int dataLenght = ((this.dataLenght[0] << 8) & 0xff00) + ((this.dataLenght[1]) & 0xff);
 
 		//byte to unsigned int conversion
 		int optLenght = this.optLenght & 0xFF;
-
+		
+		// Inizializzo il vettore dei dati opzionali alla lunghezza effettiva
+		this.data = new byte[dataLenght];
 
 		for (int i = 0; i < dataLenght; i++)
 		{
 			this.data[i] = buffer[6 + i];
 		}
+		
+		// Inizializzo il vettore data alla lunghezza effettiva
+		this.optData = new byte[optLenght];
+		
 		for (int i = 0; i < optLenght; i++)
 		{
 			this.optData[i] = buffer[6 + dataLenght + i];

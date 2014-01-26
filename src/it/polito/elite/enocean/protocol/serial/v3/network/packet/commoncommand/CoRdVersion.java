@@ -13,6 +13,8 @@ public class CoRdVersion extends Packet {
 		super();
 		this.packetType = COMMON_COMMAND;
 		// Command code
+		this.data = new byte[1];
+		this.optData = new byte[0];
 		this.data[0] = 0x03;
 		this.buildPacket();
 	}

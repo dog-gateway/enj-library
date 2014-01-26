@@ -87,25 +87,28 @@ public class ThreadWrite extends Thread{
 				if(this.expectedResponse.availablePermits()>0){ // Equivale a risp attesa = FALSE
 
 					//Se il pacchetto e gia stato inviato correttamente al primo tentativo posso eliminarlo dalla coda
-					if(this.lowPriorityTxQueue.peek().counter<3) this.lowPriorityTxQueue.poll();
-
+					if((!this.lowPriorityTxQueue.isEmpty())&&(this.lowPriorityTxQueue.peek().counter<3)) this.lowPriorityTxQueue.poll(); // NB ho messo la verifica per verificare che il 
+					
 					// Se c'e qualcosa nella coda a bassa priorite
 					if(!this.lowPriorityTxQueue.isEmpty()){
 
+						
 						// Estraggo il pacchetto senza eliminarlo e lo invio
 						try {
+							// Setto risp attesa = true
+							this.expectedResponse.acquire(); //NB quando faccio l'acquire passo da 1 a 0
+							//Scrivo sulla seriale
 							out.write(this.lowPriorityTxQueue.peek().pkt.getBytes());
 							System.out.println("Ho scritto sulla seriale");
 						} catch (IOException e) {
 							e.printStackTrace();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 
 						// Setto risp attesa = true
-						try {
-							this.expectedResponse.acquire(); //NB quando faccio l'acquire passo da 1 a 0
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+
 
 						// Decremento il contatore numero di invii tentati
 						this.lowPriorityTxQueue.peek().counter--;

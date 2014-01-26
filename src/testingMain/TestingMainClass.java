@@ -22,8 +22,8 @@ public class TestingMainClass {
 	public static void main(String[] args) {
 		try
         {
-			System.out.println("Sono nel main ....");		
-			SerialPort serialPort = (new SerialPortFactory()).getPort("/home/utente/com1", 1000);
+			System.out.println("Sono nel main prova modifiche....");		
+			SerialPort serialPort = (new SerialPortFactory()).getPort("/dev/ttyAMA0", 1000);
 					
 			//Code ad alta priorita
 			ConcurrentLinkedQueue<Packet> highPriorityTxQueue = new ConcurrentLinkedQueue<Packet>();
@@ -36,7 +36,7 @@ public class TestingMainClass {
 			//Invio il comando CO_RD_VERSION
 			Semaphore expectedResponse = new Semaphore(1);
 			CoRdVersion cmd = new CoRdVersion();
-			lowPriorityTxQueue.add( new ElementQueue(cmd,3) );
+			lowPriorityTxQueue.add( new ElementQueue(cmd,3));
 			
 			//SerialListener serialListener = new SerialListener(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
 			//serialPort.addEventListener(serialListener);
