@@ -19,10 +19,10 @@ public class Packet
 	 * successivamente discriminarne il tipo
 	 * 
 	 */
-	
-	
+
+
 	// --------------- Packet types -----------------
-	
+
 	public static byte RADIO = 1;
 	public static byte RESPONSE = 2;
 	public static byte RADIO_SUB_TEL = 3;
@@ -32,7 +32,7 @@ public class Packet
 	public static byte REMOTE_MAN_COMMAND = 7;
 	public static byte RADIO_MESSAGE = 9;
 	public static byte RADIO_ADVANCED = 10;
-	
+
 	// serial synchronization byte
 	protected byte syncByte; // Il problema e che byte e signed
 
@@ -56,7 +56,7 @@ public class Packet
 
 	// checksum for DATA and OPTIONAL_DATA
 	protected byte crc8d;
-	
+
 
 	// --------------- Constructors --------------------
 
@@ -255,7 +255,7 @@ public class Packet
 		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length + this.optData.length; //Ci va 5 e non 6 come lunghezza iniziale
 
 		byte[] packetAsBytes = new byte[packetLengthInBytes]; 
-		
+
 		//Header
 		packetAsBytes[0] = this.syncByte;
 		packetAsBytes[1] = this.dataLenght[1]; //Attenzione mando prima la parte alta
@@ -274,23 +274,32 @@ public class Packet
 		{
 			packetAsBytes[6 + i] = this.data[i];
 		}
-		
+
 		if(optLenght>0){
 			for (int i = 0; i < optLenght; i++)
 			{
 				packetAsBytes[6 + dataLenght + i] = this.optData[i];
 			}	
 		}
-		
+
 		packetAsBytes[6 + dataLenght + optLenght] = this.crc8d;
-		
+
 		//return the packet as byte array		
 		return packetAsBytes;
 	} 
 
-	/*
-	 * ------------- Metodi di GET ---------------------------------
-	 */
+
+	public byte[] getDataPayload(){
+		byte[] dataPayload = new byte[this.data.length + this.optData.length];
+		dataPayload = data;
+		if(optData.length>0){
+			for(int i = 0 ; i < optData.length ; i++){
+				dataPayload[i + data.length] = optData[i]; 
+			}
+		}
+		return dataPayload;
+	}
+
 
 	public void parsePacket(byte[] buffer)
 	{ 
@@ -308,7 +317,7 @@ public class Packet
 
 		//byte to unsigned int conversion
 		int optLenght = this.optLenght & 0xFF;
-		
+
 		// Inizializzo il vettore dei dati opzionali alla lunghezza effettiva
 		this.data = new byte[dataLenght];
 
@@ -316,10 +325,10 @@ public class Packet
 		{
 			this.data[i] = buffer[6 + i];
 		}
-		
+
 		// Inizializzo il vettore data alla lunghezza effettiva
 		this.optData = new byte[optLenght];
-		
+
 		for (int i = 0; i < optLenght; i++)
 		{
 			this.optData[i] = buffer[6 + dataLenght + i];
@@ -338,7 +347,7 @@ public class Packet
 	{
 		return packetType == EVENT;
 	}
-	
+
 	public boolean isRadio(){
 		return packetType == RADIO;
 	}

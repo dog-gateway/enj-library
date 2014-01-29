@@ -27,7 +27,9 @@ public class Radio extends Packet{
 	public Radio(byte data[], byte subTelNum, int destinationId , byte dBm, byte securityLevel){
 		super();
 		this.packetType = RADIO;
+		this.data = new byte[data.length];
 		this.data=data;
+		this.optData = new byte[7];
 		this.optData[0] = subTelNum;
 		this.optData[1] = (byte) (destinationId & 0xff);
 		this.optData[2] = (byte) ((destinationId & 0xff00)>>8);

@@ -3,10 +3,12 @@
  */
 package testingMain;
 
+import it.polito.elite.enocean.protocol.serial.v3.network.enj.D201;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoRdVersion;
 import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.*;
 import gnu.io.SerialPort;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -48,7 +50,7 @@ public class TestingMainClass {
 			
 			
 			(new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse)).run();
-
+			
         }
         catch ( Exception e )
         {
