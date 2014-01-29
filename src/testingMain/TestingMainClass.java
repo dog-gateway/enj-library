@@ -3,7 +3,6 @@
  */
 package testingMain;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.enj.D201;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoRdVersion;
 import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.*;
