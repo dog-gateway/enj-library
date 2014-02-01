@@ -1,4 +1,4 @@
-package it.polito.elite.enocean.protocol.serial.v3.network.enj;
+package it.polito.elite.enocean.enj.EEP2_5.primitives;
 
 public class EnoceanEquipmentProfile {
 	/**

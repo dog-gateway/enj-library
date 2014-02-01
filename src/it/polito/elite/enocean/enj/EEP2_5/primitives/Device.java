@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polito.elite.enocean.protocol.serial.v3.network.enj;
+package it.polito.elite.enocean.enj.EEP2_5.primitives;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>

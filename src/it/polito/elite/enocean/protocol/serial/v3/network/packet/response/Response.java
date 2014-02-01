@@ -19,6 +19,11 @@ public class Response extends Packet{
 
 	//---------------- Response type -----------------
 		
+	public Response() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public static final byte RET_OK = 0;
 	public static byte RET_ERROR = 1;
 	public static byte RET_NOT_SUPPORTED = 2;

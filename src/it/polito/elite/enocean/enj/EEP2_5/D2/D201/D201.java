@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polito.elite.enocean.protocol.serial.v3.network.enj;
+package it.polito.elite.enocean.enj.EEP2_5.D2.D201;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -19,8 +19,11 @@ public class D201 {
 	//-------------------------------------------------
 	
 	byte[] dataByte;
-	public void actuatorSetOutput(byte dimValue, byte ioChannel, byte outputValue){
+	
+	// Metodo per il CMD 1: Actuator Set Output
+	public void actuatorSetOutput(byte dimValue, byte ioChannel, byte outputValue){ // Visto che outputValue è una percentuale da 0 a 100 la metto in int? 
 		dataByte = new byte[3];
+		
 		// CMD code, the first 4 bit are unused
 		dataByte[0] = 0x01;
 		// Dim value: bit 7 to 5  - IO channel: bit 4 to 0
@@ -31,6 +34,7 @@ public class D201 {
 		/*
 		 * Stampo a video solo per verificare la correttezza dei dati in fase di debug
 		 */
+		
 		System.out.println(dataByte[0]); //Stampare in hex
 		System.out.println("DB_2 " + String.format("%x", dataByte[0]));
 		System.out.println("DB_2 " + String.format("%x", dataByte[1]));
