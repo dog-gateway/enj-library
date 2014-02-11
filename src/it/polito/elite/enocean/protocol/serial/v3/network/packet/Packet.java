@@ -104,8 +104,8 @@ public class Packet
 		}
 		// Se non ho dati opzionali non metto piu nulla nel vettore
 		if(optLenght != 0){
-			for(int i = data.length ; i<optData.length+data.length; i++){
-				vectData[i] = optData[i];
+			for(int i = 0 ; i<optData.length; i++){
+				vectData[i+data.length] = optData[i];
 			}
 		}
 		this.crc8d = Crc8.calc(vectData);
@@ -248,7 +248,7 @@ public class Packet
 		this.crc8d = crc8d;
 	}
 
-	public byte[] getBytes()
+	public byte[] getPacketAsBytes()
 	{
 		// 1 syncByte + 2 dataLenght + 1 optLenght + 1 packetType + 1 crcr8h +
 		// 1crc8d + dataLength + optDataLenght

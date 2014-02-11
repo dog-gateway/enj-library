@@ -41,7 +41,7 @@ public class SerialListener implements SerialPortEventListener{
 	InputStream in;	
 
 	// Buffer di byte per immagazzinare i byte in arrivo dalla seriale
-	byte[] buffer1 = new byte[45]; //Attenzione ho inizializzato per poter andare avanti nel debug
+	byte[] receivedBytes; //Attenzione ho inizializzato per poter andare avanti nel debug
 	ArrayList<Byte> buffer = new ArrayList<Byte>(6);
 
 	// Coda di messaggi ad alta priorita
@@ -66,7 +66,7 @@ public class SerialListener implements SerialPortEventListener{
 
 			// Flag di stato per segnalre fine della lettura dalla seriale
 			int readedIntValue = 0;
-			//int i=0;
+			int i=0;
 			//Finche ho qualocosa leggo
 			try {
 				while( (in.available())>0 ){
@@ -80,8 +80,8 @@ public class SerialListener implements SerialPortEventListener{
 					this.buffer.add(Byte.valueOf(readedByteValue));
 
 					// Stampa il valore letto in esadecimale NB solo per debug a video poi si pu˜ togliere
-					//System.out.println("" + String.format("%x", buffer.get(i).byteValue()));
-					//i++;
+					System.out.println("" + String.format("%x", buffer.get(i).byteValue()));
+					i++;
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -90,8 +90,11 @@ public class SerialListener implements SerialPortEventListener{
 			// Libero il semaforo risposta attesa (lo setto nuovamente = 1)
 			//this.expectedResponse.release();
 
+			receivedBytes = new byte[this.buffer.size()];
+			
 			for(int i1=0 ; i1<this.buffer.size() ; i1++){
-				this.buffer1[i1] = this.buffer.get(i1).byteValue();
+				this.receivedBytes[i1] = this.buffer.get(i1).byteValue();
+				
 			}
 			this.buffer.removeAll(buffer);
 			
@@ -99,7 +102,7 @@ public class SerialListener implements SerialPortEventListener{
 
 			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
 			
-			pkt.parsePacket(this.buffer1);
+			pkt.parsePacket(this.receivedBytes);
 
 			//Se il pacchetto ricevuto e una risposta
 			if(pkt.isResponse()){

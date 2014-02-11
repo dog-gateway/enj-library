@@ -1,6 +1,13 @@
 package it.polito.elite.enocean.enj.EEP2_5.primitives;
 
-public class EnoceanEquipmentProfile {
+import java.io.Serializable;
+
+public class EnoceanEquipmentProfile implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * 

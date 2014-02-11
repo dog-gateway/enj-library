@@ -1,6 +1,13 @@
 package it.polito.elite.enocean.enj.EEP2_5.primitives;
 
-public class Rorg {
+import java.io.Serializable;
+
+public class Rorg implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param rorgValue
