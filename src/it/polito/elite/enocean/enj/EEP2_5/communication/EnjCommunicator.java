@@ -15,7 +15,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnecti
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoWrLearnmore;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.response.Response;
+import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ElementQueue;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -26,25 +26,28 @@ public class EnjCommunicator{
 	/**
 	 * 
 	 */
-	public EnjCommunicator(EnjConnection connection){
+	public EnjCommunicator(EnjConnection connection, ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue){
 		super();
 		this.connection = connection;
+		this.lowPriorityRxQueue = lowPriorityRxQueue;
 	}
 
 	EnjConnection connection;
-	
+
 	Device device;
-		
+
 	EnoceanEquipmentProfile eep;
 
 	Rorg rorg;
 
 	Packet pkt;
 	
+	ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue = new ConcurrentLinkedQueue<ElementQueue>();
+
 	// Coda per accumulare i pacchetti in ricezione e visualizzarli in fase di debug
 	ConcurrentLinkedQueue<Packet> codaRicevuti = new ConcurrentLinkedQueue<Packet>();
 	// Fine coda
-	
+
 
 	// Teach field-------------------------------------------
 	public static byte TEACHIN_REQUEST =(byte) 0x00;
@@ -58,16 +61,16 @@ public class EnjCommunicator{
 		//Response response;
 
 		// Inizializzo il listener per i dati in ricezione dal livello piu basso
-		PacketReceiverListener incomingDataListener = new PacketReceiverListener(this.connection); // Forse bisogna togliere pkt 
-		
-				
+		PacketReceiverListener incomingDataListener = new PacketReceiverListener(this.connection);
+
+
 		//PacketEventSender dataSender = new PacketEventSender();
-		
+
 		PacketEventSender dataSender = this.connection.packetSender;
-		
+
 		dataSender.addEventListener(incomingDataListener);
 		// Fine inizializzazione listener
-		
+
 		byte[]	payload = new byte[7];
 		byte[] address = new byte[4];
 		byte[] manId = new byte [2];		
@@ -78,57 +81,71 @@ public class EnjCommunicator{
 		//System.out.println("Ho inviato sulla seriale CO_WR_LEARNMODE");
 		// Fine invio comando
 		
-
-		pkt = incomingDataListener.getPacket();
-		this.codaRicevuti.add(pkt);
 		
-		Packet response = new Response();
-		
-		// Faccio il cast del generico pacchetto a risposta
-		if (pkt.isResponse()){ 
-			response = pkt;
-		}
 
-		if(response.getData()[0]=='0'){
-
-			switch (pkt.getData()[0]){
-			//case (byte)(Rorg.UTE): this.teachUte(payload,address,manId);
-			case (byte) 0xD4 : this.teachUte(payload, address, manId);
-			break;
+		boolean flag=true;
+		while( flag == true){
+			//System.out.println("");
+			//System.out.print("Pacchetto: ");
+			//pkt = incomingDataListener.getPacket();
+			
+			//pkt= connection.receive();
+			//this.codaRicevuti.add(pkt);
+			//for(int i=0 ; i<pkt.getPacketAsBytes().length ; i++){
+				//System.out.print("" + String.format("%x", pkt.getPacketAsBytes()[i]));
+			//}
+			
+			pkt=this.lowPriorityRxQueue.poll().getPkt();
+					
+			if(pkt.getData()[0]==(byte)0xD4){ 
+				flag=false;
 			}
 
+
+			/* 
+			 * Attendo finch non  un UTE TEACH IN, scarto tutto il resto
+			 */
+		}	
+		//this.codaRicevuti.add(pkt);
+
+
+		switch (pkt.getData()[0]){
+		//case (byte)(Rorg.UTE): this.teachUte(payload,address,manId);
+		case (byte) 0xD4 : this.teachUte(payload, address, manId);
+		break;
 		}
-		else{ //Da vedere 
-		}
+
 
 		return device;
 	}
 
-	
+
 	public void sendCommand(){
 		D20108 plug = new D20108();
 		byte[] address = device.getAddress();
-//									  byte data[], byte subTelNum, int destinationId , byte dBm, byte securityLevel
+		//									  byte data[], byte subTelNum, int destinationId , byte dBm, byte securityLevel
 		Radio radioToSend = new Radio(plug.actuatorSetOutput(D20108.ON), (byte)0x03, address, (byte)0x00, (byte)0x00);
+
+		// 				 public Radio(byte data[], byte subTelNum, byte[] destinationId , byte dBm, byte securityLevel)
 		
 		this.connection.send(radioToSend);
 	}
-		
+
 	/**
 	 * @return
 	 */
-	private Device teachUte(byte[] payload, byte[] address, byte[] manId){
+	private void teachUte(byte[] payload, byte[] address, byte[] manId){
 
-		pkt = this.connection.receive();
+		//pkt = this.connection.receive();
 
 		// Salvo i 7 byte UTE payload
-		payload[0] = pkt.getData()[1];
-		payload[1] = pkt.getData()[2];
-		payload[2] = pkt.getData()[3];
+		payload[6] = pkt.getData()[1];
+		payload[5] = pkt.getData()[2];
+		payload[4] = pkt.getData()[3];
 		payload[3] = pkt.getData()[4];
-		payload[4] = pkt.getData()[5];
-		payload[5] = pkt.getData()[6];
-		payload[6] = pkt.getData()[7];
+		payload[2] = pkt.getData()[5];
+		payload[1] = pkt.getData()[6];
+		payload[0] = pkt.getData()[7];
 
 		// Attenzione controllare molto bene l'ordine dei byte
 		address[3] = pkt.getData()[8];
@@ -146,7 +163,8 @@ public class EnjCommunicator{
 		this.eep = new EnoceanEquipmentProfile(new Rorg(payload[0]), payload[1], payload[2]);
 
 		// Se il bit 4 e 5 di DB_6 sono 00 una teach-in query 
-		if( (payload[6] & (0x30)) == TEACHIN_REQUEST){ // Faccio and con una maschiera 00110000 per vedere solo i bit 4 e 5
+		if(	((payload[6] & (0x30)) == (byte)0x00) || ((payload[6] & (0x30)) == (byte)0x20) ){ // Faccio and con una maschiera 00110000 per vedere solo i bit 4 e 5
+			// Aggiungo il device
 			device = new Device(eep, address, manId);
 		}
 		else{
@@ -159,22 +177,47 @@ public class EnjCommunicator{
 
 		// Se il bit 6 del byte 6 = 0 allora il messaggio richede una risposta
 		if( (payload[6] & (0x40)) == 0x00){
-			byte[] payloadResp = new byte[7];
+			byte[] payloadResp = new byte[13];
 
 			/*
-			 * Come la teach in query, ma se sono master che mando??
+			 * TEACH IN QUERY
 			 */
-			 payloadResp[0] = 0;
-			 payloadResp[1] = 0;
-			 payloadResp[2] = 0;
-			 payloadResp[3] = 0;
-			 payloadResp[4] = 0;
-			 payloadResp[5] = 0; 
-			 
+			
+			//RORG UTE
+			payloadResp[0] = (byte)0xD4;
+			
+			// Ho invertito perch in fase di invio devo mandare prima DB6 etc
+			payloadResp[1] = (byte)0x91;
+			payloadResp[2] = payload[5];
+			payloadResp[3] = payload[4];
+			payloadResp[4] = payload[3];
+			payloadResp[5] = payload[2];
+			payloadResp[6] = payload[1];
+			payloadResp[7] = payload[0];
+			
+			//ADDRESS
+			payloadResp[8] = (byte)0x00;
+			payloadResp[9] = (byte)0xFF;
+			payloadResp[10] = (byte)0xFF;
+			payloadResp[11] = (byte)0xFF;
+			
+			//STATUS
+			payloadResp[12] = (byte)0x00;
+
+			byte[] opt = new byte[7];
+			opt[0] = (byte)0x03;
+			opt[1] = (byte)0x00;
+			opt[2] = (byte)0x81;
+			opt[3] = (byte)0x2A;
+			opt[4] = (byte)0x90;
+			opt[5] = (byte)0xFF;
+			opt[6] = (byte)0x00;
+			
+			
 			/* 
 			 * Creare funzione: eepIsPresent() che dica se il profilo del dispositivo  presente
 			 */
-
+/*
 			//In questa fase do per scontato che il profilo sia presente
 			if((payload[6]&(byte)0xF0) == 0x00){
 				// Unidirezionale
@@ -184,12 +227,11 @@ public class EnjCommunicator{
 				// Bidirezionale
 				payloadResp[6] = (byte)0x91; // 10010001
 			}	
+*/
 
-			//Metto la risposta in
-			this.connection.send(new Packet(Packet.RADIO, payloadResp, null));
+			//Mando la risposta us ESP3
+			this.connection.send(new Packet(Packet.RADIO, payloadResp, opt)); //Attenzione bisogna mandarli invertiti
 		}
-
-		return device;	
 	}
 
 }

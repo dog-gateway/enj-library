@@ -34,15 +34,14 @@ public class SerialListener implements SerialPortEventListener{
 	// Porta seriale
 	SerialPort serialPort;
 
-	// Pacchetto ricevuto
-	Packet pkt = new Packet();
+	
 
 	// flusso di dati in ingresso alla porta seriale
 	InputStream in;	
 
 	// Buffer di byte per immagazzinare i byte in arrivo dalla seriale
 	byte[] receivedBytes; //Attenzione ho inizializzato per poter andare avanti nel debug
-	ArrayList<Byte> buffer = new ArrayList<Byte>(6);
+	ArrayList<Byte> buffer = new ArrayList<Byte>();
 
 	// Coda di messaggi ad alta priorita
 	ConcurrentLinkedQueue<Packet> highPriorityRxQueue;
@@ -66,63 +65,88 @@ public class SerialListener implements SerialPortEventListener{
 
 			// Flag di stato per segnalre fine della lettura dalla seriale
 			int readedIntValue = 0;
-			int i=0;
+			//int i=0;
+
+			// Pacchetto ricevuto
+			Packet pkt = new Packet();
+			
+			// Inizializzo per sicurezza: svuoto il buffer
+			if(buffer.size()>0){
+				buffer.clear();
+			}
+			System.out.println("");
 			//Finche ho qualocosa leggo
 			try {
 				while( (in.available())>0 ){
 					// Leggo i dati dall'inputstream della seriale
 					readedIntValue = in.read();
-					
+
 					// Converto i dati interi in Byte
 					byte readedByteValue = (byte) (readedIntValue & 0xff);
 
-					// Aggiungo all'arraylist
-					this.buffer.add(Byte.valueOf(readedByteValue));
+					if (readedByteValue==0x55){
 
-					// Stampa il valore letto in esadecimale NB solo per debug a video poi si pu˜ togliere
-					System.out.println("" + String.format("%x", buffer.get(i).byteValue()));
-					i++;
-				}
+						while(buffer.size()!=0){
+							receivedBytes = new byte[this.buffer.size()];
+							// Riempio il buffer dei byte arrivati
+							for(int i1=0 ; i1<this.buffer.size() ; i1++){
+								this.receivedBytes[i1] = this.buffer.get(i1).byteValue();
+							}
+							// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
+							pkt.parsePacket(this.receivedBytes); // Secondo me il packet va creato ogni volta
+							putInQueue(pkt);
+							buffer.clear();
+						}// Fine while(buffer.size()!=0)
+						
+						System.out.println("" + String.format("%x", readedByteValue));
+
+						// Aggiungo all'arraylist
+						this.buffer.add(Byte.valueOf(readedByteValue));
+
+					}
+					else{
+						// Aggiungo all'arraylist
+						System.out.println("" + String.format("%x", readedByteValue));
+						this.buffer.add(Byte.valueOf(readedByteValue));	
+					}
+				} // Fine while (in.available())>0
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// Libero il semaforo risposta attesa (lo setto nuovamente = 1)
-			//this.expectedResponse.release();
-
 			receivedBytes = new byte[this.buffer.size()];
-			
+			// Riempio il buffer dei byte arrivati
 			for(int i1=0 ; i1<this.buffer.size() ; i1++){
 				this.receivedBytes[i1] = this.buffer.get(i1).byteValue();
-				
 			}
-			this.buffer.removeAll(buffer);
-			
-			System.out.println("Ho letto i dati");
-
 			// Inpacchetta il vettore di byte in un oggetto pkt di tipo Packet
-			
-			pkt.parsePacket(this.receivedBytes);
+			pkt.parsePacket(this.receivedBytes); // Secondo me il packet va creato ogni volta
+			putInQueue(pkt);
+			buffer.clear();
+			System.out.println("Ho letto i dati");	
+		}
+	}
 
-			//Se il pacchetto ricevuto e una risposta
-			if(pkt.isResponse()){
-				System.out.println("Il pacchetto  una risposta");
+	private void putInQueue(Packet pkt){
+		//Se il pacchetto ricevuto e una risposta
+		if(pkt.isResponse()){
+			System.out.println("Il pacchetto  una risposta");
 
-				// Libero il flag risposta attesa
-				this.expectedResponse.release();
+			// Libero il flag risposta attesa
+			this.expectedResponse.release();
 
+			//Aggiungo il paccketto alla coda dati a bassa prioritˆ
+			this.lowPriorityRxQueue.add(new ElementQueue(pkt, 3));
+		}
+		else{
+			if(pkt.requireResponse()){
+				this.highPriorityRxQueue.add(pkt);
+			}
+			else{
 				//Aggiungo il paccketto alla coda dati a bassa prioritˆ
 				this.lowPriorityRxQueue.add(new ElementQueue(pkt, 3));
 			}
-			else{
-				if(pkt.requireResponse()){
-					this.highPriorityRxQueue.add(pkt);
-				}
-				else{
-					//Aggiungo il paccketto alla coda dati a bassa prioritˆ
-					this.lowPriorityRxQueue.add(new ElementQueue(pkt, 3));
-				}
-			} // Fine isResponse
-		}
+		} // Fine isResponse
 	}
+
 }

@@ -30,7 +30,7 @@ public class Radio extends Packet{
 		super();
 		this.packetType = RADIO;
 		this.data = new byte[data.length];
-		this.data=data;
+		this.data = data;
 		this.optData = new byte[7];
 		this.optData[0] = subTelNum;
 

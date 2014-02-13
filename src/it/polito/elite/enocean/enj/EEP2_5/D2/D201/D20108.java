@@ -15,7 +15,8 @@ public class D20108 extends D201{
 	
 	public static byte ALL_OUTPUT_CHANNEL = 0x1E;
 	
-	public D20108(){		
+	public D20108(){
+		super();
 	}
 	
 	public byte[] actuatorSetOutput(boolean outputCommand){

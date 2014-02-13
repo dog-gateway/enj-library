@@ -184,7 +184,7 @@ public class ThreadWrite extends Thread{
 
 		//Sleep per 100 ms
 		try {
-			sleep(100); // C'è un problema nei tempi, se non metto uno sleep così elevato invia e riceve 3 volte
+			sleep(200); // C'è un problema nei tempi, se non metto uno sleep così elevato invia e riceve 3 volte
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

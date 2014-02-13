@@ -8,6 +8,12 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
+/*
+ * NB Questo pacchetto non è supportato dal TCM310
+ * 
+ */
+
+
 public class RadioMessage extends Packet{
 	/**
 	 * @param messageRorg : RORG
@@ -17,14 +23,28 @@ public class RadioMessage extends Packet{
 	 * @param dBm : Send case: 0xFF 
 	 * 				Receive case: Best RSSI value of all received sub telegrams (value decimal without minus)
 	 */
-	public RadioMessage(byte messageRorg, byte mexData[], int destinationId, int sourceId, byte dBm){	
+	//public RadioMessage(byte messageRorg, byte mexData[], int destinationId, int sourceId, byte dBm){
+	public RadioMessage(byte messageRorg, byte mexData[], byte[] destinationId, byte[] sourceId, byte dBm){
 		super();
 		this.packetType = RADIO_MESSAGE;
+		data = new byte[1+mexData.length];
 		this.data[0] = messageRorg;
 		for(int i=0 ; i<mexData.length ; i++)
 		{
 			this.data[1+i] = mexData[i];			
 		}
+		optData = new byte[8];
+		this.optData[0] = destinationId[0];
+		this.optData[1] = destinationId[1];
+		this.optData[2] = destinationId[2];
+		this.optData[3] = destinationId[3];
+		
+		this.optData[4] = sourceId[0];
+		this.optData[5] = sourceId[1];
+		this.optData[6] = sourceId[2];
+		this.optData[7] = sourceId[3];
+		
+		/*
 		this.optData[0] = (byte) (destinationId & 0xff);
 		this.optData[1] = (byte) ((destinationId & 0xff00)>>8);
 		this.optData[2] = (byte) ((destinationId & 0xff0000)>>16);
@@ -34,6 +54,7 @@ public class RadioMessage extends Packet{
 		this.optData[6] = (byte) ((sourceId & 0xff0000)>>16);
 		this.optData[7] = (byte) ((sourceId & 0xff000000)>>32);
 		this.optData[8] = dBm;
+		*/
 		this.buildPacket();
 	}
 }

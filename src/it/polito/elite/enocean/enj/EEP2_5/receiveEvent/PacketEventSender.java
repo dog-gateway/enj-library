@@ -31,9 +31,11 @@ public class PacketEventSender extends Thread{
 	public void run() {
 		boolean canRun = true;
 		while(canRun){
+			/*
 			//Se c'è qualcosa in coda
 			if(!this.lowPriorityRxQueue.isEmpty()){
-				System.out.println("Sono in Event Sender");
+				//System.out.println("Sono in Event Sender");
+				int size = this.lowPriorityRxQueue.size();
 				// Richiamo l'evento
 				Thread.yield();
 				this.fireEvent();
@@ -46,6 +48,7 @@ public class PacketEventSender extends Thread{
 					e.printStackTrace();
 				}
 			}
+			*/
 		}
 	}
 

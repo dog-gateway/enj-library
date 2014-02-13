@@ -40,8 +40,9 @@ public class EnjConnection {
 	/**
 	 * 
 	 */
-	public EnjConnection() {
+	public EnjConnection(ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue) {
 		super();
+		this.lowPriorityRxQueue = lowPriorityRxQueue;
 	}
 
 	public void startConnection() throws Exception{
@@ -59,7 +60,7 @@ public class EnjConnection {
 
 		threadWrite = new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse);
 		threadWrite.start();
-
+		System.out.println("");
 	}
 	
 	
@@ -69,11 +70,16 @@ public class EnjConnection {
 		lowPriorityTxQueue.add( new ElementQueue(pkt,3));
 	}
 
-	/*
-	 * Non serve perchè c'è il listener
-	 */
+
 	public Packet receive(){
 //		return this.lowPriorityRxQueue.peek().getPkt();
-		return this.lowPriorityRxQueue.poll().getPkt();
+		int size = lowPriorityRxQueue.size();
+		System.out.println("Elementi in coda: "+size);
+		if(size!=0){
+		Packet pkt = this.lowPriorityRxQueue.poll().getPkt();
+		return pkt;
+		}
+		//return pkt;
+		return null;
 	}
 }

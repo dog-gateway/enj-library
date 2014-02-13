@@ -34,10 +34,10 @@ public abstract class D201 {
 		/*
 		 * Stampo a video solo per verificare la correttezza dei dati in fase di debug
 		 */	
-		System.out.println(dataByte[0]); //Stampare in hex
+/*
 		System.out.println("DB_2 " + String.format("%x", dataByte[0]));
 		System.out.println("DB_2 " + String.format("%x", dataByte[1]));
-		System.out.println("DB_2 " + String.format("%x", dataByte[2]));
+		System.out.println("DB_2 " + String.format("%x", dataByte[2]));*/
 		//----------------------------------------------------------------------------
 		return dataByte;
 	}
