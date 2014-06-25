@@ -7,11 +7,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketEventSender;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketReceiver;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.SerialPortFactory;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.ThreadWrite;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ElementQueue;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.SerialListener;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.SerialPortFactory;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ThreadWrite;
 import gnu.io.SerialPort;
 
 /**
@@ -27,8 +27,8 @@ public class EnjConnection {
 	ConcurrentLinkedQueue<Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<Packet>();
 
 	//Code a bassa priorita
-	ConcurrentLinkedQueue<ElementQueue> lowPriorityTxQueue = new ConcurrentLinkedQueue<ElementQueue>();
-	ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue = new ConcurrentLinkedQueue<ElementQueue>();
+	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
+	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
 
 	Semaphore expectedResponse = new Semaphore(1);
 
@@ -40,7 +40,7 @@ public class EnjConnection {
 	/**
 	 * 
 	 */
-	public EnjConnection(ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue) {
+	public EnjConnection(ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue) {
 		super();
 		this.lowPriorityRxQueue = lowPriorityRxQueue;
 	}
@@ -51,7 +51,7 @@ public class EnjConnection {
 
 		//(new HighPriorityThread( highPriorityTxQueue, highPriorityRxQueue, expectedResponse)).run();
 
-		SerialListener serialListener = new SerialListener(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
+		PacketReceiver serialListener = new PacketReceiver(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
 		serialPort.addEventListener(serialListener);
 		serialPort.notifyOnDataAvailable(true);
 		
@@ -67,7 +67,7 @@ public class EnjConnection {
 
 	public void send(Packet pkt){
 		//System.out.println("Sono in send packet");
-		lowPriorityTxQueue.add( new ElementQueue(pkt,3));
+		lowPriorityTxQueue.add( new PacketQueueItem(pkt,3));
 	}
 
 

@@ -14,9 +14,9 @@ import it.polito.elite.enocean.enj.EEP2_5.communication.EnjCommunicator;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.Device;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
 import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnection;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage.RadioMessage;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ElementQueue;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -34,7 +34,7 @@ public class Enocean {
 		EnjDevices devices = new EnjDevices();
 
 		// Reload devices
-		   devices.load(); // C'e exception perchè non c'è una minchia da caricare
+		   devices.load(); // C'e exception perchÔøΩ non c'ÔøΩ una minchia da caricare
 		// end reload
 
 		
@@ -49,7 +49,7 @@ public class Enocean {
 		}
 		
 		
-		ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue = new ConcurrentLinkedQueue<ElementQueue>();
+		ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
 		EnjConnection connection = new EnjConnection(lowPriorityRxQueue);
 		EnjCommunicator communicator = new EnjCommunicator(connection,lowPriorityRxQueue);
 		

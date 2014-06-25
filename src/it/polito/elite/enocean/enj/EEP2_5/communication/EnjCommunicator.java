@@ -12,10 +12,10 @@ import it.polito.elite.enocean.enj.EEP2_5.primitives.Rorg;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketReceiverListener;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketEventSender;
 import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnection;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoWrLearnmore;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ElementQueue;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -26,7 +26,7 @@ public class EnjCommunicator{
 	/**
 	 * 
 	 */
-	public EnjCommunicator(EnjConnection connection, ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue){
+	public EnjCommunicator(EnjConnection connection, ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue){
 		super();
 		this.connection = connection;
 		this.lowPriorityRxQueue = lowPriorityRxQueue;
@@ -42,7 +42,7 @@ public class EnjCommunicator{
 
 	Packet pkt;
 	
-	ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue = new ConcurrentLinkedQueue<ElementQueue>();
+	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
 
 	// Coda per accumulare i pacchetti in ricezione e visualizzarli in fase di debug
 	ConcurrentLinkedQueue<Packet> codaRicevuti = new ConcurrentLinkedQueue<Packet>();
@@ -103,7 +103,7 @@ public class EnjCommunicator{
 
 
 			/* 
-			 * Attendo finchè non è un UTE TEACH IN, scarto tutto il resto
+			 * Attendo finchÔøΩ non ÔøΩ un UTE TEACH IN, scarto tutto il resto
 			 */
 		}	
 		//this.codaRicevuti.add(pkt);
@@ -172,7 +172,7 @@ public class EnjCommunicator{
 				// E una teach in deletion request
 			}
 			//Nessuna delle due precedenti
-			System.out.println("Sticazzi non è ne teach in ne delection teach in");
+			System.out.println("Sticazzi non ÔøΩ ne teach in ne delection teach in");
 		}
 
 		// Se il bit 6 del byte 6 = 0 allora il messaggio richede una risposta
@@ -186,7 +186,7 @@ public class EnjCommunicator{
 			//RORG UTE
 			payloadResp[0] = (byte)0xD4;
 			
-			// Ho invertito perchè in fase di invio devo mandare prima DB6 etc
+			// Ho invertito perchÔøΩ in fase di invio devo mandare prima DB6 etc
 			payloadResp[1] = (byte)0x91;
 			payloadResp[2] = payload[5];
 			payloadResp[3] = payload[4];
@@ -215,7 +215,7 @@ public class EnjCommunicator{
 			
 			
 			/* 
-			 * Creare funzione: eepIsPresent() che dica se il profilo del dispositivo è presente
+			 * Creare funzione: eepIsPresent() che dica se il profilo del dispositivo ÔøΩ presente
 			 */
 /*
 			//In questa fase do per scontato che il profilo sia presente

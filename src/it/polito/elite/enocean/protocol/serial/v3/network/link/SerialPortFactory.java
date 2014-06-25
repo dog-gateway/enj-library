@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication;
+package it.polito.elite.enocean.protocol.serial.v3.network.link;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;

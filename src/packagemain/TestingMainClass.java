@@ -12,12 +12,12 @@ import it.polito.elite.enocean.enj.EEP2_5.primitives.Device;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.EnoceanEquipmentProfile;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.Rorg;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketReceiver;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.SerialPortFactory;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.ThreadWrite;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoRdVersion;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ElementQueue;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.SerialListener;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.SerialPortFactory;
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ThreadWrite;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -43,15 +43,15 @@ public class TestingMainClass {
 			ConcurrentLinkedQueue<Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<Packet>();
 
 			//Code a bassa priorita
-			ConcurrentLinkedQueue<ElementQueue> lowPriorityTxQueue = new ConcurrentLinkedQueue<ElementQueue>();
-			ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue = new ConcurrentLinkedQueue<ElementQueue>();
+			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
+			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
 
 			//Invio il comando CO_RD_VERSION
 			Semaphore expectedResponse = new Semaphore(1);
 			CoRdVersion cmd = new CoRdVersion();
-			lowPriorityTxQueue.add( new ElementQueue(cmd,3));
+			lowPriorityTxQueue.add( new PacketQueueItem(cmd,3));
 
-			SerialListener serialListener = new SerialListener(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
+			PacketReceiver serialListener = new PacketReceiver(serialPort, highPriorityRxQueue, lowPriorityRxQueue, expectedResponse);
 
 			serialPort.addEventListener(serialListener);
 

@@ -1,0 +1,124 @@
+/*
+ * EnJ - EnOcean Java API
+ * 
+ * Copyright 2014 Andrea Biasi, Dario Bonino 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License
+ */
+package it.polito.elite.enocean.protocol.serial.v3.network.link;
+
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+
+/**
+ * A class modeling a queue item containing an EnOcean {@link Packet}, and a
+ * (re)transmission counter. It is mainly used in transmission queues to account
+ * for possible re-transmissions. Defines a default retransmission counter,
+ * which can be redefined programmatically, or overridden by using the proper
+ * constructor.
+ * 
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
+ * @authr <a href="mailto:biasiandrea04@gmail.com">Andrea Biasi </a>
+ * 
+ */
+public class PacketQueueItem
+{
+	// the default (re)transmission counter
+	public static int MAX_RETRANSMISSION = 3;
+
+	// The ESP (EnOcean Serial Protocol) packet
+	Packet pkt;
+
+	// Count the number of attempts to send packet
+	int counter;
+
+	/**
+	 * Create a new Queue item containing an ESP packet, and the given
+	 * re-transmission counter.
+	 * 
+	 * @param pkt
+	 *            The packet represented by the just created queue item.
+	 * @param counter
+	 *            The re-transmission counter.
+	 */
+	public PacketQueueItem(Packet pkt, int counter)
+	{
+		super();
+		this.pkt = pkt;
+		this.counter = counter;
+	}
+
+	/**
+	 * Create a new Queue item containing an ESP packet, and the default
+	 * re-transmission counter {@link PacketQueueItem.MAX_RETRANSMISSION}.
+	 * 
+	 * @param pkt
+	 *            The ESP3 packet represented by the just create queue item.
+	 */
+	public PacketQueueItem(Packet pkt)
+	{
+		this.pkt = pkt;
+	}
+
+	/**
+	 * Get the ESP packet contained by this {@link PacketQueueItem}.
+	 * 
+	 * @return The ESP packet.
+	 */
+	public Packet getPkt()
+	{
+		return pkt;
+	}
+
+	/**
+	 * Set the ESP packet contained by this {@link PacketQueueItem}.
+	 * 
+	 * @param pkt
+	 *            The ESP3 packet to set.
+	 */
+	public void setPkt(Packet pkt)
+	{
+		this.pkt = pkt;
+	}
+
+	/**
+	 * Get the current re-transmission counter associated to this queue item
+	 * 
+	 * @return The current value of the re-trasmission counter, typically <=
+	 *         initial_value.
+	 */
+	public int getCounter()
+	{
+		return counter;
+	}
+
+	/**
+	 * Set the re-transmission counter associated to this queue item.
+	 * 
+	 * @param counter
+	 *            The initial value of the counter.
+	 */
+	public void setCounter(int counter)
+	{
+		this.counter = counter;
+	}
+
+	/**
+	 * Decrease the re-transmission counter.
+	 * 
+	 * @return the updated counter
+	 */
+	public int decreaseReTransmissionCount()
+	{
+		return --this.counter;
+	}
+}

@@ -1,4 +1,4 @@
-package it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication;
+package it.polito.elite.enocean.protocol.serial.v3.network.link;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -30,10 +30,10 @@ public class HighPriorityThread extends Thread {
 		this.expectedResponse = expectedResponse;
 	}
 
-	// Coda di messaggi ad alta prioritˆ in trasmissione (Risposte da trasmettere)
+	// Coda di messaggi ad alta prioritï¿½ in trasmissione (Risposte da trasmettere)
 	ConcurrentLinkedQueue<Packet> highPriorityTxQueue;
 
-	// Coda di messaggi ad alta prioritˆ in ricezione (Messaggi che necessitano di risposta)
+	// Coda di messaggi ad alta prioritï¿½ in ricezione (Messaggi che necessitano di risposta)
 	ConcurrentLinkedQueue<Packet> highPriorityRxQueue;
 
 	// Pacchetto ESP3
@@ -48,7 +48,7 @@ public class HighPriorityThread extends Thread {
 			// Prende i pacchetti dalla coda RX e li mette nella coda in TX
 			if (!this.highPriorityRxQueue.isEmpty()){
 				
-				//Preleva il pacchetto dalla coda ad alta prioritˆ in ingresso
+				//Preleva il pacchetto dalla coda ad alta prioritï¿½ in ingresso
 				pkt = this.highPriorityRxQueue.poll();
 				
 				// Setta risposta attesa
@@ -66,7 +66,7 @@ public class HighPriorityThread extends Thread {
 				 * 
 				 */
 				
-				// Metto la risposta della coda ad alta prioritˆ in scrittura
+				// Metto la risposta della coda ad alta prioritï¿½ in scrittura
 				this.highPriorityTxQueue.add(new Response((byte)0x00));
 				
 			} // Fine if

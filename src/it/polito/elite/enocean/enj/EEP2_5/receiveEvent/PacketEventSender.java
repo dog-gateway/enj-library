@@ -3,7 +3,7 @@
  */
 package it.polito.elite.enocean.enj.EEP2_5.receiveEvent;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication.ElementQueue;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class PacketEventSender extends Thread{
 
 	List<PacketReceiverListener> _listeners = new ArrayList<PacketReceiverListener>();
-	ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue;
+	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue;
 
 	public PacketEventSender() {
 		super();
 	}
 
-	public PacketEventSender( ConcurrentLinkedQueue<ElementQueue> lowPriorityRxQueue ) {
+	public PacketEventSender( ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue ) {
 		super();
 		this.lowPriorityRxQueue = lowPriorityRxQueue;
 	}
@@ -32,7 +32,7 @@ public class PacketEventSender extends Thread{
 		boolean canRun = true;
 		while(canRun){
 			/*
-			//Se c'è qualcosa in coda
+			//Se c'ÔøΩ qualcosa in coda
 			if(!this.lowPriorityRxQueue.isEmpty()){
 				//System.out.println("Sono in Event Sender");
 				int size = this.lowPriorityRxQueue.size();

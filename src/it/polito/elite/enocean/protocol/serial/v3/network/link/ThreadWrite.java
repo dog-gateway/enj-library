@@ -1,46 +1,106 @@
 /**
  * 
  */
-package it.polito.elite.enocean.protocol.serial.v3.network.serialcommunication;
+package it.polito.elite.enocean.protocol.serial.v3.network.link;
 
+import gnu.io.SerialPort;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
 
+public class ThreadWrite extends Thread{
 
-
-
-public class SerialWriter {
 	/**
-	 * @param highPriorityTxQueue
-	 * @param lowPriorityTxQueue
+	 * @param highPriorityQueue
+	 * @param lowPriorityQueue
+	 * @param serialPort
 	 * @param expectedResponse
-	 * @param out
 	 */
-	public SerialWriter(ConcurrentLinkedQueue<Packet> highPriorityTxQueue, ConcurrentLinkedQueue<ElementQueue> lowPriorityTxQueue, Semaphore expectedResponse, OutputStream out) {
+	public ThreadWrite(ConcurrentLinkedQueue<Packet> highPriorityQueue,
+			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityQueue,
+			SerialPort serialPort, Semaphore expectedResponse) {
 		super();
-		this.highPriorityTxQueue = highPriorityTxQueue;
-		this.lowPriorityTxQueue = lowPriorityTxQueue;
+		this.highPriorityTxQueue = highPriorityQueue;
+		this.lowPriorityTxQueue = lowPriorityQueue;
+		this.serialPort = serialPort;
 		this.expectedResponse = expectedResponse;
-		this.out = out;
 	}
 
+	// Coda di messaggi ad alta priorita (Risposte da inviare)
 	ConcurrentLinkedQueue<Packet> highPriorityTxQueue;
-	ConcurrentLinkedQueue<ElementQueue> lowPriorityTxQueue;
-	Semaphore expectedResponse;
+
+	// Coda di messaggi a bassa priorita
+	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue;
+
+	// Elemento estratto dalla coda a bassa priotita, contiene pacchetto e un contatore
+	PacketQueueItem element;
+
+	// Pacchetto ESP3
+	Packet pkt;
+
+	// Porta seriale
+	SerialPort serialPort;
+
+	// Stream dati in uscita
 	OutputStream out;
+
+	// Flag per risposta attesa
+	Semaphore expectedResponse;
+
 	
-	public void scrivi(){
+	public void run(){
+		
+		
+		try {
+			// Ottieni lo stream di dati in uscita
+			out = serialPort.getOutputStream();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// Flag per segnalare continuazione del thread
+		boolean canRun = true;
+
+		//SerialWriter serialWriter = new SerialWriter(highPriorityTxQueue, lowPriorityTxQueue, expectedResponse, out);
+
+
+		while(canRun){
+			//System.out.println("Sono in thread write");
+
+			// Se la coda ad alta priorita non e vuota, invia prima i dati ad alta priorita
+			//System.out.println("Prima del wait");
+
+			if(!lowPriorityTxQueue.isEmpty()){
+			    ThreadWrite.yield(); //cerca di eseguire alla massima velocitÔøΩ possibile (100% cpu) ma lasciando spazio agli altri thread
+				this.scrivi();
+			}
+			else{
+			    try {
+					Thread.sleep(10); //dorme per 10ms prima di svegliarsi e fare un altro giro
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} //dorme per 10ms prima di svegliarsi e fare un altro giro
+			}
+			
+		}// Fine while(canRun)
+	}
+	
+
+	private void scrivi(){
 		long startTime = 0;
 
+		System.out.println("Sono in scrivi");
+		
 		if (!highPriorityTxQueue.isEmpty()){
 			// Prelevo il pacchetto dalla coda ad alta priorita e lo scrivo sulla seriale
 			try {
@@ -92,10 +152,10 @@ public class SerialWriter {
 			// Se sto ancora attendendo la risposta al comando inviato				
 			else{
 				// Se sono passati piu di 500 ms e non ho ricevuto risposta
-				if((System.currentTimeMillis() - startTime)>1000){ //ATTENZIONE metto 1 sec solo per testare
+				if((System.currentTimeMillis() - startTime)>500){
 
 					// Se ho esaurito i tentativi di invio segnalo il fallimento della trasmissione
-					if(this.lowPriorityTxQueue.peek().counter==0){ //Segnala un java.lang.NullPointerException perchè?
+					if(this.lowPriorityTxQueue.peek().counter==0){ //Segnala un java.lang.NullPointerException perchÔøΩ?
 						this.lowPriorityTxQueue.poll();
 						System.out.println("Trasmissione fallita dopo 3 tentativi");
 					}
@@ -122,5 +182,12 @@ public class SerialWriter {
 
 		}// Fine else if (!highPriorityQueue.isEmpty())
 
+		//Sleep per 100 ms
+		try {
+			sleep(200); // C'ÔøΩ un problema nei tempi, se non metto uno sleep cosÔøΩ elevato invia e riceve 3 volte
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}// Fine scrivi()
 }

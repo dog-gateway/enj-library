@@ -15,7 +15,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 public class Packet
 {
 	/*
-	 * Attenzione ho tolto la classe Abstract la uso come una normale, perchè cosi posso impacchettare come generico Packet e
+	 * Attenzione ho tolto la classe Abstract la uso come una normale, perchÔøΩ cosi posso impacchettare come generico Packet e
 	 * successivamente discriminarne il tipo
 	 * 
 	 */
@@ -32,6 +32,9 @@ public class Packet
 	public static byte REMOTE_MAN_COMMAND = 7;
 	public static byte RADIO_MESSAGE = 9;
 	public static byte RADIO_ADVANCED = 10;
+	
+	// ---------------- The packet constants ---------
+	public static final byte SYNC_BYTE = 0x55;
 
 	// serial synchronization byte
 	protected byte syncByte; // Il problema e che byte e signed
@@ -65,7 +68,7 @@ public class Packet
 	 */
 	public Packet()
 	{
-		this.syncByte = 0x55;
+		this.syncByte = Packet.SYNC_BYTE;
 	}
 
 	/**
