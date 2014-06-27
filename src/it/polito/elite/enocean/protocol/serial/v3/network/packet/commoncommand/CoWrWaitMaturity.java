@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Waiting till end of maturity time before received radio telegrams will transit
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrWaitMaturity extends Packet {
+public class CoWrWaitMaturity extends ESP3Packet {
 	/**
 	 * @param waitEndMaturity : 0: Radio telegrams are send immediately 1: Radio telegrams are send after the maturity time is elapsed
 	 */

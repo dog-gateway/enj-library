@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Read number of teached in secure devices
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdNumsecuredevice extends Packet {
+public class CoRdNumsecuredevice extends ESP3Packet {
 	public CoRdNumsecuredevice() {
 		super();
 		this.packetType = COMMON_COMMAND;

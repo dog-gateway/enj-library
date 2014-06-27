@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Send reset command to a Smart Ack Client
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author andreabiasi
  *
  */
-public class SaWrReset extends Packet{
+public class SaWrReset extends ESP3Packet{
 	/**
 	 * @param deviceId : Device ID of the Smart Ack Client
 	 */

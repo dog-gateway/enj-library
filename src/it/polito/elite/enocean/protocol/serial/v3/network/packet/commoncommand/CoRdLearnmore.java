@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Reads the learnmode state of controller
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdLearnmore extends Packet {
+public class CoRdLearnmore extends ESP3Packet {
 	public CoRdLearnmore() {
 		super();
 		this.packetType = COMMON_COMMAND;

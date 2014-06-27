@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Reset the system log from device databank
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrSysLog extends Packet {
+public class CoWrSysLog extends ESP3Packet {
 	public CoWrSysLog() {
 		super();
 		this.packetType = COMMON_COMMAND;

@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Enable/Disable all supplied filters
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrFilterEnable extends Packet {
+public class CoWrFilterEnable extends ESP3Packet {
 	/**
 	 * @param filterOnoff : All filter disable = 0 (OFF) 
 	 * 						All filter enable = 1 (ON)

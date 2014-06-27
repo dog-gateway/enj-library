@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Send smart ack learn answer to modify mailbox at postmaster.
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class SaWrLearnconfirm extends Packet{
+public class SaWrLearnconfirm extends ESP3Packet{
 	/**
 	 * @param responseTime : Response time for sensor in ms in which the controller can prepare the data and send it to the postmaster. Only actual, if learn return code is Learn IN. 
 	 * @param confirmCode : Learn IN: 0x00 

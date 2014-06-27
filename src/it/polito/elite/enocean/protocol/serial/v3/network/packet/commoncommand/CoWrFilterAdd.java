@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Add filter to fileter list
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrFilterAdd extends Packet {
+public class CoWrFilterAdd extends ESP3Packet {
 	/**
 	 * @param filterType : Device ID = 0, R-ORG = 1, dBm = 2
 	 * @param filterValue : Value of filter function

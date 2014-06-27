@@ -3,13 +3,13 @@
  */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.response;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class Response extends Packet{
+public class Response extends ESP3Packet{
 	public Response(byte respCode){
 		super();
 		this.packetType = RESPONSE;

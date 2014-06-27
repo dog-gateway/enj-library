@@ -5,7 +5,7 @@ package it.polito.elite.enocean.enj.EEP2_5.receiveEvent;
 
 
 import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnection;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -13,7 +13,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  */
 public class PacketReceiverListener implements ReceivedDataEventListener{
 
-	Packet pkt;
+	ESP3Packet pkt;
 	EnjConnection connection;
 	boolean received = false;
 	
@@ -28,7 +28,7 @@ public class PacketReceiverListener implements ReceivedDataEventListener{
 		received = true;
 	}
 	
-	public Packet getPacket(){
+	public ESP3Packet getPacket(){
 		while(!received){
 			//System.out.println("Non ho ancora ricevuto");
 		}

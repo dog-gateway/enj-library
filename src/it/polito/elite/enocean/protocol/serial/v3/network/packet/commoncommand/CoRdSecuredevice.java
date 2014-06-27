@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Read secure device
  * 
@@ -8,9 +8,9 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdSecuredevice extends Packet {
+public class CoRdSecuredevice extends ESP3Packet {
 /**
- * @param index : Index of secure device to read, starting with 1É255
+ * @param index : Index of secure device to read, starting with 1ï¿½255
  */
 public CoRdSecuredevice(byte index) {
 		super();

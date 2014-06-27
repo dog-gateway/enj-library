@@ -1,18 +1,18 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /*
  * Enables or disables learn mode of controller
  */
-public class CoWrLearnmore extends Packet {
+public class CoWrLearnmore extends ESP3Packet {
 	
 	public static byte START_LEARNMODE = 0x01; 
 	public static byte END_LEARNMODE = 0x00; 
 
 	/**
 	 * @param enable : Start Learn mode = 1 End Learn mode = 0
-	 * @param timeout : Time-Out for the learn mode in ms. When time is 0 then default period of 60Õ000 ms is used
+	 * @param timeout : Time-Out for the learn mode in ms. When time is 0 then default period of 60ï¿½000 ms is used
 	 * @param channel : 0..0xFD = Channel No. absolute 
 	 * 					0xFE = Previous channel relative 
 	 * 					0xFF = Next channel relative

@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Set the amount of reclaim tries in Smart Ack Client
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author andreabiasi
  *
  */
-public class SaWrReclaims extends Packet{
+public class SaWrReclaims extends ESP3Packet{
 	/**
 	 * @param reclaimCount : Presetting for the number of required reclaim tries
 	 */

@@ -13,7 +13,7 @@ import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketReceiverListener;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketEventSender;
 import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnection;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoWrLearnmore;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
@@ -40,12 +40,12 @@ public class EnjCommunicator{
 
 	Rorg rorg;
 
-	Packet pkt;
+	ESP3Packet pkt;
 	
 	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
 
 	// Coda per accumulare i pacchetti in ricezione e visualizzarli in fase di debug
-	ConcurrentLinkedQueue<Packet> codaRicevuti = new ConcurrentLinkedQueue<Packet>();
+	ConcurrentLinkedQueue<ESP3Packet> codaRicevuti = new ConcurrentLinkedQueue<ESP3Packet>();
 	// Fine coda
 
 
@@ -230,7 +230,7 @@ public class EnjCommunicator{
 */
 
 			//Mando la risposta us ESP3
-			this.connection.send(new Packet(Packet.RADIO, payloadResp, opt)); //Attenzione bisogna mandarli invertiti
+			this.connection.send(new ESP3Packet(ESP3Packet.RADIO, payloadResp, opt)); //Attenzione bisogna mandarli invertiti
 		}
 	}
 

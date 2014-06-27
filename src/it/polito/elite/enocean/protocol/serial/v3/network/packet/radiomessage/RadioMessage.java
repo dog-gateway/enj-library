@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * The radio message (payload data without any radio telegram contents) is embedded into the ESP3 packet
  * 
@@ -9,12 +9,12 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  */
 
 /*
- * NB Questo pacchetto non è supportato dal TCM310
+ * NB Questo pacchetto non ÔøΩ supportato dal TCM310
  * 
  */
 
 
-public class RadioMessage extends Packet{
+public class RadioMessage extends ESP3Packet{
 	/**
 	 * @param messageRorg : RORG
 	 * @param mexData : Message Data Content

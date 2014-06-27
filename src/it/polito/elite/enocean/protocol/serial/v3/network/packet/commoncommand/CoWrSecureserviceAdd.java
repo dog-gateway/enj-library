@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Add secure device to coltroller. It is possible to add ony one or more rocker with this function
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class CoWrSecureserviceAdd extends Packet {
+public class CoWrSecureserviceAdd extends ESP3Packet {
 /**
  * @param slf : Security Level Format
  * @param id : Device ID

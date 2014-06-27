@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Feedback about used addres and lenght of the area and the Smart-Ack table
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdMemAddress extends Packet {
+public class CoRdMemAddress extends ESP3Packet {
 	/**
 	 * @param memoryArea : 	Config area = 0 
 	 * 						Smart Ack Table = 1 

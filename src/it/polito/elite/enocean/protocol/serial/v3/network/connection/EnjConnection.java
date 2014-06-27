@@ -10,8 +10,8 @@ import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketEventSender;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketReceiver;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.SerialPortFactory;
-import it.polito.elite.enocean.protocol.serial.v3.network.link.ThreadWrite;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketTransmitter;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import gnu.io.SerialPort;
 
 /**
@@ -23,8 +23,8 @@ public class EnjConnection {
 	SerialPort serialPort;
 
 	//Code ad alta priorita
-	ConcurrentLinkedQueue<Packet> highPriorityTxQueue = new ConcurrentLinkedQueue<Packet>();
-	ConcurrentLinkedQueue<Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<Packet>();
+	ConcurrentLinkedQueue<ESP3Packet> highPriorityTxQueue = new ConcurrentLinkedQueue<ESP3Packet>();
+	ConcurrentLinkedQueue<ESP3Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<ESP3Packet>();
 
 	//Code a bassa priorita
 	ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
@@ -32,7 +32,7 @@ public class EnjConnection {
 
 	Semaphore expectedResponse = new Semaphore(1);
 
-	ThreadWrite threadWrite;
+	PacketTransmitter threadWrite;
 
 
 	public PacketEventSender packetSender = new PacketEventSender(this.lowPriorityRxQueue);
@@ -58,25 +58,25 @@ public class EnjConnection {
 		//PacketEventSender packetSender = new PacketEventSender(this.lowPriorityRxQueue);
 		packetSender.start();
 
-		threadWrite = new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse);
+		threadWrite = new PacketTransmitter(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse);
 		threadWrite.start();
 		System.out.println("");
 	}
 	
 	
 
-	public void send(Packet pkt){
+	public void send(ESP3Packet pkt){
 		//System.out.println("Sono in send packet");
 		lowPriorityTxQueue.add( new PacketQueueItem(pkt,3));
 	}
 
 
-	public Packet receive(){
+	public ESP3Packet receive(){
 //		return this.lowPriorityRxQueue.peek().getPkt();
 		int size = lowPriorityRxQueue.size();
 		System.out.println("Elementi in coda: "+size);
 		if(size!=0){
-		Packet pkt = this.lowPriorityRxQueue.poll().getPkt();
+		ESP3Packet pkt = this.lowPriorityRxQueue.poll().getPkt();
 		return pkt;
 		}
 		//return pkt;

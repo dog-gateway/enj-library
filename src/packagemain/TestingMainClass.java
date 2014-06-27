@@ -15,8 +15,8 @@ import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketReceiver;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.SerialPortFactory;
-import it.polito.elite.enocean.protocol.serial.v3.network.link.ThreadWrite;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketTransmitter;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoRdVersion;
 
 /**
@@ -39,8 +39,8 @@ public class TestingMainClass {
 
 
 			//Code ad alta priorita
-			ConcurrentLinkedQueue<Packet> highPriorityTxQueue = new ConcurrentLinkedQueue<Packet>();
-			ConcurrentLinkedQueue<Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<Packet>();
+			ConcurrentLinkedQueue<ESP3Packet> highPriorityTxQueue = new ConcurrentLinkedQueue<ESP3Packet>();
+			ConcurrentLinkedQueue<ESP3Packet> highPriorityRxQueue = new ConcurrentLinkedQueue<ESP3Packet>();
 
 			//Code a bassa priorita
 			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
@@ -57,7 +57,7 @@ public class TestingMainClass {
 
 			serialPort.notifyOnDataAvailable(true);
 			//			(new HighPriorityThread( highPriorityTxQueue, highPriorityRxQueue, expectedResponse)).run();
-			ThreadWrite threadwrite = new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse);
+			PacketTransmitter threadwrite = new PacketTransmitter(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse);
 			threadwrite.run();
 
 			//(new ThreadWrite(highPriorityTxQueue, lowPriorityTxQueue, serialPort, expectedResponse)).run();

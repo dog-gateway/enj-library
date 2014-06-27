@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Read security information (level, keys). This function does not support the actual security concept and should not be used any more
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdSecurity extends Packet {
+public class CoRdSecurity extends ESP3Packet {
 	public CoRdSecurity() {
 		super();
 		this.packetType = COMMON_COMMAND;

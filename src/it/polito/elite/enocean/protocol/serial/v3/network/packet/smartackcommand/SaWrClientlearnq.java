@@ -1,13 +1,13 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Code 4 : Sends smart ack learn request telegram to smart ack controller. This function will only be in a Smart Ack Client
  * 
  * @author andreabiasi
  *
  */
-public class SaWrClientlearnq extends Packet{
+public class SaWrClientlearnq extends ESP3Packet{
 	/**
 	 * @param MsbManufactorId : nnn = Most significant 3 bits of the Manufacturer ID 11111 = reserved / default values
 	 * @param LsbManufactorId : Least significant bits of the Manufacturer ID

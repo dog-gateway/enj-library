@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.radiosubtel;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Packet type 3 : Radio Sub Tel
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class RadioSubTel extends Packet{
+public class RadioSubTel extends ESP3Packet{
 	/**
 	 * @param data : radio telegram without checksum
 	 * @param subTelNum : actual sequence number of subtelegrams 

@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.remotemancommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Remote management send or receive message
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class RemoteManCommand extends Packet{
+public class RemoteManCommand extends ESP3Packet{
 	
 	/**
 	 * @param functionNumber : Range: 0x0000 ... 0x0FFF

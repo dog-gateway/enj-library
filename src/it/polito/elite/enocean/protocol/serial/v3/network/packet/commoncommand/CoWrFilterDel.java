@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Delete filter from filter list
@@ -9,10 +9,10 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrFilterDel extends Packet {
+public class CoWrFilterDel extends ESP3Packet {
 	/**
 	 * @param filterType : Device ID = 0, R-ORG = 1, dBm = 2
-	 * @param filterValue : Value of filter function ÕcompareÕ: - device ID - R-ORG - RSSI of radio telegram in dBm
+	 * @param filterValue : Value of filter function ï¿½compareï¿½: - device ID - R-ORG - RSSI of radio telegram in dBm
 	 */
 	public CoWrFilterDel(byte filterType, int filterValue) {
 		super();

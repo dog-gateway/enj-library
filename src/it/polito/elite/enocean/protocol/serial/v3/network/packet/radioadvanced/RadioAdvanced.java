@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.radioadvanced;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * The advanced radio protocol telegram (raw data without LEN and CRC) is embedded into the ESP3 packet
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class RadioAdvanced extends Packet{
+public class RadioAdvanced extends ESP3Packet{
 	/**
 	 * @param rawData : Advanced radio protocol telegram without the first Length byte. For sending the advanced protocol CRC8 byte can be set to any value. x = Data Length
 	 * @param subTelNum : Number of sub telegram; Send: 3 / receive: 1 ... y

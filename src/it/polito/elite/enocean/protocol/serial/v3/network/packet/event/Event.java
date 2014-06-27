@@ -3,7 +3,7 @@
  */
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.event;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * PACKET TYPE 4 : EVENT
@@ -14,7 +14,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class Event extends Packet{
+public class Event extends ESP3Packet{
 
 	/*
 	 * ATTENZIONE IL PACCHETTO EVENT PUO SOLO ESSERE RICEVUTO PER CUI CREDO NON SERVA A NULLA IL COSTRUTTORE

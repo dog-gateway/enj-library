@@ -20,16 +20,16 @@ package it.polito.elite.enocean.protocol.serial.v3.network.link;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 /**
- * A class implementing the reception tier of the Java EnOcean Serial Protocol
+ * A class implementing the receiver tier of the Java EnOcean Serial Protocol
  * API, EnJ. It listens for new incoming packets on the attached serial port,
  * and routes packets depending on their nature, accounting for responses, when
  * needed.
@@ -45,8 +45,9 @@ public class PacketReceiver implements SerialPortEventListener
 
 	// HighPriority message queue, will hold incoming messages who need
 	// response.
-	// within a maximum time frame of 5ms.
-	private ConcurrentLinkedQueue<Packet> highPriorityRxQueue;
+	// within a maximum time frame of 500ms. TODO check the actual time frame on
+	// the ESP3 specs
+	private ConcurrentLinkedQueue<PacketQueueItem> highPriorityRxQueue;
 
 	// LowPriority message queue, holds messages not needing any response.
 	private ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue;
@@ -59,7 +60,7 @@ public class PacketReceiver implements SerialPortEventListener
 
 	/**
 	 * Create a {@link PacketReceiver} instance, attached to the given serial
-	 * port, and using the given reception queues and response semaphore.
+	 * port, and using the given message queues and response semaphore.
 	 * 
 	 * @param serialPort
 	 *            The serial port upon which receiving packets.
@@ -73,17 +74,32 @@ public class PacketReceiver implements SerialPortEventListener
 	 *            The semaphore signaling if a response is needed.
 	 */
 	public PacketReceiver(SerialPort serialPort,
-			ConcurrentLinkedQueue<Packet> highPriorityRxQueue,
+			ConcurrentLinkedQueue<PacketQueueItem> highPriorityRxQueue,
 			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue,
 			Semaphore expectedResponse)
 	{
 		super();
+
+		// store the serial port
 		this.serialPort = serialPort;
+
+		// store the high-priority queue reference
 		this.highPriorityRxQueue = highPriorityRxQueue;
+
+		// store the low-priority queue reference
 		this.lowPriorityRxQueue = lowPriorityRxQueue;
+
+		// store a reference to the expected response semaphore
 		this.expectedResponse = expectedResponse;
 	}
 
+	/**
+	 * @see {@link SerialPortEventListener}
+	 * 
+	 *      Listens for events on the attached serial port and handles incoming
+	 *      data, parsing ESP3 packets and putting them in the right message
+	 *      queue.
+	 */
 	@Override
 	public void serialEvent(SerialPortEvent event)
 	{
@@ -92,8 +108,8 @@ public class PacketReceiver implements SerialPortEventListener
 			// Input Stream of the serial port
 			InputStream serialInputStream = this.serialPort.getInputStream();
 
-			// Input byte buffer as ArrayList (check if needed)
-			Vector<Byte> buffer = new Vector<Byte>();
+			// Input byte buffer as Vector (check if needed)
+			ArrayList<Byte> buffer = new ArrayList<Byte>();
 
 			// check if data is available
 			if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE)
@@ -117,11 +133,23 @@ public class PacketReceiver implements SerialPortEventListener
 					byte readedByteValue = (byte) (readedIntValue & 0xff);
 
 					// check for the packet sync byte
-					if (readedByteValue == Packet.SYNC_BYTE)
-						this.readPacket(buffer);
-					
-					//clear the buffer
-					buffer.clear();
+					if (readedByteValue == ESP3Packet.SYNC_BYTE)
+					{
+
+						// parse the Packet and enqueue it in the right
+						// place
+						ESP3Packet pkt = this.parsePacket(buffer);
+
+						// check not null
+						if (pkt != null)
+						{
+							// place the packet in the right queue
+							putInQueue(pkt);
+
+							// clear the buffer
+							buffer.clear();
+						}
+					}
 
 					// Store the current byte in the packet buffer (always
 					// starts with a sync byte)
@@ -135,73 +163,101 @@ public class PacketReceiver implements SerialPortEventListener
 
 				// try to read the last packet when transmission ends and no
 				// sync bytes can be exploited as packet delimiter
-				this.readPacket(buffer);
 
-				//clear the buffer
-				buffer.clear();
-				
-				//debug
-				//TODO: add logging here
+				// parse the Packet and enqueue it in the right place
+				ESP3Packet pkt = this.parsePacket(buffer);
+
+				// check not null
+				if (pkt != null)
+				{
+					// place the packet in the right queue
+					putInQueue(pkt);
+
+					// clear the buffer
+					buffer.clear();
+				}
+
+				// debug, TODO use a logging system here
 				System.out.println("Data read");
 			}
 
 		}
 		catch (IOException e)
 		{
-			// TODO add logging here
+			// TODO use a logging system here
 			e.printStackTrace();
 		}
 	}
 
-	private void readPacket(Vector<Byte> buffer)
+	/**
+	 * Given a buffer of bytes as an {@link ArrayList} instance, parses the
+	 * buffer into an ESP3 Packet, if possible.
+	 * 
+	 * @param buffer
+	 *            The byte buffer to parse.
+	 * @return The corresponding ESP3 {@link ESP3Packet} if the parsing process was
+	 *         successful, null otherwise.
+	 */
+	private ESP3Packet parsePacket(ArrayList<Byte> buffer)
 	{
-		// Input byte buffer to use for packet construction
-		byte[] receivedBytes;
+		ESP3Packet pkt = null;
 
-		// Prepare a Packet instance for holding the just received data
-		Packet pkt = new Packet();
-
-		// create a new byte array of the size of the read
-		// packet
-		receivedBytes = new byte[buffer.size()];
-
-		// fill the byte array
-		for (int i = 0; i < buffer.size(); i++)
+		if (buffer.size() > 0)
 		{
-			receivedBytes[i] = buffer.get(i).byteValue();
-		}
-		// Build the Packet instance
-		pkt.parsePacket(receivedBytes);
+			// Input byte buffer to use for packet construction
+			byte[] receivedBytes;
 
-		// place the packet in the right queue
-		putInQueue(pkt);
+			// Prepare a Packet instance for holding the just received data
+			pkt = new ESP3Packet();
+
+			// create a new byte array of the size of the read
+			// packet
+			receivedBytes = new byte[buffer.size()];
+
+			// fill the byte array
+			for (int i = 0; i < buffer.size(); i++)
+			{
+				receivedBytes[i] = buffer.get(i).byteValue();
+			}
+			// Build the Packet instance
+			pkt.parsePacket(receivedBytes);
+		}
+		return pkt;
 	}
 
-	private void putInQueue(Packet pkt)
+	private void putInQueue(ESP3Packet pkt)
 	{
-		// Se il pacchetto ricevuto e una risposta
+		// If the packet is a response to a previously sent packet, then the
+		// expected semaphore should be freed.
 		if (pkt.isResponse())
 		{
-			System.out.println("Il pacchetto � una risposta");
+			// debug, TODO use a logging system here
+			System.out.println("Received response packet");
 
-			// Libero il flag risposta attesa
+			// free the expected response semaphore
 			this.expectedResponse.release();
 
-			// Aggiungo il paccketto alla coda dati a bassa priorit�
-			this.lowPriorityRxQueue.add(new PacketQueueItem(pkt, 3));
+			// Add the packet to the low priority queue
+			this.lowPriorityRxQueue.add(new PacketQueueItem(pkt));
 		}
 		else
 		{
-			if (pkt.requireResponse())
+			// if the packet requires a response, than specific timings must be
+			// respected (response in less than 500ms, TODO check the actual
+			// time frame on the ESP3 specs), and therefore the packet should be
+			// inserted into an
+			// high priority message queue.
+			if (pkt.requiresResponse())
 			{
-				this.highPriorityRxQueue.add(pkt);
+				this.highPriorityRxQueue.add(new PacketQueueItem(pkt));
 			}
 			else
 			{
-				// Aggiungo il paccketto alla coda dati a bassa priorit�
-				this.lowPriorityRxQueue.add(new PacketQueueItem(pkt, 3));
+				// simple packet not requiring any response, should be treated
+				// at normal speed.
+				this.lowPriorityRxQueue.add(new PacketQueueItem(pkt));
 			}
-		} // Fine isResponse
+		}
 	}
 
 }

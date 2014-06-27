@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Enables/Disables postmaster function of device
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author andreabiasi
  *
  */
-public class SaWrPostmaster extends Packet{
+public class SaWrPostmaster extends ESP3Packet{
 	/**
 	 * @param mailboxCount :Enables/Disables postmaster function of device.
 	 */

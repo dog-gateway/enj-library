@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Read x bytes of the flash, ram0, data, idata, xdata
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdMem extends Packet {
+public class CoRdMem extends ESP3Packet {
 	/**
 	 * @param memoryType : 	Flash 0x00 
 	 * 						RAM 0 0x01 

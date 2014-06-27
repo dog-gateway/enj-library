@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Delete secure device from controller. It is only possible to delete ALL rockets of a secure device.
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrSecuredeviceDel extends Packet {
+public class CoWrSecuredeviceDel extends ESP3Packet {
 	/**
 	 * @param id : Device ID. If it is the broadcast ID (0xFFFFFFFF), then delete all secure devices from controller
 	 */

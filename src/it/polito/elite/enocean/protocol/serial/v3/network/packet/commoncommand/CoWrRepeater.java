@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Write repeater level OFF, 1, 2;
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class CoWrRepeater extends Packet {
+public class CoWrRepeater extends ESP3Packet {
 	
 	/**
 	 * @param repEnable : OFF=0 ON=1

@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Delete all filter from filter list
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrFilterDelAll extends Packet {
+public class CoWrFilterDelAll extends ESP3Packet {
 	public CoWrFilterDelAll() {
 		super();
 		this.packetType = COMMON_COMMAND;

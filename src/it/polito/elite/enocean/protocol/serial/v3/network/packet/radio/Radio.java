@@ -1,13 +1,13 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.radio;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * 
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  *
  */
-public class Radio extends Packet{
+public class Radio extends ESP3Packet{
 	/**
 	 * Optional data: Byte vector which contain all optional data passed with the constructor
 	 */

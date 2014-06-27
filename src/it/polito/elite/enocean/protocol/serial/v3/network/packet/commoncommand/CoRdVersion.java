@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 /**
  * Read the device SW version / HW version, chip-ID, etc.
  * 
@@ -8,7 +8,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoRdVersion extends Packet {
+public class CoRdVersion extends ESP3Packet {
 	public CoRdVersion() {
 		super();
 		this.packetType = COMMON_COMMAND;

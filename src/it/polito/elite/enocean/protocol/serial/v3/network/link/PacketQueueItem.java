@@ -17,10 +17,10 @@
  */
 package it.polito.elite.enocean.protocol.serial.v3.network.link;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
- * A class modeling a queue item containing an EnOcean {@link Packet}, and a
+ * A class modeling a queue item containing an EnOcean {@link ESP3Packet}, and a
  * (re)transmission counter. It is mainly used in transmission queues to account
  * for possible re-transmissions. Defines a default retransmission counter,
  * which can be redefined programmatically, or overridden by using the proper
@@ -36,7 +36,7 @@ public class PacketQueueItem
 	public static int MAX_RETRANSMISSION = 3;
 
 	// The ESP (EnOcean Serial Protocol) packet
-	Packet pkt;
+	ESP3Packet pkt;
 
 	// Count the number of attempts to send packet
 	int counter;
@@ -50,7 +50,7 @@ public class PacketQueueItem
 	 * @param counter
 	 *            The re-transmission counter.
 	 */
-	public PacketQueueItem(Packet pkt, int counter)
+	public PacketQueueItem(ESP3Packet pkt, int counter)
 	{
 		super();
 		this.pkt = pkt;
@@ -64,7 +64,7 @@ public class PacketQueueItem
 	 * @param pkt
 	 *            The ESP3 packet represented by the just create queue item.
 	 */
-	public PacketQueueItem(Packet pkt)
+	public PacketQueueItem(ESP3Packet pkt)
 	{
 		this.pkt = pkt;
 	}
@@ -74,7 +74,7 @@ public class PacketQueueItem
 	 * 
 	 * @return The ESP packet.
 	 */
-	public Packet getPkt()
+	public ESP3Packet getPkt()
 	{
 		return pkt;
 	}
@@ -85,7 +85,7 @@ public class PacketQueueItem
 	 * @param pkt
 	 *            The ESP3 packet to set.
 	 */
-	public void setPkt(Packet pkt)
+	public void setPkt(ESP3Packet pkt)
 	{
 		this.pkt = pkt;
 	}

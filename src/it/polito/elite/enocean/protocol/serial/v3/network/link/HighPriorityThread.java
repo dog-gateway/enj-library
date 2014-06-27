@@ -3,7 +3,7 @@ package it.polito.elite.enocean.protocol.serial.v3.network.link;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.response.Response;
 
 /**
@@ -21,8 +21,8 @@ public class HighPriorityThread extends Thread {
 	 * @param expectedResponse
 	 */
 	public HighPriorityThread(
-			ConcurrentLinkedQueue<Packet> highPriorityTxQueue,
-			ConcurrentLinkedQueue<Packet> highPriorityRxQueue,
+			ConcurrentLinkedQueue<ESP3Packet> highPriorityTxQueue,
+			ConcurrentLinkedQueue<ESP3Packet> highPriorityRxQueue,
 			Semaphore expectedResponse) {
 		super();
 		this.highPriorityTxQueue = highPriorityTxQueue;
@@ -31,13 +31,13 @@ public class HighPriorityThread extends Thread {
 	}
 
 	// Coda di messaggi ad alta priorit� in trasmissione (Risposte da trasmettere)
-	ConcurrentLinkedQueue<Packet> highPriorityTxQueue;
+	ConcurrentLinkedQueue<ESP3Packet> highPriorityTxQueue;
 
 	// Coda di messaggi ad alta priorit� in ricezione (Messaggi che necessitano di risposta)
-	ConcurrentLinkedQueue<Packet> highPriorityRxQueue;
+	ConcurrentLinkedQueue<ESP3Packet> highPriorityRxQueue;
 
 	// Pacchetto ESP3
-	Packet pkt;
+	ESP3Packet pkt;
 
 	// Flag per risposta attesa
 	Semaphore expectedResponse;

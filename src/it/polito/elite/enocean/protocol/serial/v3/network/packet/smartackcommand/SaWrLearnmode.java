@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Enables or disables learn mode of Smart Ack Controller.
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class SaWrLearnmode extends Packet{
+public class SaWrLearnmode extends ESP3Packet{
 	/**
 	 * @param enable Start Learnmode = 1 
 	 * 				 End Learnmode = 0
@@ -17,7 +17,7 @@ public class SaWrLearnmode extends Packet{
 	 * 					Advance Learnmode = 1 
 	 * 					Advance Learnmode select Rep. = 2
 	 * @param timeout	Time-Out for the learn mode in ms. 
-	 * 					When time is 0 then default period of 60Õ000 ms is used
+	 * 					When time is 0 then default period of 60ï¿½000 ms is used
 	 */
 	public SaWrLearnmode(byte enable, byte extended, int timeout){
 		super();

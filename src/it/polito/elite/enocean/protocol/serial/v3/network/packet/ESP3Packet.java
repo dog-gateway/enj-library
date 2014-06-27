@@ -12,7 +12,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 
 // ATTENZIONE, per i metodi setLenght e getLenght meglio usare tipo int?
 
-public class Packet
+public class ESP3Packet
 {
 	/*
 	 * Attenzione ho tolto la classe Abstract la uso come una normale, perch� cosi posso impacchettare come generico Packet e
@@ -66,9 +66,9 @@ public class Packet
 	/**
 	 * Empty constructor (to support the bean instantiation pattern)
 	 */
-	public Packet()
+	public ESP3Packet()
 	{
-		this.syncByte = Packet.SYNC_BYTE;
+		this.syncByte = ESP3Packet.SYNC_BYTE;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class Packet
 	 * @param optData
 	 * @param cRC8D
 	 */
-	public  Packet(byte packetType, byte[] data, byte[] optData)
+	public  ESP3Packet(byte packetType, byte[] data, byte[] optData)
 	{
 		this.syncByte = 0x55;
 		this.packetType = packetType;
@@ -355,7 +355,7 @@ public class Packet
 		return packetType == RADIO;
 	}
 
-	public boolean requireResponse(){
+	public boolean requiresResponse(){
 		return this.isEvent()&&( (this.packetType==Event.SA_RECLAIM_NOT_SUCCESFUL) || (this.packetType==Event.SA_CONFIRM_LEARN) || (this.packetType==Event.SA_LEARN_ACK));
 	}
 }

@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * Write security information (level, keys). This functions does not support the actual security concept should not be used any more
@@ -9,7 +9,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
  *
  */
 
-public class CoWrSecurity extends Packet {	
+public class CoWrSecurity extends ESP3Packet {	
 	/**
 	 * @param secLevel : Type no. of encryption
 	 * @param key : Security key

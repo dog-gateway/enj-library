@@ -3,7 +3,7 @@
  */
 package it.polito.elite.enocean.enj.EEP2_5.D2.D201;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
