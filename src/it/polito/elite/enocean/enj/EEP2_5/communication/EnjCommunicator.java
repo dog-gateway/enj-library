@@ -11,7 +11,7 @@ import it.polito.elite.enocean.enj.EEP2_5.primitives.EnoceanEquipmentProfile;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.Rorg;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketReceiverListener;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketEventSender;
-import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnection;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.EnJLink;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoWrLearnmore;
@@ -26,13 +26,13 @@ public class EnjCommunicator{
 	/**
 	 * 
 	 */
-	public EnjCommunicator(EnjConnection connection, ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue){
+	public EnjCommunicator(EnJLink connection, ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue){
 		super();
 		this.connection = connection;
 		this.lowPriorityRxQueue = lowPriorityRxQueue;
 	}
 
-	EnjConnection connection;
+	EnJLink connection;
 
 	Device device;
 

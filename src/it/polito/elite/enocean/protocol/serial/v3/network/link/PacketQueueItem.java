@@ -36,26 +36,10 @@ public class PacketQueueItem
 	public static int MAX_RETRANSMISSION = 3;
 
 	// The ESP (EnOcean Serial Protocol) packet
-	ESP3Packet pkt;
+	private ESP3Packet pkt;
 
 	// Count the number of attempts to send packet
-	int counter;
-
-	/**
-	 * Create a new Queue item containing an ESP packet, and the given
-	 * re-transmission counter.
-	 * 
-	 * @param pkt
-	 *            The packet represented by the just created queue item.
-	 * @param counter
-	 *            The re-transmission counter.
-	 */
-	public PacketQueueItem(ESP3Packet pkt, int counter)
-	{
-		super();
-		this.pkt = pkt;
-		this.counter = counter;
-	}
+	private int counter;
 
 	/**
 	 * Create a new Queue item containing an ESP packet, and the default
@@ -67,6 +51,7 @@ public class PacketQueueItem
 	public PacketQueueItem(ESP3Packet pkt)
 	{
 		this.pkt = pkt;
+		this.counter = PacketQueueItem.MAX_RETRANSMISSION;
 	}
 
 	/**
@@ -96,7 +81,7 @@ public class PacketQueueItem
 	 * @return The current value of the re-trasmission counter, typically <=
 	 *         initial_value.
 	 */
-	public int getCounter()
+	public int getRetransmissionCounter()
 	{
 		return counter;
 	}
@@ -107,9 +92,17 @@ public class PacketQueueItem
 	 * @param counter
 	 *            The initial value of the counter.
 	 */
-	public void setCounter(int counter)
+	public void setRetransmissionCounter(int counter)
 	{
 		this.counter = counter;
+	}
+	
+	/**
+	 * Decreases by one the retransmission counter.
+	 */
+	public void decreaseRetransmissionCounter()
+	{
+		this.counter--;
 	}
 
 	/**

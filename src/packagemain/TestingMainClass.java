@@ -14,8 +14,8 @@ import it.polito.elite.enocean.enj.EEP2_5.primitives.Rorg;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketReceiver;
-import it.polito.elite.enocean.protocol.serial.v3.network.link.SerialPortFactory;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketTransmitter;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.serial.SerialPortFactory;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoRdVersion;
 

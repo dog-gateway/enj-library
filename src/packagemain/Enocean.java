@@ -13,7 +13,7 @@ import it.polito.elite.enocean.enj.EEP2_5.D2.D201.D20108;
 import it.polito.elite.enocean.enj.EEP2_5.communication.EnjCommunicator;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.Device;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
-import it.polito.elite.enocean.protocol.serial.v3.network.connection.EnjConnection;
+import it.polito.elite.enocean.protocol.serial.v3.network.link.EnJLink;
 import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage.RadioMessage;
@@ -50,7 +50,7 @@ public class Enocean {
 		
 		
 		ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
-		EnjConnection connection = new EnjConnection(lowPriorityRxQueue);
+		EnJLink connection = new EnJLink(lowPriorityRxQueue);
 		EnjCommunicator communicator = new EnjCommunicator(connection,lowPriorityRxQueue);
 		
 		try {
