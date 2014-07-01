@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.protocol.serial.v3.network.link.serial;
+package it.polito.elite.enocean.enj.link.serial;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;

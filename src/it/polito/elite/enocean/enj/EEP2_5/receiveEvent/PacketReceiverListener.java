@@ -4,7 +4,7 @@
 package it.polito.elite.enocean.enj.EEP2_5.receiveEvent;
 
 
-import it.polito.elite.enocean.protocol.serial.v3.network.link.EnJLink;
+import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**

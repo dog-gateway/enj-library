@@ -10,11 +10,11 @@ import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import it.polito.elite.enocean.enj.EEP2_5.D2.D201.D20108;
-import it.polito.elite.enocean.enj.EEP2_5.communication.EnjCommunicator;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.Device;
+import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
-import it.polito.elite.enocean.protocol.serial.v3.network.link.EnJLink;
-import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
+import it.polito.elite.enocean.enj.link.EnJLink;
+import it.polito.elite.enocean.enj.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage.RadioMessage;
 
@@ -51,10 +51,10 @@ public class Enocean {
 		
 		ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue = new ConcurrentLinkedQueue<PacketQueueItem>();
 		EnJLink connection = new EnJLink(lowPriorityRxQueue);
-		EnjCommunicator communicator = new EnjCommunicator(connection,lowPriorityRxQueue);
+		EnJConnection communicator = new EnJConnection(connection,lowPriorityRxQueue);
 		
 		try {
-			connection.startConnection();
+			connection.connect();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

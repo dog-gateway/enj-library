@@ -3,7 +3,7 @@
  */
 package it.polito.elite.enocean.enj.EEP2_5.receiveEvent;
 
-import it.polito.elite.enocean.protocol.serial.v3.network.link.PacketQueueItem;
+import it.polito.elite.enocean.enj.link.PacketQueueItem;
 
 import java.util.ArrayList;
 import java.util.List;

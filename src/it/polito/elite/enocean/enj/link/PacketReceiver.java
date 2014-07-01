@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.protocol.serial.v3.network.link;
+package it.polito.elite.enocean.enj.link;
 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -73,16 +73,16 @@ public class PacketReceiver implements SerialPortEventListener
 	 * @param expectedResponse
 	 *            The semaphore signaling if a response is needed.
 	 */
-	public PacketReceiver(SerialPort serialPort,
+	public PacketReceiver(
 			ConcurrentLinkedQueue<PacketQueueItem> highPriorityRxQueue,
 			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityRxQueue,
-			Semaphore expectedResponse)
+			SerialPort serialPort, Semaphore expectedResponse)
 	{
 		super();
 
 		// store the serial port
 		this.serialPort = serialPort;
-
+	
 		// store the high-priority queue reference
 		this.highPriorityRxQueue = highPriorityRxQueue;
 
@@ -195,8 +195,8 @@ public class PacketReceiver implements SerialPortEventListener
 	 * 
 	 * @param buffer
 	 *            The byte buffer to parse.
-	 * @return The corresponding ESP3 {@link ESP3Packet} if the parsing process was
-	 *         successful, null otherwise.
+	 * @return The corresponding ESP3 {@link ESP3Packet} if the parsing process
+	 *         was successful, null otherwise.
 	 */
 	private ESP3Packet parsePacket(ArrayList<Byte> buffer)
 	{
