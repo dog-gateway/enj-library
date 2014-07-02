@@ -2,7 +2,8 @@ package it.polito.elite.enocean.enj.EEP2_5.primitives;
 
 import java.io.Serializable;
 
-public class Rorg implements Serializable{
+public class Rorg implements Serializable
+{
 
 	/**
 	 * 
@@ -12,7 +13,8 @@ public class Rorg implements Serializable{
 	/**
 	 * @param rorgValue
 	 */
-	public Rorg(byte rorgValue) {
+	public Rorg(byte rorgValue)
+	{
 		super();
 		this.rorgValue = rorgValue;
 	}
@@ -36,62 +38,82 @@ public class Rorg implements Serializable{
 	/**
 	 * @return the rorgValue
 	 */
-	public byte getRorgValue() {
+	public byte getRorgValue()
+	{
 		return rorgValue;
 	}
 
 	/**
-	 * @param rorg the rorgValue to set
+	 * @param rorg
+	 *            the rorgValue to set
 	 */
-	public void setRorgValue(byte rorg) {
+	public void setRorgValue(byte rorg)
+	{
 		this.rorgValue = rorg;
 	}
 
-	public boolean isRps() {
+	public boolean isRps()
+	{
 		return this.rorgValue == RPS;
 	}
-	
-	public boolean isBS1() {
+
+	public boolean isBS1()
+	{
 		return this.rorgValue == BS1;
 	}
-	
-	public boolean isBS4() {
+
+	public boolean isBS4()
+	{
 		return this.rorgValue == BS4;
 	}
-	
-	public boolean isVld() {
+
+	public boolean isVld()
+	{
 		return this.rorgValue == VLD;
 	}
-	
-	public boolean isMsc() {
+
+	public boolean isMsc()
+	{
 		return this.rorgValue == MSC;
 	}
-	
-	public boolean isAdt() {
+
+	public boolean isAdt()
+	{
 		return this.rorgValue == ADT;
 	}
-	
-	public boolean isSmLrnReq() {
+
+	public boolean isSmLrnReq()
+	{
 		return this.rorgValue == SM_LRN_REQ;
 	}
-	
-	public boolean isSmLrnAns() {
+
+	public boolean isSmLrnAns()
+	{
 		return this.rorgValue == SM_LRN_ANS;
 	}
-	
-	public boolean isSmLrnRec() {
+
+	public boolean isSmLrnRec()
+	{
 		return this.rorgValue == SM_LRN_REC;
 	}
-	
-	public boolean isSysEx() {
+
+	public boolean isSysEx()
+	{
 		return this.rorgValue == SYS_EX;
 	}
-	
-	public boolean isSec() {
+
+	public boolean isSec()
+	{
 		return this.rorgValue == SEC;
 	}
-	
-	public boolean isSecEncaps() {
+
+	public boolean isSecEncaps()
+	{
 		return this.rorgValue == SEC_ENCAPS;
+	}
+
+	public boolean isUTE()
+	{
+		return this.rorgValue == Rorg.UTE;
 	}
 }

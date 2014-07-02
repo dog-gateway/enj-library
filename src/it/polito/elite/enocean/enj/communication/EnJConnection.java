@@ -17,6 +17,8 @@
  */
 package it.polito.elite.enocean.enj.communication;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import it.polito.elite.enocean.enj.EEP2_5.D2.D201.D20108;
@@ -25,7 +27,9 @@ import it.polito.elite.enocean.enj.EEP2_5.primitives.EnoceanEquipmentProfile;
 import it.polito.elite.enocean.enj.EEP2_5.primitives.Rorg;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketReceiverListener;
 import it.polito.elite.enocean.enj.EEP2_5.receiveEvent.PacketEventSender;
+import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.link.EnJLink;
+import it.polito.elite.enocean.enj.link.PacketListener;
 import it.polito.elite.enocean.enj.link.PacketQueueItem;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoWrLearnmore;
@@ -38,8 +42,9 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
  * EnOcean network.
  * 
  * It is typically built on top of an EnJLink instance, e.g.:
+ * 
  * <pre>
- * String serialId = "/dev/tty0";
+ * String serialId = &quot;/dev/tty0&quot;;
  * 
  * EnJLink link = new EnJLink(serialId);
  * 
@@ -50,12 +55,24 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
  * @authr <a href="mailto:biasiandrea04@gmail.com">Andrea Biasi </a>
  * 
  */
-public class EnJConnection
+public class EnJConnection implements PacketListener
 {
 	// the wrapped link layer
 	private EnJLink linkLayer;
 
-	//-------- check if needed -------------
+	// the default teach-in timeout in milliseconds
+	public static final int TEACH_IN_TIME = 20000;
+
+	// the teach-in flag
+	private boolean teachIn;
+
+	// the teach in timer
+	private Timer teachInTimer;
+
+	// the teach in disabling task
+	private CancelTeachInTask teachInResetTask;
+
+	// -------- check if needed -------------
 	private Device device;
 
 	private EnoceanEquipmentProfile eep;
@@ -63,25 +80,109 @@ public class EnJConnection
 	private Rorg rorg;
 
 	private ESP3Packet pkt;
-	
+
 	// Teach field should'nt this go in the TEACH packet?-----
 	public static byte TEACHIN_REQUEST = (byte) 0x00;
 	public static byte TEACHIN_DELECTION_REQUEST = (byte) 0x01;
 	public static byte TEACHIN_NOTSPECIFIED = (byte) 0x02;
 
 	// -------------------------------------------------------
-	//--------------------------------------
+	// --------------------------------------
 
 	/**
+	 * Build a connection layer instance on top of the given link layer
+	 * instance.
 	 * 
+	 * @param linkLayer
+	 *            The {@link EnJLink} instance upon which basing the connection
+	 *            layer.
 	 */
 	public EnJConnection(EnJLink linkLayer)
 	{
+		// initialize the teachIn flag at false
+		this.teachIn = false;
+
+		// initialize the teach in timer
+		this.teachInTimer = new Timer();
+
+		// intialize the teach in reset task
+		this.teachInResetTask = new CancelTeachInTask(this);
+
+		// store a reference to the link layer
 		this.linkLayer = linkLayer;
+
+		// add this connection layer as listener for incoming events
+		this.linkLayer.addPacketListener(this);
 	}
 
-	
+	/**
+	 * Enables the teach in procedure, it forces the connection layer to listen
+	 * for teach-in requests coming from the physical network. whenever a new
+	 * teach-in request is detected, a device recognition process is started
+	 * enabling access to the newly discovered device.
+	 * 
+	 * New devices are transfered to the next layer by means of a listener
+	 * mechanism.
+	 * 
+	 * The teach in procedure lasts for a time equal to the default
+	 * <code>EnJConnection.TEACH_IN_TIME</code>
+	 */
+	public void enableTeachIn()
+	{
+		// start reset timer
+		this.enableTeachIn(EnJConnection.TEACH_IN_TIME);
+	}
 
+	/**
+	 * Enables the teach in procedure, it forces the connection layer to listen
+	 * for teach-in requests coming from the physical network. whenever a new
+	 * teach-in request is detected, a device recognition process is started
+	 * enabling access to the newly discovered device.
+	 * 
+	 * New devices are transfered to the next layer by means of a listener
+	 * mechanism.
+	 * 
+	 * @param teachInTime
+	 *            the maximum time for which the connection layer will accept
+	 *            teach in requests.
+	 */
+	public void enableTeachIn(int teachInTime)
+	{
+		if (!this.teachIn)
+		{
+			// enable teach in
+			this.teachIn = true;
+
+			// start the teach in reset timer
+			this.teachInTimer.schedule(this.teachInResetTask, teachInTime);
+		}
+	}
+
+	/**
+	 * Checks if the connection layer is currently accepting teach-in requests
+	 * or not
+	 * 
+	 * @return the teachIn true if the connection layer is accepting teach-in
+	 *         requests, false otherwise.
+	 */
+	public boolean isTeachInEnabled()
+	{
+		return teachIn;
+	}
+
+	/**
+	 * Disables the teach mode on the connection layer. Teach-in requests are
+	 * ignored.
+	 */
+	public void disableTeachIn()
+	{
+		// stop any pending timer
+		this.teachInTimer.cancel();
+		this.teachInTimer.purge();
+
+		// disable the teach in procedure
+		this.teachIn = false;
+	}
 
 	public Device teach()
 	{
@@ -112,7 +213,7 @@ public class EnJConnection
 			// pkt.getPacketAsBytes()[i]));
 			// }
 
-			pkt = this.lowPriorityRxQueue.poll().getPkt();
+			//pkt = this.lowPriorityRxQueue.poll().getPkt();
 
 			if (pkt.getData()[0] == (byte) 0xD4)
 			{
@@ -256,6 +357,47 @@ public class EnJConnection
 			// Mando la risposta us ESP3
 			this.linkLayer.send(new ESP3Packet(ESP3Packet.RADIO, payloadResp,
 					opt)); // Attenzione bisogna mandarli invertiti
+		}
+	}
+
+	@Override
+	public void handlePacket(ESP3Packet pkt)
+	{
+		if (teachIn)
+			this.handleTeachIn(pkt);
+
+	}
+
+	private void handleTeachIn(ESP3Packet pkt)
+	{
+		// check the packet type and data content
+		if (pkt.isRadio())
+		{
+			// too low level, should encapsulate data in a more useful way
+			// get the packet raw data
+			byte packetData[] = pkt.getData();
+
+			// check the packet type
+			if(packetData[0]==Rorg.UTE)
+			{
+				//the packet payload
+				byte payload[] = new byte[7];
+				payload[6] = pkt.getData()[1];
+				payload[5] = pkt.getData()[2];
+				payload[4] = pkt.getData()[3];
+				payload[3] = pkt.getData()[4];
+				payload[2] = pkt.getData()[5];
+				payload[1] = pkt.getData()[6];
+				payload[0] = pkt.getData()[7];
+
+				// the device address
+				byte address[] = new byte[4];
+				address[3] = pkt.getData()[8];
+				address[2] = pkt.getData()[9];
+				address[1] = pkt.getData()[10];
+				address[0] = pkt.getData()[11];
+				//teach-in... handle the teach-in procedure
+			}
 		}
 	}
 
