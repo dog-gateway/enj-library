@@ -179,7 +179,7 @@ public class EnJLink
 		if (this.pktDeliveryProcess != null)
 			this.pktDeliveryProcess.addPacketListener(listener);
 	}
-	
+
 	/**
 	 * Removes a packet listener from the set of listeners notified of new
 	 * packets in the RX queue (low priority)
@@ -201,7 +201,25 @@ public class EnJLink
 	 */
 	public void send(ESP3Packet pkt)
 	{
-		this.lowPriorityTxQueue.add(new PacketQueueItem(pkt));
+		this.send(pkt, false);
+	}
+
+	/**
+	 * Sends a single {@link ESP3Packet} to the transceiver using normal or high
+	 * priority
+	 * 
+	 * @param pkt
+	 *            the packet to send
+	 * @param isHighPriority
+	 *            true if the packet should be sent with high priority (typical
+	 *            for responses), false otherwise.
+	 */
+	public void send(ESP3Packet pkt, boolean isHighPriority)
+	{
+		if (!isHighPriority)
+			this.lowPriorityTxQueue.add(new PacketQueueItem(pkt));
+		else
+			this.highPriorityTxQueue.add(new PacketQueueItem(pkt));
 	}
 
 	/**

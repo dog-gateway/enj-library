@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polito.elite.enocean.enj.EEP2_5.primitives;
+package it.polito.elite.enocean.enj.EEP26;
 
 import java.io.Serializable;
 
@@ -29,7 +29,7 @@ public class Device implements Serializable{
 	public Device(){
 	}
 
-	public Device(EnoceanEquipmentProfile eep, byte[] address,
+	public Device(EEPIdentifier eep, byte[] address,
 			byte[] manufacturerId) {
 		super();
 		this.eep = eep;
@@ -37,20 +37,20 @@ public class Device implements Serializable{
 		this.manufacturerId = manufacturerId;
 	}
 
-	EnoceanEquipmentProfile eep;
+	EEPIdentifier eep;
 	byte[] address = new byte[4];
 	byte[] manufacturerId = new byte[3];
 
 	/**
 	 * @return the deviceRorg
 	 */
-	public EnoceanEquipmentProfile getEEP() {
+	public EEPIdentifier getEEP() {
 		return eep;
 	}
 	/**
 	 * @param deviceRorg the deviceRorg to set
 	 */
-	public void setEEP(EnoceanEquipmentProfile eep) {
+	public void setEEP(EEPIdentifier eep) {
 		this.eep = eep;
 	}
 	/**

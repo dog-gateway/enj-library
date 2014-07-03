@@ -1,4 +1,4 @@
-package it.polito.elite.enocean.enj.EEP2_5.primitives;
+package it.polito.elite.enocean.enj.EEP26;
 
 import java.io.Serializable;
 

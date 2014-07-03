@@ -3,7 +3,7 @@
  */
 package it.polito.elite.enocean.enj.knowndevices;
 
-import it.polito.elite.enocean.enj.EEP2_5.primitives.Device;
+import it.polito.elite.enocean.enj.EEP26.Device;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

@@ -1,8 +1,8 @@
-package it.polito.elite.enocean.enj.EEP2_5.primitives;
+package it.polito.elite.enocean.enj.EEP26;
 
 import java.io.Serializable;
 
-public class EnoceanEquipmentProfile implements Serializable{
+public class EEPIdentifier implements Serializable{
 	/**
 	 * 
 	 */
@@ -15,7 +15,7 @@ public class EnoceanEquipmentProfile implements Serializable{
 	 * @param function
 	 * @param type
 	 */
-	public EnoceanEquipmentProfile(Rorg rorg, byte function, byte type) {
+	public EEPIdentifier(Rorg rorg, byte function, byte type) {
 		super();
 		this.rorg = rorg;
 		this.function = function;
