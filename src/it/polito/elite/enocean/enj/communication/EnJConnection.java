@@ -17,13 +17,13 @@
  */
 package it.polito.elite.enocean.enj.communication;
 
-import it.polito.elite.enocean.enj.EEP26.Device;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
 import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInPacket;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
+import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
@@ -67,7 +67,7 @@ public class EnJConnection implements PacketListener
 	private CancelTeachInTask teachInResetTask;
 
 	// -------- check if needed -------------
-	private Device device;
+	private EnOceanDevice device;
 
 	/**
 	 * Build a connection layer instance on top of the given link layer
@@ -164,20 +164,14 @@ public class EnJConnection implements PacketListener
 		this.teachIn = false;
 	}
 
-	//TODO: change this to abstract the link layer packet composition!!
-	public void sendCommand()
+	// TODO: change this to abstract the link layer packet composition!!
+	public void sendRadioCommand(byte[] address, byte[] payload)
 	{
-		D20108 plug = new D20108();
-		byte[] address = device.getAddress();
-		// byte data[], byte subTelNum, int destinationId , byte dBm, byte
-		// securityLevel
-		Radio radioToSend = new Radio(plug.actuatorSetOutput(D20108.ON),
-				(byte) 0x03, address, (byte) 0x00, (byte) 0x00);
+		// build the link-layer packet
+		Radio enjLinkPacket = Radio.getRadioToSend(address, payload);
 
-		// public Radio(byte data[], byte subTelNum, byte[] destinationId , byte
-		// dBm, byte securityLevel)
-
-		this.linkLayer.send(radioToSend);
+		//send the packet
+		this.linkLayer.send(enjLinkPacket);
 	}
 
 	@Override
@@ -196,7 +190,8 @@ public class EnJConnection implements PacketListener
 	 * being added, in a tech-in procedure disabling or it could just refuse the
 	 * physical teach-in request if not supported.
 	 * 
-	 * @param pkt The teach-in request packet
+	 * @param pkt
+	 *            The teach-in request packet
 	 */
 	private void handleUTETeachIn(UTETeachInPacket pkt)
 	{

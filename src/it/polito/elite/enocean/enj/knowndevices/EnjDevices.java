@@ -3,7 +3,7 @@
  */
 package it.polito.elite.enocean.enj.knowndevices;
 
-import it.polito.elite.enocean.enj.EEP26.Device;
+import it.polito.elite.enocean.enj.model.EnOceanDevice;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,9 +25,9 @@ public class EnjDevices {
 		super();
 	}
 
-	ArrayList<Device> devices = new ArrayList<Device>(1);
+	ArrayList<EnOceanDevice> devices = new ArrayList<EnOceanDevice>(1);
 
-	public void add(Device device){
+	public void add(EnOceanDevice device){
 		devices.add(device);
 	}
 
@@ -56,7 +56,7 @@ public class EnjDevices {
 			FileInputStream fileIn =new FileInputStream("devices.ser");  
 			ObjectInputStream in = new ObjectInputStream(fileIn);  
 
-			this.devices = (ArrayList<Device>) in.readObject(); // C'e un warning soppresso che nn capisco ma funziona
+			this.devices = (ArrayList<EnOceanDevice>) in.readObject(); // C'e un warning soppresso che nn capisco ma funziona
 
 			in.close();  
 			fileIn.close();  
@@ -72,7 +72,7 @@ public class EnjDevices {
 		}  
 	}
 
-	public Device peekDevice(){
+	public EnOceanDevice peekDevice(){
 		return this.devices.get(0);
 	}
 }

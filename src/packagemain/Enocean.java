@@ -9,12 +9,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import it.polito.elite.enocean.enj.EEP26.Device;
 import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketQueueItem;
+import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage.RadioMessage;
 
@@ -62,7 +62,7 @@ public class Enocean {
 		//lettura = "command";
 		//int size = lowPriorityRxQueue.size();
 		if(lettura.equals("teach")){
-			Device newDevice = communicator.teach();
+			EnOceanDevice newDevice = communicator.teach();
 			devices.add(newDevice);
 			devices.save();
 		}

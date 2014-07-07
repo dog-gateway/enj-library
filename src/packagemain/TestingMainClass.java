@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 import gnu.io.SerialPort;
-import it.polito.elite.enocean.enj.EEP26.Device;
 import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.Rorg;
 import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
@@ -16,6 +15,7 @@ import it.polito.elite.enocean.enj.link.PacketQueueItem;
 import it.polito.elite.enocean.enj.link.PacketReceiver;
 import it.polito.elite.enocean.enj.link.PacketTransmitter;
 import it.polito.elite.enocean.enj.link.serial.SerialPortFactory;
+import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand.CoRdVersion;
 
