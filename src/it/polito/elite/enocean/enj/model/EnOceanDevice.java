@@ -37,7 +37,7 @@ import java.util.Hashtable;
  *            The EnOcean Equipment Profile supported by the device
  * 
  */
-public class EnOceanDevice<T extends EEP> implements Serializable
+public class EnOceanDevice implements Serializable
 {
 
 	/**
@@ -46,7 +46,7 @@ public class EnOceanDevice<T extends EEP> implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	// the set of supported profiles
-	private Hashtable<EEPIdentifier, T> supportedProfiles;
+	private Hashtable<EEPIdentifier, EEP> supportedProfiles;
 
 	// the device address
 	byte[] address = new byte[4];
@@ -104,13 +104,14 @@ public class EnOceanDevice<T extends EEP> implements Serializable
 	 * @param eepClass
 	 *            The corresponding class, which must extend {@link EEP}
 	 */
-	public void addSupportedEEP(EEPIdentifier eepId, Class<T> eepClass)
+	public void addSupportedEEP(EEPIdentifier eepId,
+			Class<? extends EEP> eepClass)
 	{
 		// store the entry by building the corresponding instances
 		try
 		{
 			// get the profile instance
-			T eep = eepClass.newInstance();
+			EEP eep = eepClass.newInstance();
 
 			// add the instance to the set of supported instances
 			this.supportedProfiles.put(eepId, eep);
@@ -133,7 +134,7 @@ public class EnOceanDevice<T extends EEP> implements Serializable
 	 * @return the <code>&lt;T extends {@link EEP}&gt;</code> instance, if
 	 *         present, or null otherwise.
 	 */
-	public T getSupportedEEP(EEPIdentifier eepId)
+	public EEP getSupportedEEP(EEPIdentifier eepId)
 	{
 		return this.supportedProfiles.get(eepId);
 	}
@@ -160,5 +161,18 @@ public class EnOceanDevice<T extends EEP> implements Serializable
 	public int getManufacturerUID()
 	{
 		return ByteBuffer.wrap(this.manufacturerId).getInt();
+	}
+
+	/**
+	 * Given a device address expressed in the low level notation (array of
+	 * bytes) returns the device address in the high-level notation.
+	 * 
+	 * @param address
+	 *            The low-level address to convert.
+	 * @return the corresponding high level identifier.
+	 */
+	public static int byteAddressToUID(byte[] address)
+	{
+		return ByteBuffer.wrap(address).getInt();
 	}
 }

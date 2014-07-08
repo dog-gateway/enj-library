@@ -10,8 +10,8 @@ import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
+import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
-import it.polito.elite.enocean.enj.knowndevices.EnjDevices;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketQueueItem;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
@@ -31,7 +31,7 @@ public class Enocean {
 	public static void main(String[] args) {
 
 		String lettura = null;
-		EnjDevices devices = new EnjDevices();
+		EnJPersistentDeviceSet devices = new EnJPersistentDeviceSet();
 
 		// Reload devices
 		   devices.load(); // C'e exception perch� non c'� una minchia da caricare

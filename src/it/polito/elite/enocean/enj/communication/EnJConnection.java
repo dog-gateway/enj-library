@@ -18,12 +18,10 @@
 package it.polito.elite.enocean.enj.communication;
 
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
-import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInPacket;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
-import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
@@ -65,9 +63,6 @@ public class EnJConnection implements PacketListener
 
 	// the teach in disabling task
 	private CancelTeachInTask teachInResetTask;
-
-	// -------- check if needed -------------
-	private EnOceanDevice device;
 
 	/**
 	 * Build a connection layer instance on top of the given link layer
@@ -168,7 +163,7 @@ public class EnJConnection implements PacketListener
 	public void sendRadioCommand(byte[] address, byte[] payload)
 	{
 		// build the link-layer packet
-		Radio enjLinkPacket = Radio.getRadioToSend(address, payload);
+		Radio enjLinkPacket = Radio.getRadio(address, payload, true);
 
 		//send the packet
 		this.linkLayer.send(enjLinkPacket);

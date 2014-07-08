@@ -76,13 +76,18 @@ public class Radio extends ESP3Packet
 	}
 
 	/**
-	 * Gets a Radio packet to be sent to the transceiver, and then to the device with the given address
+	 * Gets a Radio packet to be sent to the transceiver, and then to the device
+	 * with the given address
+	 * 
 	 * @param address
 	 * @param payload
 	 * @return
 	 */
-	public static Radio getRadioToSend(byte[] address, byte[] payload)
+	public static Radio getRadio(byte[] address, byte[] payload, boolean send)
 	{
+		// prepare the radio packet
+		Radio pkt = null;
+
 		// public Radio(byte data[], byte subTelNum, byte[] destinationId , byte
 		// dBm, byte securityLevel)
 		// subtel number is set to 0x3 when sending
@@ -90,7 +95,17 @@ public class Radio extends ESP3Packet
 		// physical device. TODO: check if it works, was 0x00
 		// the security level (CRC8) is ignored in the advanced radio
 		// composition 0 (disabled)
-		return new Radio(payload, (byte) 0x03, address, (byte) 0xFF,
-				(byte) 0x00);
+		if (send)
+		{
+			//fill the packet
+			pkt = new Radio(payload, (byte) 0x03, address, (byte) 0xFF,
+			(byte) 0x00);
+
+		}
+		else
+		{
+			// TODO: to be supported in future releases
+		}
+		return pkt;
 	}
 }
