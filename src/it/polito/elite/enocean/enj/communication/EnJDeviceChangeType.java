@@ -15,27 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.application;
-
-import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
+package it.polito.elite.enocean.enj.communication;
 
 /**
- * The EnOcean for Java application layer, takes care of device tracking,
- * persistence and offers means for registering to device status updates and to
- * send messages without knowing any network-specific detail.
- * 
- * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
- * 
+ * @author bonino
+ *
  */
-public class EnJApplication
+public enum EnJDeviceChangeType
 {
-
-	// The set of known devices
-	private EnJPersistentDeviceSet knownDevices;
-	
-	public EnJApplication()
-	{
-		// TODO Auto-generated constructor stub
-	}
-
+	CREATED,
+	MODIFIED,
+	DELETED
 }

@@ -37,4 +37,13 @@ public class EEPRegistry
 			this.supportedProfiles.put(profileId, profile);
 	}
 
+	/**
+	 * Returns an EEP class given the corresponding EEP identifier
+	 * @param eepId The EEP identifier.
+	 * @return The EEP class.
+	 */
+	public Class<? extends EEP> getEEP(EEPIdentifier eepId)
+	{
+		return this.supportedProfiles.get(eepId);
+	}
 }

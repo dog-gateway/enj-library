@@ -22,9 +22,12 @@ import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInPacket;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
+import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Timer;
 
 /**
@@ -52,6 +55,11 @@ public class EnJConnection implements PacketListener
 	// the wrapped link layer
 	private EnJLink linkLayer;
 
+	// the set of device listeners to keep updated about device events
+	private Set<EnJDeviceListener> deviceListeners;
+
+	// ------------- TEACH IN -----------------
+
 	// the default teach-in timeout in milliseconds
 	public static final int TEACH_IN_TIME = 20000;
 
@@ -74,6 +82,9 @@ public class EnJConnection implements PacketListener
 	 */
 	public EnJConnection(EnJLink linkLayer)
 	{
+		// initialize the set of device listeners
+		this.deviceListeners = new HashSet<>();
+
 		// initialize the teachIn flag at false
 		this.teachIn = false;
 
@@ -88,6 +99,32 @@ public class EnJConnection implements PacketListener
 
 		// add this connection layer as listener for incoming events
 		this.linkLayer.addPacketListener(this);
+	}
+
+	/**
+	 * Adds a device listener to the set of listeners to be notified about
+	 * device events: creation, modification, deletion.
+	 * 
+	 * @param listener
+	 *            The {@link EnJDeviceListener} to notify to.
+	 */
+	public void addEnJDeviceListener(EnJDeviceListener listener)
+	{
+		// store the listener in the set of currently active listeners
+		this.deviceListeners.add(listener);
+	}
+
+	/**
+	 * Removes a device listener from the ste of listeners to be notified about
+	 * device events.
+	 * 
+	 * @param listener
+	 *            The {@link EnJDeviceListener} to remove.
+	 * @return true if removal was successful, false, otherwise.
+	 */
+	public boolean removeEnJDeviceListener(EnJDeviceListener listener)
+	{
+		return this.deviceListeners.remove(listener);
 	}
 
 	/**
@@ -165,7 +202,7 @@ public class EnJConnection implements PacketListener
 		// build the link-layer packet
 		Radio enjLinkPacket = Radio.getRadio(address, payload, true);
 
-		//send the packet
+		// send the packet
 		this.linkLayer.send(enjLinkPacket);
 	}
 
@@ -182,8 +219,8 @@ public class EnJConnection implements PacketListener
 
 	/**
 	 * Handles the UTE teach-in process, it can either result in a new device
-	 * being added, in a tech-in procedure disabling or it could just refuse the
-	 * physical teach-in request if not supported.
+	 * being added, in a teach-in procedure disabling or it could just refuse
+	 * the physical teach-in request if not supported.
 	 * 
 	 * @param pkt
 	 *            The teach-in request packet
@@ -198,10 +235,23 @@ public class EnJConnection implements PacketListener
 		{
 			// check the eep
 			if (EEPRegistry.getInstance().isEEPSupported(pkt.getEEP()))
-
+			{
 				// build the response packet
 				response = pkt
 						.buildResponse(UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
+
+				// build the device
+				EnOceanDevice device = new EnOceanDevice(pkt.getAddress(),
+						pkt.getManId());
+
+				// add the supported EEP
+				device.addSupportedEEP(pkt.getEEP(), EEPRegistry.getInstance()
+						.getEEP(pkt.getEEP()));
+
+				// notify the new device discovery
+				this.notifyEnJDeviceListeners(device,
+						EnJDeviceChangeType.CREATED);
+			}
 			else
 				// build the response packet
 				response = pkt
@@ -231,6 +281,15 @@ public class EnJConnection implements PacketListener
 			// priority as a maximum 500ms latency is allowed.
 			this.linkLayer.send(response.getRawPacket(), true);
 		}
+	}
+
+	private void notifyEnJDeviceListeners(EnOceanDevice device,
+			EnJDeviceChangeType changeType)
+	{
+		// switch on the kind of change
+
+		// use asynchronous delivery here, to avoid blocking / delaying the
+		// messaging procedure
 	}
 
 }

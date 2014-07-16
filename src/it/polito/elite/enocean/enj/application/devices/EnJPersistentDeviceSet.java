@@ -176,7 +176,8 @@ public class EnJPersistentDeviceSet implements Serializable
 
 				// restores in this object
 				this.theSet.clear();
-				this.theSet.putAll(((EnJPersistentDeviceSet) in.readObject()).theSet);
+				this.theSet
+						.putAll(((EnJPersistentDeviceSet) in.readObject()).theSet);
 
 				// close the input streams
 				in.close();
@@ -243,9 +244,9 @@ public class EnJPersistentDeviceSet implements Serializable
 	{
 		// add the given device
 		this.theSet.put(device.getDeviceUID(), device);
-		
-		if(this.autoSave)
-			if((this.filename!=null)&&(!this.filename.isEmpty()))
+
+		if (this.autoSave)
+			if ((this.filename != null) && (!this.filename.isEmpty()))
 				this.save();
 	}
 
@@ -260,45 +261,61 @@ public class EnJPersistentDeviceSet implements Serializable
 		// adds all devices
 		for (EnOceanDevice currentDevice : devices)
 		{
-			this.theSet.put(currentDevice.getDeviceUID(),currentDevice);
+			this.theSet.put(currentDevice.getDeviceUID(), currentDevice);
 		}
-		
-		if(this.autoSave)
-			if((this.filename!=null)&&(!this.filename.isEmpty()))
+
+		if (this.autoSave)
+			if ((this.filename != null) && (!this.filename.isEmpty()))
 				this.save();
 	}
-	
+
 	public EnOceanDevice remove(EnOceanDevice device)
 	{
-		return this.theSet.remove(device.getDeviceUID());
+		EnOceanDevice removed = this.theSet.remove(device.getDeviceUID());
+
+		if (this.autoSave)
+			if ((this.filename != null) && (!this.filename.isEmpty()))
+				this.save();
+
+		return removed;
 	}
-	
+
 	public EnOceanDevice remove(int uid)
 	{
-		return this.theSet.remove(uid);
+		EnOceanDevice removed = this.theSet.remove(uid);
+
+		if (this.autoSave)
+			if ((this.filename != null) && (!this.filename.isEmpty()))
+				this.save();
+
+		return removed;
 	}
-	
+
 	public Collection<EnOceanDevice> removeAll(Collection<EnOceanDevice> devices)
 	{
 		HashSet<EnOceanDevice> removedItems = new HashSet<>();
-	
-		for(EnOceanDevice device : devices)
+
+		for (EnOceanDevice device : devices)
 		{
 			removedItems.add(this.theSet.remove(device.getDeviceUID()));
 		}
-		
+
+		if (this.autoSave)
+			if ((this.filename != null) && (!this.filename.isEmpty()))
+				this.save();
+
 		return removedItems;
 	}
-	
+
 	public Collection<EnOceanDevice> removeAll(int deviceUIDs[])
 	{
 		HashSet<EnOceanDevice> removedItems = new HashSet<>();
-		
-		for(int i=0; i<deviceUIDs.length; i++)
+
+		for (int i = 0; i < deviceUIDs.length; i++)
 		{
 			removedItems.add(this.theSet.remove(deviceUIDs[i]));
 		}
-		
+
 		return removedItems;
 	}
 }
