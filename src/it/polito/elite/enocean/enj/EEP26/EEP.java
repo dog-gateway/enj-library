@@ -44,5 +44,10 @@ public abstract class EEP
 	{
 		return version;
 	}
-
+	
+	/**
+	 * Return the eep identifier associated to this EEP
+	 * @return
+	 */
+	public abstract  EEPIdentifier getEEPIdentifier();
 }

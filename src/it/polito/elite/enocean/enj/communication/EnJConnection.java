@@ -20,6 +20,7 @@ package it.polito.elite.enocean.enj.communication;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
 import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInPacket;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
+import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDeliveryTask;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
@@ -29,6 +30,8 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The EnOcean for Java (EnJ) connection layer. It decouples link-level
@@ -58,6 +61,9 @@ public class EnJConnection implements PacketListener
 	// the set of device listeners to keep updated about device events
 	private Set<EnJDeviceListener> deviceListeners;
 
+	// the executor service to run device update tasks
+	private ExecutorService deviceUpdateDeliveryExecutor;
+
 	// ------------- TEACH IN -----------------
 
 	// the default teach-in timeout in milliseconds
@@ -84,6 +90,9 @@ public class EnJConnection implements PacketListener
 	{
 		// initialize the set of device listeners
 		this.deviceListeners = new HashSet<>();
+
+		// initialize the update delivery executor
+		this.deviceUpdateDeliveryExecutor = Executors.newCachedThreadPool();
 
 		// initialize the teachIn flag at false
 		this.teachIn = false;
@@ -286,10 +295,11 @@ public class EnJConnection implements PacketListener
 	private void notifyEnJDeviceListeners(EnOceanDevice device,
 			EnJDeviceChangeType changeType)
 	{
-		// switch on the kind of change
-
 		// use asynchronous delivery here, to avoid blocking / delaying the
 		// messaging procedure
+		this.deviceUpdateDeliveryExecutor
+				.execute(new EnJDeviceChangeDeliveryTask(device, changeType,
+						this.deviceListeners));
 	}
 
 }

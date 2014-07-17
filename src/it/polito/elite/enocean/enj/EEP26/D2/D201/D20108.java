@@ -38,6 +38,10 @@ public class D20108 extends D201 implements Serializable
 	// the byte identifier for all output channels
 	public static byte ALL_OUTPUT_CHANNEL = 0x1E;
 
+	// the "data" fields accessible through this eep (and updated upon network
+	// data reception)
+	
+
 	// register the type in the EEPProfile even if no instance of this class is
 	// created.
 	static
@@ -57,12 +61,19 @@ public class D20108 extends D201 implements Serializable
 	}
 
 	// execution commands
-	public void actuatorSetOuput(EnJConnection connection, byte[] deviceAddress, boolean command)
+	public void actuatorSetOuput(EnJConnection connection,
+			byte[] deviceAddress, boolean command)
 	{
 		// exec the command by using the D201 general purpose implementation
-		super.actuatorSetOutput(connection, deviceAddress, D201.SWITCH_TO_NEW_OUTPUT_VALUE,
-				D20108.ALL_OUTPUT_CHANNEL, command ? D20108.ON_BYTE
-						: D20108.OFF_BYTE);
+		super.actuatorSetOutput(connection, deviceAddress,
+				D201.SWITCH_TO_NEW_OUTPUT_VALUE, D20108.ALL_OUTPUT_CHANNEL,
+				command ? D20108.ON_BYTE : D20108.OFF_BYTE);
+	}
+
+	@Override
+	public  EEPIdentifier getEEPIdentifier()
+	{
+		return new EEPIdentifier(D201.rorg, D201.func, D20108.type);
 	}
 
 }

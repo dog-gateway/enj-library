@@ -33,7 +33,26 @@ public interface EnJDeviceListener
 	 * Called when a new {@link EnOceanDevice} has been added, can either be
 	 * exploited at the connection or at the application layer.
 	 * 
-	 * @param device The just added device;
+	 * @param device
+	 *            The just added device;
 	 */
 	public void addedEnOceanDevice(EnOceanDevice device);
+
+	/**
+	 * Called when a {@link EnOceanDevice} definition has changed, e.g., because
+	 * of addition of new EEPs.
+	 * 
+	 * @param changedDevice
+	 *            The changed device.
+	 */
+	public void modifiedEnOceanDevice(EnOceanDevice changedDevice);
+
+	/**
+	 * Called when a {@link EnOceanDevice} has been remove from the physical
+	 * layer, e.g., moved in another place not reachable by the same EnOcean
+	 * network.
+	 * 
+	 * @param changedDevice
+	 */
+	public void removedEnOceanDevice(EnOceanDevice changedDevice);
 }

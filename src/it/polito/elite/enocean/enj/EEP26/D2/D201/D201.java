@@ -28,6 +28,13 @@ public abstract class D201 extends EEP
 	static byte STOP_DIMMING = 0x04;
 
 	// -------------------------------------------------
+	// Parameters defined by this EEP, which
+	// might change depending on the network
+	// activity.
+	// --------------------------------------------------
+	
+
+	// -------------------------------------------------
 
 	// the class constructor
 	public D201(String version)
@@ -55,18 +62,19 @@ public abstract class D201 extends EEP
 	 *            The required ouput value. A byte representing a percentage
 	 *            between 0 (0x00) and 100 (0x64).
 	 */
-	public void actuatorSetOutput(EnJConnection connection, byte[] deviceAddress, byte dimValue,
-			byte ioChannel, byte outputValue)
-	{ 
-		//prepare the data payload to host "desired" values
+	public void actuatorSetOutput(EnJConnection connection,
+			byte[] deviceAddress, byte dimValue, byte ioChannel,
+			byte outputValue)
+	{
+		// prepare the data payload to host "desired" values
 		byte dataByte[] = new byte[3];
 
 		// CMD code (0x01), the first 4 bits are not used
 		dataByte[0] = 0x01;
-		
+
 		// Dim value: bit 7 to 5 - IO channel: bit 4 to 0
 		dataByte[1] = (byte) ((dimValue << 5) + ioChannel);
-		
+
 		// Output value bit 6 to 0
 		dataByte[2] = outputValue;
 
