@@ -97,18 +97,24 @@ public class EEPIdentifier implements Serializable
 					+ eepIdentifierAsString.substring(0, 2));
 			byte func = Byte.parseByte("0x"
 					+ eepIdentifierAsString.substring(2, 4));
-			
+
 			// TODO handle higher EEP e.g. D201
-			byte type = (byte)0xff;
+			byte type = (byte) 0xff;
 			if (eepIdentifierAsString.length() == 6)
 			{
 				type = Byte.parseByte("0x"
 						+ eepIdentifierAsString.substring(4, 6));
 			}
-			
-			identifier  = new EEPIdentifier(new Rorg(rorg), func, type);
+
+			identifier = new EEPIdentifier(new Rorg(rorg), func, type);
 		}
-		
+
 		return identifier;
+	}
+
+	public static boolean isPartOf(EEPIdentifier part, EEPIdentifier whole)
+	{
+		// checks if the part and the whole have the same rorg and function
+		return ((part.rorg.getRorgValue() == whole.rorg.getRorgValue()) && (part.function == whole.function));
 	}
 }

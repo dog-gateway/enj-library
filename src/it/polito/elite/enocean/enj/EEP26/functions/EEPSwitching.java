@@ -17,8 +17,6 @@
  */
 package it.polito.elite.enocean.enj.EEP26.functions;
 
-import it.polito.elite.enocean.enj.EEP26.EEP;
-import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.D2.D201.D201;
 import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 
@@ -29,30 +27,40 @@ import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 public class EEPSwitching extends EEPFunction<Boolean>
 {
 
+	// the EEPFunction name
 	public static final String NAME = "Switching";
-	
+
+	// the human readable values
+	public static final boolean ON = true;
+	public static final boolean OFF = false;
+
+	private boolean value;
+
 	public EEPSwitching()
 	{
-		//call the super class constructor
+		// call the super class constructor
 		super(EEPSwitching.NAME);
-		
-		//store supported EEPs
+
+		// store supported EEPs
 		this.supportedEEP.add(D201.class.getSimpleName());
 		this.supportedEEP.add(D20108.class.getSimpleName());
+
+		// by default the function starts at OFF
+		this.value = EEPSwitching.OFF;
 	}
 
 	@Override
 	public Boolean getValue()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return value;
 	}
 
 	@Override
 	public void setValue(Boolean value)
 	{
-		// TODO Auto-generated method stub
-		
+		// store the current value
+		this.value = value;
+
 	}
 
 	@Override
@@ -65,10 +73,7 @@ public class EEPSwitching extends EEPFunction<Boolean>
 	@Override
 	public void setUnit()
 	{
-		// TODO Auto-generated method stub
-		
+		// intentionally left empty, no unit is supported.
 	}
-
-	
 
 }
