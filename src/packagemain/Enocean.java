@@ -30,7 +30,7 @@ public class Enocean {
 	 */
 	public static void main(String[] args) {
 
-		String lettura = null;
+/*		String lettura = null;
 		EnJPersistentDeviceSet devices = new EnJPersistentDeviceSet();
 
 		// Reload devices
@@ -120,13 +120,10 @@ public class Enocean {
 				connection.send(radioToSend);
 				
 				//communicator.sendCommand();
-				/*
-				 * 
-				 * COMMUNICATION
-				 * 
-				 */
+
 			}
 		}
 		//Alla fine salva i dispositivi --> devices.save
+*/
 	}
 }

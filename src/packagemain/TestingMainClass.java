@@ -30,7 +30,7 @@ public class TestingMainClass {
 	 * @return 
 	 */
 	public static void main(String[] args) {
-
+/*
 		try {
 			System.out.println("Sono nel main prova....");		
 
