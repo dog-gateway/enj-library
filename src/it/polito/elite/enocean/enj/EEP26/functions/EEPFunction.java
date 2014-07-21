@@ -30,16 +30,19 @@ import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
  * 
  * @author bonino
  * @param <T>
+ * @param <T>
  *            The value type.
  *
  */
-public abstract class EEPFunction<T>
+public abstract class EEPFunction
 {
 	// the function name
 	protected String name;
 
 	// the supported EEPs, i.e., the EEPs having this function
 	protected Set<String> supportedEEP;
+	
+	protected Object value;
 
 	/**
 	 * The class constructor, initializes the data structures shared between all
@@ -101,12 +104,34 @@ public abstract class EEPFunction<T>
 		this.supportedEEP = supportedEEP;
 	}
 
-	public abstract T getValue();
+	/**
+	 * Get the current value of this EEP function
+	 * @param <T>
+	 * 
+	 * @return
+	 */
+	public abstract Object getValue();
 
-	public abstract void setValue(T value);
+	/**
+	 * Set the current value of this EEP function
+	 * @param <T>
+	 * 
+	 * @param value
+	 * @return 
+	 */
+	public abstract boolean setValue(Object value);
 
+	/**
+	 * Get the unit of measure associated to the value of this function, if
+	 * available or null otherwise.
+	 * 
+	 * @return
+	 */
 	public abstract String getUnit();
 
+	/**
+	 * Set the unit of measure associated to the function value.
+	 */
 	public abstract void setUnit();
 
 }

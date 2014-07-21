@@ -9,6 +9,7 @@ import it.polito.elite.enocean.enj.communication.EnJConnection;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
+ * @param <T>
  * 
  */
 public abstract class D201 extends EEP
@@ -32,6 +33,7 @@ public abstract class D201 extends EEP
 	// might change depending on the network
 	// activity.
 	// --------------------------------------------------
+
 	
 
 	// -------------------------------------------------

@@ -21,10 +21,13 @@ import it.polito.elite.enocean.enj.EEP26.D2.D201.D201;
 import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 
 /**
+ * A class representing the switching function associated to some of the EEPs
+ * defined in the 2.6 specification.
+ * 
  * @author bonino
  *
  */
-public class EEPSwitching extends EEPFunction<Boolean>
+public class EEPSwitching extends EEPFunction
 {
 
 	// the EEPFunction name
@@ -34,8 +37,10 @@ public class EEPSwitching extends EEPFunction<Boolean>
 	public static final boolean ON = true;
 	public static final boolean OFF = false;
 
-	private boolean value;
-
+	/**
+	 * Basic constructor, builds a new {@link EEPSwitching} instance initialized
+	 * at {@link EEPFunction}.OFF.
+	 */
 	public EEPSwitching()
 	{
 		// call the super class constructor
@@ -49,17 +54,46 @@ public class EEPSwitching extends EEPFunction<Boolean>
 		this.value = EEPSwitching.OFF;
 	}
 
+	/**
+	 * Constructor, builds a new {@link EEPSwitching} instance with the given
+	 * value (true == on, false == off).
+	 * 
+	 * @param value
+	 */
+	public EEPSwitching(boolean value)
+	{
+		// call the super class constructor
+		super(EEPSwitching.NAME);
+
+		// store supported EEPs
+		this.supportedEEP.add(D201.class.getSimpleName());
+		this.supportedEEP.add(D20108.class.getSimpleName());
+
+		// by default the function starts at OFF
+		this.value = value;
+	}
+
 	@Override
-	public Boolean getValue()
+	public Object getValue()
 	{
 		return value;
 	}
 
 	@Override
-	public void setValue(Boolean value)
+	public boolean setValue(Object value)
 	{
-		// store the current value
-		this.value = value;
+		boolean stored = false;
+
+		if (value instanceof Boolean)
+		{
+			// store the current value
+			this.value = value;
+
+			// updated the operation result
+			stored = true;
+		}
+
+		return stored;
 
 	}
 

@@ -3,11 +3,12 @@
  */
 package it.polito.elite.enocean.enj.EEP26.D2.D201;
 
-import java.io.Serializable;
-
 import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
+import it.polito.elite.enocean.enj.EEP26.functions.EEPSwitching;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
+
+import java.io.Serializable;
 
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
@@ -58,6 +59,9 @@ public class D20108 extends D201 implements Serializable
 	public D20108()
 	{
 		super("2.6");
+		
+		//add the supported functions
+		this.addFunction(new EEPSwitching());
 	}
 
 	// execution commands
