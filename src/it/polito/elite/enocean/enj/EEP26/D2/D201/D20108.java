@@ -1,11 +1,27 @@
-/**
+/*
+ * EnJ - EnOcean Java API
  * 
+ * Copyright 2014 Andrea Biasi, Dario Bonino 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License
  */
 package it.polito.elite.enocean.enj.EEP26.D2.D201;
 
 import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
-import it.polito.elite.enocean.enj.EEP26.functions.EEPSwitching;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPEnergyMeasurement;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerMeasurement;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPSwitching;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 
 import java.io.Serializable;
@@ -41,7 +57,6 @@ public class D20108 extends D201 implements Serializable
 
 	// the "data" fields accessible through this eep (and updated upon network
 	// data reception)
-	
 
 	// register the type in the EEPProfile even if no instance of this class is
 	// created.
@@ -59,9 +74,11 @@ public class D20108 extends D201 implements Serializable
 	public D20108()
 	{
 		super("2.6");
-		
-		//add the supported functions
-		this.addFunction(new EEPSwitching());
+
+		// add the supported functions
+		this.addChannelAttribute(1, new EEPSwitching());
+		this.addChannelAttribute(1, new EEPEnergyMeasurement());
+		this.addChannelAttribute(1, new EEPPowerMeasurement());
 	}
 
 	// execution commands
@@ -70,12 +87,27 @@ public class D20108 extends D201 implements Serializable
 	{
 		// exec the command by using the D201 general purpose implementation
 		super.actuatorSetOutput(connection, deviceAddress,
-				D201.SWITCH_TO_NEW_OUTPUT_VALUE, D20108.ALL_OUTPUT_CHANNEL,
-				command ? D20108.ON_BYTE : D20108.OFF_BYTE);
+				D20108DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
+				D20108.ALL_OUTPUT_CHANNEL, command ? D20108.ON_BYTE
+						: D20108.OFF_BYTE);
+	}
+
+	public void actuatorSetOuput(EnJConnection connection,
+			byte[] deviceAddress, int dimValue, D20108DimMode dimMode)
+	{
+		// check limits
+		if (dimValue < 0)
+			dimValue = 0;
+		else if (dimValue > 100)
+			dimValue = 100;
+
+		super.actuatorSetOutput(connection, deviceAddress, dimMode.getCode(),
+				D20108.ALL_OUTPUT_CHANNEL, (byte) dimValue);
+
 	}
 
 	@Override
-	public  EEPIdentifier getEEPIdentifier()
+	public EEPIdentifier getEEPIdentifier()
 	{
 		return new EEPIdentifier(D201.rorg, D201.func, D20108.type);
 	}

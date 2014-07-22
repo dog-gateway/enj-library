@@ -19,15 +19,6 @@ public abstract class D201 extends EEP
 	public static final byte func = (byte) 0x01;
 	// func must be defined by extending classes
 
-	/*
-	 * Constant fields for dim value in CMD = 0x01
-	 */
-	static byte SWITCH_TO_NEW_OUTPUT_VALUE = 0x00;
-	static byte DIM_TO_NEW_OUTPUT_VALUE_TIMER1 = 0x01;
-	static byte DIM_TO_NEW_OUTPUT_VALUE_TIMER2 = 0x02;
-	static byte DIM_TO_NEW_OUTPUT_VALUE_TIMER3 = 0x03;
-	static byte STOP_DIMMING = 0x04;
-
 	// -------------------------------------------------
 	// Parameters defined by this EEP, which
 	// might change depending on the network

@@ -15,10 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.EEP26.functions;
-
-import it.polito.elite.enocean.enj.EEP26.D2.D201.D201;
-import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
+package it.polito.elite.enocean.enj.EEP26.attributes;
 
 /**
  * A class representing the switching function associated to some of the EEPs
@@ -27,7 +24,7 @@ import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
  * @author bonino
  *
  */
-public class EEPSwitching extends EEPFunction
+public class EEPSwitching extends EEPAttribute<Boolean>
 {
 
 	// the EEPFunction name
@@ -39,16 +36,12 @@ public class EEPSwitching extends EEPFunction
 
 	/**
 	 * Basic constructor, builds a new {@link EEPSwitching} instance initialized
-	 * at {@link EEPFunction}.OFF.
+	 * at {@link EEPAttribute}.OFF.
 	 */
 	public EEPSwitching()
 	{
 		// call the super class constructor
 		super(EEPSwitching.NAME);
-
-		// store supported EEPs
-		this.supportedEEP.add(D201.class.getSimpleName());
-		this.supportedEEP.add(D20108.class.getSimpleName());
 
 		// by default the function starts at OFF
 		this.value = EEPSwitching.OFF;
@@ -65,22 +58,12 @@ public class EEPSwitching extends EEPFunction
 		// call the super class constructor
 		super(EEPSwitching.NAME);
 
-		// store supported EEPs
-		this.supportedEEP.add(D201.class.getSimpleName());
-		this.supportedEEP.add(D20108.class.getSimpleName());
-
 		// by default the function starts at OFF
 		this.value = value;
 	}
 
 	@Override
-	public Object getValue()
-	{
-		return value;
-	}
-
-	@Override
-	public boolean setValue(Object value)
+	public boolean setValue(Boolean value)
 	{
 		boolean stored = false;
 
@@ -96,18 +79,4 @@ public class EEPSwitching extends EEPFunction
 		return stored;
 
 	}
-
-	@Override
-	public String getUnit()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setUnit()
-	{
-		// intentionally left empty, no unit is supported.
-	}
-
 }

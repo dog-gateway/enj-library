@@ -223,6 +223,10 @@ public class EnJConnection implements PacketListener
 	{
 		if ((this.teachIn) && (UTETeachInPacket.isUTETeachIn(pkt)))
 			this.handleUTETeachIn(new UTETeachInPacket(pkt));
+		else
+		{
+			//handle other packets
+		}
 
 	}
 

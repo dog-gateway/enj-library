@@ -17,11 +17,9 @@
  */
 package it.polito.elite.enocean.enj.EEP26;
 
-import it.polito.elite.enocean.enj.EEP26.functions.EEPFunction;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPAttribute;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -37,8 +35,13 @@ public abstract class EEP
 	// TODO: handle this as a real version
 	private String version;
 
-	// the set of functions associated to this profile
-	protected HashMap<String, Set<EEPFunction>> functions;
+	// the set of attributes associated to single channels defined by this
+	// profile: the key is the channel id. If the EEP has only one channel id
+	// the implementing classes might encode all attributes as device-wide
+	protected HashMap<Integer, HashMap<String, EEPAttribute<? extends Object>>> channelAttributes;
+
+	// the set of EEPWide attributes
+	protected HashMap<String, EEPAttribute<? extends Object>> eepAttributes;
 
 	/**
 	 * 
@@ -48,8 +51,11 @@ public abstract class EEP
 		// store the version number
 		this.version = new String(version);
 
-		// initialize the functions map
-		this.functions = new HashMap<String, Set<EEPFunction>>();
+		// initialize the channel specific attributes
+		this.channelAttributes = new HashMap<Integer, HashMap<String, EEPAttribute<? extends Object>>>();
+
+		// initializa the eep wide attributes
+		this.eepAttributes = new HashMap<String, EEPAttribute<? extends Object>>();
 	}
 
 	/**
@@ -61,69 +67,149 @@ public abstract class EEP
 	}
 
 	/**
-	 * Lists the unique names of all functions associated to this EEP
+	 * Adds an EEPWide attribute to this {@link EEP} instance
 	 * 
-	 * @return
+	 * @param attribute
+	 *            the attribute to add
+	 * @return true if successful, false otherwise.
 	 */
-	public Set<String> listAllFunctionNames()
+	public boolean addEEPAttribute(EEPAttribute<? extends Object> attribute)
 	{
-		return this.functions.keySet();
+		// the operation result, initially false
+		boolean stored = false;
+
+		// check if the insertion was successful
+		if (this.eepAttributes.put(attribute.getClass().getSimpleName(),
+				attribute).equals(attribute))
+			stored = true;
+
+		// return the insertion result
+		return stored;
 	}
 
 	/**
-	 * Lists all functions associated to this EEP, typically the {@link Set}
-	 * contained in the returned {@link Collection} contain one element only,
-	 * except for cases in which same functions might have more instances
-	 * (multiple channel deviceS).
+	 * Returns the eep-wide attribute having the given name, or null if no
+	 * attribute with the given name is available.
 	 * 
-	 * @return
+	 * @param attributeName
+	 *            The name of the attribute to retrieve.
+	 * @return The corresponding {@link EEPAttribute} instance
 	 */
-	public Collection<Set<EEPFunction>> getAllFunctions()
+	public EEPAttribute<? extends Object> getEEPAttribute(String attributeName)
 	{
-		return this.functions.values();
+		return this.eepAttributes.get(attributeName);
 	}
 
 	/**
-	 * Get the function instances associated to the given function name.
+	 * Returns the names of the eep-wide attributes defined for this {@link EEP}
+	 * instance.
 	 * 
-	 * @param functionName
-	 *            The function name (typically obtained through reflection:
-	 *            EEPFunctionClass.class.getSimpleName()).
-	 * @return The set of {@link EEPFunction}s associated to given function name.
+	 * @return The {@link Set}<{@link String}> containing all the names of the
+	 *         currently available {@link EEP}s.
 	 */
-	public Set<EEPFunction> getFunction(String functionName)
+	public Set<String> listEEPAttributes()
 	{
-		return functionName != null ? this.functions.get(functionName) : null;
+		return this.eepAttributes.keySet();
 	}
 
 	/**
-	 * Add a function to the set of functions assoxiated to this EEP.
-	 * @param function
+	 * Adds an channel-specific attribute to this {@link EEP} instance
+	 * 
+	 * @param channelId
+	 *            The id of the channel to which the attribute must be
+	 *            associated.
+	 * @param attribute
+	 *            the attribute to add
+	 * @return true if successful, false otherwise.
 	 */
-	public void addFunction(EEPFunction function)
+	public boolean addChannelAttribute(Integer channelId,
+			EEPAttribute<? extends Object> attribute)
 	{
-		// get the function name
-		String functionName = function.getClass().getSimpleName();
+		// the operation result, initially false
+		boolean stored = false;
 
-		// prepare a variable for holding the functionset associated to the
-		// given function (type)
-		Set<EEPFunction> functionSet = null;
-		if (this.functions.containsKey(functionName))
+		// the channel-specific attribute map
+		HashMap<String, EEPAttribute<? extends Object>> channelAttributes = this.channelAttributes
+				.get(channelId);
+
+		// check not null, if null the channel does not exist and must be
+		// created
+		if (channelAttributes == null)
 		{
-			// get the set if exists
-			functionSet = this.functions.get(functionName);
-		}
-		else
-		{
-			// create a new set
-			functionSet = new HashSet<EEPFunction>();
+			// create the channel attributes map
+			channelAttributes = new HashMap<String, EEPAttribute<? extends Object>>();
 
-			// store the set into the EEP map of functions
-			this.functions.put(functionName, functionSet);
+			// store the map
+			this.channelAttributes.put(channelId, channelAttributes);
 		}
 
-		// add the function
-		functionSet.add(function);
+		// check if the insertion was successful
+		if (channelAttributes.put(attribute.getClass().getSimpleName(),
+				attribute).equals(attribute))
+			stored = true;
+
+		// return the insertion result
+		return stored;
+	}
+
+	/**
+	 * Returns the a channel specific attribute having the given name, or null
+	 * if no attribute with the given name is available.
+	 * 
+	 * @param channelId
+	 *            The channel id.
+	 * @param attributeName
+	 *            The name of the attribute to retrieve.
+	 * @return The corresponding {@link EEPAttribute} instance
+	 */
+	public EEPAttribute<? extends Object> getChannelAttribute(
+			Integer channelId, String attributeName)
+	{
+		// prepare the attribute holder
+		EEPAttribute<? extends Object> attribute = null;
+
+		// get the channel-specific attributes
+		HashMap<String, EEPAttribute<? extends Object>> channelAttributes = this.channelAttributes
+				.get(channelId);
+
+		// if channel-specific attributes are available
+		if (channelAttributes != null)
+			// store the requested attribute, if present
+			attribute = channelAttributes.get(attributeName);
+
+		// return the extracted attribute, will be null if the attribute does
+		// not exist.
+		return attribute;
+	}
+
+	/**
+	 * Returns the names of the channel-specific attributes defined for this
+	 * {@link EEP} instance, on the given channel.
+	 * 
+	 * @param channelId
+	 *            The id of the channel.
+	 * @return The {@link Set}<{@link String}> containing all the names of the
+	 *         currently available {@link EEP}s.
+	 */
+	public Set<String> listChannelAttributes(Integer channelId)
+	{
+		// get the channel specific attributes
+		HashMap<String, EEPAttribute<? extends Object>> attributes = this.channelAttributes
+				.get(channelId);
+
+		// return the channel attribute names if the channel exist and there are
+		// attributes associated to the channel, false otherwise.
+		return (attributes != null) ? attributes.keySet() : null;
+	}
+
+	/**
+	 * Returns the number of channels supported by this {@link EEP} instance.
+	 * 
+	 * @return The number of channels as an Integer.
+	 */
+	public int getNumberOfChannels()
+	{
+		return this.channelAttributes.size();
 	}
 
 	/**
