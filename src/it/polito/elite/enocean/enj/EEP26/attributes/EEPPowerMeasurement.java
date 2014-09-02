@@ -23,7 +23,7 @@ package it.polito.elite.enocean.enj.EEP26.attributes;
  * in kW and they are treated as a number-unit couple with no explicit unit of
  * measurement handling.
  * 
- * @author bonino
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
 public class EEPPowerMeasurement extends EEPAttribute<Double>

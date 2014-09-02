@@ -65,18 +65,10 @@ public class EEPSwitching extends EEPAttribute<Boolean>
 	@Override
 	public boolean setValue(Boolean value)
 	{
-		boolean stored = false;
+		// store the current value
+		this.value = value;
 
-		if (value instanceof Boolean)
-		{
-			// store the current value
-			this.value = value;
-
-			// updated the operation result
-			stored = true;
-		}
-
-		return stored;
+		return true;
 
 	}
 }

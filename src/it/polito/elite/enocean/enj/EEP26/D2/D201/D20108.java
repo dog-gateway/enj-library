@@ -20,8 +20,10 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
 import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPEnergyMeasurement;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPLocalControl;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerMeasurement;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPSwitching;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPUserInterfaceMode;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 
 import java.io.Serializable;
@@ -79,6 +81,8 @@ public class D20108 extends D201 implements Serializable
 		this.addChannelAttribute(1, new EEPSwitching());
 		this.addChannelAttribute(1, new EEPEnergyMeasurement());
 		this.addChannelAttribute(1, new EEPPowerMeasurement());
+		this.addChannelAttribute(1, new EEPLocalControl());
+		this.addChannelAttribute(1, new EEPUserInterfaceMode());
 	}
 
 	// execution commands

@@ -24,7 +24,7 @@ package it.polito.elite.enocean.enj.EEP26.attributes;
  * Wh or in kWh and they are treated as a couple Number-unit with no explicit
  * unit of measurement handling.
  * 
- * @author bonino
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
 public class EEPEnergyMeasurement extends EEPAttribute<Double>
