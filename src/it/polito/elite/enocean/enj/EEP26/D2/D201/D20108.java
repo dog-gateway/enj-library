@@ -91,13 +91,13 @@ public class D20108 extends D201 implements Serializable
 	{
 		// exec the command by using the D201 general purpose implementation
 		super.actuatorSetOutput(connection, deviceAddress,
-				D20108DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
+				D201DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
 				D20108.ALL_OUTPUT_CHANNEL, command ? D20108.ON_BYTE
 						: D20108.OFF_BYTE);
 	}
 
 	public void actuatorSetOuput(EnJConnection connection,
-			byte[] deviceAddress, int dimValue, D20108DimMode dimMode)
+			byte[] deviceAddress, int dimValue, D201DimMode dimMode)
 	{
 		// check limits
 		if (dimValue < 0)

@@ -1,7 +1,7 @@
 /*
  * EnJ - EnOcean Java API
  * 
- * Copyright 2014 Dario Bonino 
+ * Copyright 2014 Andrea Biasi, Dario Bonino 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,37 +18,36 @@
 package it.polito.elite.enocean.enj.EEP26.attributes;
 
 /**
- * A class representing the capability of a device to be locally controlled.
- * Such a capability may either be enabled or disabled depending on
- * configuration and application needs.
+ * A class representing the capability of a device to detect power failures. It
+ * might either be enabled or disabled.
  * 
  * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
-public class EEPLocalControl extends EEPAttribute<Boolean>
+public class EEPPowerFailure extends EEPAttribute<Boolean>
 {
 	// the EEPFunction name
-	public static final String NAME = "LocalControl";
+	public static final String NAME = "PowerFailure";
 
 	// the possible values
-	public static final boolean ENABLED = true;
 	public static final boolean DISABLED = false;
-
-	public EEPLocalControl()
+	public static final boolean ENABLED = true;
+	
+	public EEPPowerFailure()
 	{
-		// call the superclass constructor
-		super(EEPLocalControl.NAME);
-
-		// set the default value
-		this.value = EEPLocalControl.DISABLED;
+		//call the superclass constructor
+		super(EEPPowerFailure.NAME);
+		
+		//set the default value at disabled
+		this.value = EEPPowerFailure.DISABLED;
 	}
-
-	public EEPLocalControl(Boolean value)
+	
+	public EEPPowerFailure(Boolean value)
 	{
-		// call the superclass constructor
-		super(EEPLocalControl.NAME);
-
-		// set the value
+		//call the superclass constructor
+		super(EEPPowerFailure.NAME);
+		
+		//set the given value
 		this.value = value;
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * EnJ - EnOcean Java API
  * 
- * Copyright 2014 Dario Bonino 
+ * Copyright 2014 Andrea Biasi, Dario Bonino 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,37 +18,38 @@
 package it.polito.elite.enocean.enj.EEP26.attributes;
 
 /**
- * A class representing the capability of a device to be locally controlled.
- * Such a capability may either be enabled or disabled depending on
- * configuration and application needs.
+ * A class representing the behavior of a device upon an over current shutdown.
+ * It can either stay turned off until manual switching is performed or it can
+ * be reset to the original state through a trigger signal.
  * 
  * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
-public class EEPLocalControl extends EEPAttribute<Boolean>
+public class EEPOverCurrentShutdownReset extends EEPAttribute<Boolean>
 {
 	// the EEPFunction name
-	public static final String NAME = "LocalControl";
+	public static final String NAME = "ResetOverCurrentShutdown";
 
 	// the possible values
-	public static final boolean ENABLED = true;
-	public static final boolean DISABLED = false;
+	public static final boolean NOT_ACTIVE = false;
+	public static final boolean TRIGGER_SIGNAL = true;
 
-	public EEPLocalControl()
+	public EEPOverCurrentShutdownReset()
 	{
 		// call the superclass constructor
-		super(EEPLocalControl.NAME);
+		super(EEPOverCurrentShutdownReset.NAME);
 
-		// set the default value
-		this.value = EEPLocalControl.DISABLED;
+		// set the default value at NOT_ACTIVE
+		this.value = NOT_ACTIVE;
 	}
 
-	public EEPLocalControl(Boolean value)
+	public EEPOverCurrentShutdownReset(Boolean value)
 	{
-		// call the superclass constructor
-		super(EEPLocalControl.NAME);
+		// call the super class constructor
+		super(EEPOverCurrentShutdownReset.NAME);
 
-		// set the value
+		// set the given value
 		this.value = value;
+
 	}
 }

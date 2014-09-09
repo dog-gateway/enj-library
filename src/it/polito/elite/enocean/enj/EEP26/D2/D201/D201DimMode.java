@@ -21,7 +21,7 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
  * @author bonino
  *
  */
-public enum D20108DimMode
+public enum D201DimMode
 {
 	SWITCH_TO_NEW_OUTPUT_VALUE((byte)0x00),
 	TIMED_DIM_1((byte)0x01),
@@ -31,7 +31,7 @@ public enum D20108DimMode
 	
 	private final byte code;
 	
-	private D20108DimMode(byte modCode)
+	private D201DimMode(byte modCode)
 	{
 		this.code = modCode;
 	}
