@@ -19,8 +19,12 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
 
 import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPDefaultState;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPEnergyMeasurement;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPLocalControl;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPOverCurrentShutdown;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPOverCurrentShutdownReset;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerFailure;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerMeasurement;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPSwitching;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPUserInterfaceMode;
@@ -83,6 +87,10 @@ public class D20108 extends D201 implements Serializable
 		this.addChannelAttribute(1, new EEPPowerMeasurement());
 		this.addChannelAttribute(1, new EEPLocalControl());
 		this.addChannelAttribute(1, new EEPUserInterfaceMode());
+		this.addChannelAttribute(1, new EEPDefaultState());
+		this.addChannelAttribute(1, new EEPOverCurrentShutdown());
+		this.addChannelAttribute(1, new EEPOverCurrentShutdownReset());
+		this.addChannelAttribute(1, new EEPPowerFailure());
 	}
 
 	// execution commands
