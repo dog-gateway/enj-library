@@ -19,6 +19,7 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
 
 import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
+import it.polito.elite.enocean.enj.EEP26.attributes.EEPAttribute;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPDefaultState;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPEnergyMeasurement;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPLocalControl;
@@ -116,6 +117,32 @@ public class D20108 extends D201 implements Serializable
 		super.actuatorSetOutput(connection, deviceAddress, dimMode.getCode(),
 				D20108.ALL_OUTPUT_CHANNEL, (byte) dimValue);
 
+	}
+
+	/**
+	 * Updates the configuration of the physical actuator having this EEP
+	 * profile with values from the given set of attributes. Attributes not
+	 * being part of the acceptable configuration parameters will be simply
+	 * ignored.
+	 * 
+	 * @param connection The {@link EnJConnection} object enabling physical layer communication
+	 * @param deviceAddress The physical layer address of the device
+	 * @param attributes The configuration attributes to set
+	 */
+	public void actuatorSetLocal(EnJConnection connection,
+			byte[] deviceAddress, int channelId, EEPAttribute<? extends Object>[] attributes)
+	{
+		//extract the attributes
+		for(EEPAttribute<? extends Object> attribute : attributes)
+		{
+			//TODO: find an efficient way for gathering needed data...
+			if(attribute instanceof EEPLocalControl)
+			{
+				//handle local control
+			}
+		}
+		
+		//call the superclass method for setting the device configuration
 	}
 
 	@Override
