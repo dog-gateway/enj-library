@@ -17,6 +17,8 @@
  */
 package it.polito.elite.enocean.enj.EEP26.attributes;
 
+import java.nio.ByteBuffer;
+
 /**
  * A class representing the power measurement function associated to some of the
  * EEPs defined in the 2.6 specification. Power values could either be in W or
@@ -122,6 +124,23 @@ public class EEPPowerMeasurement extends EEPAttribute<Double>
 		}
 
 		return stored;
+	}
+	
+	@Override
+	public byte[] byteValue()
+	{
+		//it is likely to never be used...
+		
+		//use byte buffers to ease double encoding / decoding
+		
+		// a byte buffer wrapping an array of 4 bytes
+		ByteBuffer valueAsBytes = ByteBuffer.wrap(new byte[4]);
+		
+		// store the current value
+		valueAsBytes.putDouble(this.value);
+		
+		// return the value as byte array
+		return valueAsBytes.array();
 	}
 
 }

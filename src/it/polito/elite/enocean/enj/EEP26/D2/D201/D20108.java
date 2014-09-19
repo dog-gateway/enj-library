@@ -125,24 +125,60 @@ public class D20108 extends D201 implements Serializable
 	 * being part of the acceptable configuration parameters will be simply
 	 * ignored.
 	 * 
-	 * @param connection The {@link EnJConnection} object enabling physical layer communication
-	 * @param deviceAddress The physical layer address of the device
-	 * @param attributes The configuration attributes to set
+	 * @param connection
+	 *            The {@link EnJConnection} object enabling physical layer
+	 *            communication
+	 * @param deviceAddress
+	 *            The physical layer address of the device
+	 * @param attributes
+	 *            The configuration attributes to set
 	 */
 	public void actuatorSetLocal(EnJConnection connection,
-			byte[] deviceAddress, int channelId, EEPAttribute<? extends Object>[] attributes)
+			byte[] deviceAddress, int channelId,
+			EEPAttribute<? extends Object>[] attributes, D201DimTime dimTime1, D201DimTime dimTime2, D201DimTime dimTime3)
 	{
-		//extract the attributes
-		for(EEPAttribute<? extends Object> attribute : attributes)
+		// the over current shutdown settings (enabled / disabled), disabled by
+		// default
+		byte overCurrentShutDown = 0x00;
+
+		// the reset behavior in overcurrent shutdown cases
+		byte resetOverCurrentShutDown = 0x00;
+
+		// the local control enabling flag
+		byte localControl = 0x00;
+
+		// the user interface mode (either day or night)
+		byte userInterfaceIndication = 0x00;
+
+		// the power failure flag
+		byte powerFailure = 0x00;
+
+		// the default state to set when the actuator is powered
+		byte defaultState = 0x00;
+
+		// extract the attributes
+		// TODO: find a better way to perform such operations, if possible
+		for (EEPAttribute<? extends Object> attribute : attributes)
 		{
-			//TODO: find an efficient way for gathering needed data...
-			if(attribute instanceof EEPLocalControl)
-			{
-				//handle local control
-			}
+			if (attribute instanceof EEPLocalControl)
+				localControl = attribute.byteValue()[0];
+			else if (attribute instanceof EEPOverCurrentShutdown)
+				overCurrentShutDown = attribute.byteValue()[0];
+			else if (attribute instanceof EEPOverCurrentShutdownReset)
+				resetOverCurrentShutDown = attribute.byteValue()[0];
+			else if (attribute instanceof EEPUserInterfaceMode)
+				userInterfaceIndication = attribute.byteValue()[0];
+			else if (attribute instanceof EEPPowerFailure)
+				powerFailure = attribute.byteValue()[0];
+			else if (attribute instanceof EEPDefaultState)
+				defaultState = attribute.byteValue()[0];
 		}
-		
-		//call the superclass method for setting the device configuration
+
+		// call the superclass method for setting the device configuration
+		super.actuatorSetLocal(connection, deviceAddress, (byte) channelId,
+				localControl, overCurrentShutDown, resetOverCurrentShutDown,
+				userInterfaceIndication, powerFailure, defaultState, dimTime1,
+				dimTime2, dimTime3);
 	}
 
 	@Override

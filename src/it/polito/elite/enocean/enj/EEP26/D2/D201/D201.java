@@ -17,6 +17,7 @@ public abstract class D201 extends EEP
 	// the EEP26 definition, according to the EEP26 specification
 	public static final Rorg rorg = new Rorg((byte) 0xd2);
 	public static final byte func = (byte) 0x01;
+
 	// func must be defined by extending classes
 
 	// -------------------------------------------------
@@ -24,8 +25,6 @@ public abstract class D201 extends EEP
 	// might change depending on the network
 	// activity.
 	// --------------------------------------------------
-
-	
 
 	// -------------------------------------------------
 
@@ -73,5 +72,30 @@ public abstract class D201 extends EEP
 
 		// send the payload for connection-layer encapsulation
 		connection.sendRadioCommand(deviceAddress, dataByte);
+	}
+
+	public void actuatorSetLocal(EnJConnection connection,
+			byte[] deviceAddress, byte channelId, byte localControl,
+			byte overCurrentShutDown, byte resetOverCurrentShutDown,
+			byte userInterfaceIndication, byte powerFailure, byte defaultState,
+			D201DimTime dimTime1, D201DimTime dimTime2, D201DimTime dimTime3)
+	{
+		// prepare the data payload to host received configuration values
+		byte dataByte[] = new byte[4];
+
+		// CMD code (0x02), the first bit relates to taught-in devices, not
+		// handled at the moment, the other 3 bits are not used, in binary
+		// notation this means 10000002 (1 enable taught-in devices, 000 not
+		// used, 0002 command code
+		dataByte[0] = (byte) ((0x08 << 4) + 0x02); // byte is signed therefore
+													// 0x82 would require a
+													// cast)
+		
+		// bit 7 -> over current shutdown
+		// bit 6 -> over current shutdown reset
+		// bit 5 -> local control
+		// bit 4 to 0 -> channelId
+		dataByte[1]= (byte)((overCurrentShutDown << 7)+(resetOverCurrentShutDown<<6)+(localControl<<5)+channelId);
+
 	}
 }

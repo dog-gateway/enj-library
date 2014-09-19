@@ -118,4 +118,10 @@ public abstract class EEPAttribute<T>
 		this.unit = unit;
 		return true;
 	}
+	
+	/**
+	 * Returns the byte representation (respecting the EEP2.6 standard) of this attribute value
+	 * @return
+	 */
+	public abstract byte[] byteValue();
 }

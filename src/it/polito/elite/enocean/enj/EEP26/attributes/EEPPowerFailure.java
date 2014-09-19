@@ -50,4 +50,18 @@ public class EEPPowerFailure extends EEPAttribute<Boolean>
 		//set the given value
 		this.value = value;
 	}
+	
+	@Override
+	public byte[] byteValue()
+	{
+		// by default is disabled
+		byte value = 0x00;
+
+		// if value is true than the local control is enabled and the value
+		// should be 0b1 == 0x01
+		if (this.value == EEPPowerFailure.ENABLED)
+			value = 0x01;
+
+		return new byte[]{value};
+	}
 }

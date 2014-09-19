@@ -17,6 +17,8 @@
  */
 package it.polito.elite.enocean.enj.EEP26.attributes;
 
+import java.nio.ByteBuffer;
+
 
 /**
  * A class representing the energy measurement function associated to some of
@@ -147,4 +149,20 @@ public class EEPEnergyMeasurement extends EEPAttribute<Double>
 		return stored;
 	}
 
+	@Override
+	public byte[] byteValue()
+	{
+		//it is likely to never be used...
+		
+		//use byte buffers to ease double encoding / decoding
+		
+		// a byte buffer wrapping an array of 4 bytes
+		ByteBuffer valueAsBytes = ByteBuffer.wrap(new byte[4]);
+		
+		// store the current value
+		valueAsBytes.putDouble(this.value);
+		
+		// return the value as byte array
+		return valueAsBytes.array();
+	}	
 }

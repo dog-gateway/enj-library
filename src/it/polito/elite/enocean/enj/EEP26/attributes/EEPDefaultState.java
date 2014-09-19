@@ -88,4 +88,11 @@ public class EEPDefaultState extends EEPAttribute<D201DefaultStateValue>
 		return found;
 	}
 
+	@Override
+	public byte[] byteValue()
+	{
+		return new byte[]{this.value.getCode()};
+	}
+
+	
 }
