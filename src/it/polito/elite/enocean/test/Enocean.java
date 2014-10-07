@@ -1,7 +1,7 @@
 /**
  * 
  */
-package packagemain;
+package it.polito.elite.enocean.test;
 
 
 import java.io.BufferedReader;

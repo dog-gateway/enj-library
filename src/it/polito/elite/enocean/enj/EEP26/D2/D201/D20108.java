@@ -135,7 +135,8 @@ public class D20108 extends D201 implements Serializable
 	 */
 	public void actuatorSetLocal(EnJConnection connection,
 			byte[] deviceAddress, int channelId,
-			EEPAttribute<? extends Object>[] attributes, D201DimTime dimTime1, D201DimTime dimTime2, D201DimTime dimTime3)
+			EEPAttribute<? extends Object>[] attributes, D201DimTime dimTime1,
+			D201DimTime dimTime2, D201DimTime dimTime3)
 	{
 		// the over current shutdown settings (enabled / disabled), disabled by
 		// default
@@ -179,6 +180,62 @@ public class D20108 extends D201 implements Serializable
 				localControl, overCurrentShutDown, resetOverCurrentShutDown,
 				userInterfaceIndication, powerFailure, defaultState, dimTime1,
 				dimTime2, dimTime3);
+	}
+
+	public void actuatorSetMeasurement(EnJConnection connection,
+			byte[] deviceAddress, boolean autoReportMesurement,
+			boolean signalResetMeasurement, boolean powerMode, int channelId,
+			int measurementDeltaToBeReported, D201UnitOfMeasure unitOfMeasure,
+			int maximumTimeBetweenActuatorMessages,
+			int minimumTimeBetweenActuatorMessages)
+	{
+		if ((maximumTimeBetweenActuatorMessages >= 0)
+				&& (minimumTimeBetweenActuatorMessages >= 0))
+		{
+			byte reportMeasurementAsByte = autoReportMesurement ? (byte) 0x01
+					: (byte) 0x00;
+			byte signalResetMeasurementAsByte = signalResetMeasurement ? (byte) 0x01
+					: (byte) 0x00;
+			byte powerModeAsByte = powerMode ? (byte) 0x01 : (byte) 0x00;
+
+			// get the measurement delta LSB, and with all 0 apart from the last
+			// 4 bits
+			byte measurementDeltaLSB = (byte) ((measurementDeltaToBeReported) & (0x000F));
+
+			// get the measurement delta MSB, shift right by 8 bits and set at 0
+			// the 8 leading bits
+			byte measurementDeltaMSB = (byte) ((measurementDeltaToBeReported >> 8) & (0x00FF));
+			byte maximumTimeAsByte = (byte) Math.min(
+					(maximumTimeBetweenActuatorMessages / 10), 255);
+			byte minimumTimeAsByte = (byte) Math.min(
+					minimumTimeBetweenActuatorMessages, 255);
+
+			// call the superclass method
+			super.actuatorSetMeasurement(connection, deviceAddress,
+					reportMeasurementAsByte, signalResetMeasurementAsByte,
+					powerModeAsByte, (byte) channelId, measurementDeltaLSB,
+					unitOfMeasure.getCode(), measurementDeltaMSB,
+					maximumTimeAsByte, minimumTimeAsByte);
+		}
+		else
+			throw new NumberFormatException(
+					"Only positive numbers allowed for time values");
+	}
+	
+	/**
+	 * Asks for the current power or energy measurement on a given channel Id of a given EnOcean actuator
+	 * @param connection
+	 * @param deviceAddress
+	 * @param powerMode
+	 * @param channelId
+	 */
+	public void actuatorMeasurementQuery(EnJConnection connection, byte[] deviceAddress, boolean powerMode, int channelId)
+	{
+		//get the measurement mode as a byte value
+		byte powerModeAsByte = powerMode ? (byte) 0x01 : (byte) 0x00;
+		
+		//call the superclass method
+		super.actuatorMeasurementQuery(connection, deviceAddress, powerModeAsByte, (byte)channelId);
 	}
 
 	@Override
