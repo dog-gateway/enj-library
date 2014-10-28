@@ -302,4 +302,43 @@ public abstract class D201 extends EEP
 		// send the radio packet
 		connection.sendRadioCommand(deviceAddress, dataByte);
 	}
+
+	public void parseActuatorStatusQuery(byte[] dataPayload)
+	{
+		// dataPayload[0] --> MSB
+		// dataPayload[dataPayload.length] --> LSB
+
+		// power failure 0 -> disabled, 1->enabled
+		byte powerFailure = (byte) (dataPayload[0] & (byte) 0x80);
+
+		// power failure detection 0->power failure not detected / supported
+		// /enabled, 1-> power failure detected
+		byte powerFailureDetection = (byte) (dataPayload[0] & (byte) 0x40);
+
+		// the command id, should be 0x04
+		byte commandId = (byte) (dataPayload[0] & (byte) 0x0F);
+
+		// the status of the overcurrent switch off function
+		// 0 -> ready / not supported
+		// 1 -> executed
+		byte overCurrentSwitchOff = (byte) (dataPayload[1] & (byte) 0x80);
+		
+		// the current error level
+		// 0 -> hardware ok
+		// 1 -> hardware warning
+		// 2 -> hardware failure
+		// 3 -> not supported
+		byte errorLevel = (byte)(dataPayload[1] & (byte) 0x60);
+		
+		//the channel id
+		// 0x00..0x1D -> Output Channel
+		// 0x1E -> not applicable / do not use
+		// 0x1F -> input channel (from mains supply)
+		byte channelId = (byte)(dataPayload[1] & (byte)0x1F);
+		
+		// local control
+		// 0 -> disabled / not supported
+		// 1 -> enabled
+		byte localControl = (byte)(dataPayload[2] & (byte)0x80);
+	}
 }
