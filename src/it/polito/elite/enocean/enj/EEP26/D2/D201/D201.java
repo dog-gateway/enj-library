@@ -303,7 +303,8 @@ public abstract class D201 extends EEP
 		connection.sendRadioCommand(deviceAddress, dataByte);
 	}
 
-	public void parseActuatorStatusQuery(byte[] dataPayload)
+	public D201ActuatorStatusResponse parseActuatorStatusResponse(
+			byte[] dataPayload)
 	{
 		// dataPayload[0] --> MSB
 		// dataPayload[dataPayload.length] --> LSB
@@ -322,23 +323,34 @@ public abstract class D201 extends EEP
 		// 0 -> ready / not supported
 		// 1 -> executed
 		byte overCurrentSwitchOff = (byte) (dataPayload[1] & (byte) 0x80);
-		
+
 		// the current error level
 		// 0 -> hardware ok
 		// 1 -> hardware warning
 		// 2 -> hardware failure
 		// 3 -> not supported
-		byte errorLevel = (byte)(dataPayload[1] & (byte) 0x60);
-		
-		//the channel id
+		byte errorLevel = (byte) (dataPayload[1] & (byte) 0x60);
+
+		// the channel id
 		// 0x00..0x1D -> Output Channel
 		// 0x1E -> not applicable / do not use
 		// 0x1F -> input channel (from mains supply)
-		byte channelId = (byte)(dataPayload[1] & (byte)0x1F);
-		
+		byte channelId = (byte) (dataPayload[1] & (byte) 0x1F);
+
 		// local control
 		// 0 -> disabled / not supported
 		// 1 -> enabled
-		byte localControl = (byte)(dataPayload[2] & (byte)0x80);
+		byte localControl = (byte) (dataPayload[2] & (byte) 0x80);
+
+		// output value
+		// 0x00 -> 0% or OFF
+		// 0x01 - 0x64 -> 1% -100% (or ON)
+		// 0x65 - 0x7E -> Not used
+		// 0x7F -> Output not valid / not set
+		byte outputValue = (byte) (dataPayload[2] & (byte) 0x7F);
+
+		return new D201ActuatorStatusResponse(powerFailure,
+				powerFailureDetection, commandId, overCurrentSwitchOff,
+				errorLevel, channelId, localControl, outputValue);
 	}
 }
