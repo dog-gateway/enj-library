@@ -108,7 +108,8 @@ public class UTETeachInPacket
 		// get the actual address
 		for (int i = 8; i < 12; i++)
 		{
-			this.address[this.address.length - i] = rawData[i];
+			//reverse fill, TODO check if works!
+			this.address[this.address.length - (i-8)] = rawData[i];
 		}
 
 		// get the manufacturer id

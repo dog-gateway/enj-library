@@ -303,6 +303,16 @@ public abstract class D201 extends EEP
 		connection.sendRadioCommand(deviceAddress, dataByte);
 	}
 
+	/**
+	 * D2.01 CMD 0x04, Implements the CMD 0x04 of the D2.01 EnOcean Equipment
+	 * Profile. Represents a response to the Actuator Status Query message
+	 * (D2.01.04) and contains information about the current status of an
+	 * EnOcean Actuator.
+	 * 
+	 * @param dataPayload
+	 *            The low level data payload to "wrap";
+	 * @return The wrapped payload.
+	 */
 	public D201ActuatorStatusResponse parseActuatorStatusResponse(
 			byte[] dataPayload)
 	{
@@ -352,5 +362,38 @@ public abstract class D201 extends EEP
 		return new D201ActuatorStatusResponse(powerFailure,
 				powerFailureDetection, commandId, overCurrentSwitchOff,
 				errorLevel, channelId, localControl, outputValue);
+	}
+
+	public D201ActuatorMeasurementResponse parseActuatorMeasurementResponse(
+			byte[] dataPayload)
+	{
+		// dataPayload[0] --> MSB
+		// dataPayload[dataPayload.length] --> LSB
+
+		// the command id, should be 0x07
+		byte commandId = (byte) (dataPayload[0] & (byte) 0x0F);
+
+		// the unit
+		// 0x00 --> Energy [Ws]
+		// 0x01 --> Energy [Wh]
+		// 0x02 --> Energy [kWh]
+		// 0x03 --> Power [W]
+		// 0x04 --> Power [kW]
+		// 0x05..0x07 --> Not used
+		byte unit = (byte) (dataPayload[1] & (byte) 0xE0);
+
+		// the channel id
+		// 0x00..0x1D -> Output Channel
+		// 0x1E -> not applicable / do not use
+		// 0x1F -> input channel (from mains supply)
+		byte channelId = (byte) (dataPayload[1] & (byte) 0x1F);
+		
+		byte measureValue[] = new byte[4];
+		measureValue[0] = dataPayload[2];
+		measureValue[1] =  dataPayload[3];
+		measureValue[2] = dataPayload[4];
+		measureValue[3]	= dataPayload[5];
+
+		return new D201ActuatorMeasurementResponse(commandId, channelId, measureValue, unit);
 	}
 }

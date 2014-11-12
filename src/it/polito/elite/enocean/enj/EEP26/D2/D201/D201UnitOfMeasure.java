@@ -43,4 +43,22 @@ public enum D201UnitOfMeasure
 	{
 		return this.code;
 	}
+	
+	public static D201UnitOfMeasure valueOf(byte value)
+	{
+		D201UnitOfMeasure unit = null;
+		for(D201UnitOfMeasure currentUnit : D201UnitOfMeasure.values())
+		{
+			if(currentUnit.getCode()==value)
+			{
+				unit = currentUnit;
+				break;
+			}
+		}
+		
+		if(unit==null)
+			throw new IllegalArgumentException();
+		
+		return unit;
+	}
 }
