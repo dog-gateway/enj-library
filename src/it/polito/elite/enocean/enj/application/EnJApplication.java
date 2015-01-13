@@ -28,11 +28,7 @@ import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
  * 
  */
 public class EnJApplication
-{
-
-	// The set of known devices
-	private EnJPersistentDeviceSet knownDevices;
-	
+{	
 	public EnJApplication()
 	{
 		// TODO Auto-generated constructor stub

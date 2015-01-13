@@ -27,7 +27,7 @@ import java.util.Hashtable;
 /**
  * A class representing EnOcean devices, it allows easier composition of
  * device-related packets and easier deconding / encoding of device-specific
- * information. It supports typically one (but many are permitted) one EnOcean
+ * information. It supports typically one (but many are permitted) EnOcean
  * Equipment Profile which defines the device functions and capabilities.
  * 
  * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>

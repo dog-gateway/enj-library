@@ -19,6 +19,7 @@ package it.polito.elite.enocean.enj.communication;
 
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
 import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInPacket;
+import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDeliveryTask;
 import it.polito.elite.enocean.enj.link.EnJLink;
@@ -78,6 +79,9 @@ public class EnJConnection implements PacketListener
 	// the teach in disabling task
 	private CancelTeachInTask teachInResetTask;
 
+	// The set of known devices
+	private EnJPersistentDeviceSet knownDevices;
+
 	/**
 	 * Build a connection layer instance on top of the given link layer
 	 * instance.
@@ -86,7 +90,7 @@ public class EnJConnection implements PacketListener
 	 *            The {@link EnJLink} instance upon which basing the connection
 	 *            layer.
 	 */
-	public EnJConnection(EnJLink linkLayer)
+	public EnJConnection(EnJLink linkLayer, String peristentDeviceStorageFilename)
 	{
 		// initialize the set of device listeners
 		this.deviceListeners = new HashSet<>();
@@ -105,6 +109,10 @@ public class EnJConnection implements PacketListener
 
 		// store a reference to the link layer
 		this.linkLayer = linkLayer;
+		
+		//initialize the persistent device store and sets autosave at on
+		//TODO: check how to pass the filename here...
+		this.knownDevices = new EnJPersistentDeviceSet(peristentDeviceStorageFilename,true);
 
 		// add this connection layer as listener for incoming events
 		this.linkLayer.addPacketListener(this);
@@ -230,7 +238,7 @@ public class EnJConnection implements PacketListener
 			// generated data.
 			if (pkt.isRadio())
 			{
-				//handle radio packets
+				// handle radio packets, search the destination device
 			}
 		}
 
@@ -266,6 +274,9 @@ public class EnJConnection implements PacketListener
 				// add the supported EEP
 				device.addSupportedEEP(pkt.getEEP(), EEPRegistry.getInstance()
 						.getEEP(pkt.getEEP()));
+
+				// store the device locally
+				this.knownDevices.add(device);
 
 				// notify the new device discovery
 				this.notifyEnJDeviceListeners(device,

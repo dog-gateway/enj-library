@@ -6,6 +6,7 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
 import it.polito.elite.enocean.enj.EEP26.EEP;
 import it.polito.elite.enocean.enj.EEP26.Rorg;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
 /**
  * @author <a href="mailto:biasiandrea04@gmail.com">Andrea Biasi</a>, <a
@@ -395,5 +396,10 @@ public abstract class D201 extends EEP
 		measureValue[3]	= dataPayload[5];
 
 		return new D201ActuatorMeasurementResponse(commandId, channelId, measureValue, unit);
+	}
+	
+	public void handleProfileUpdate(Radio pkt)
+	{
+		
 	}
 }
