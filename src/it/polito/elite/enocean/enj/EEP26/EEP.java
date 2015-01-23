@@ -18,6 +18,7 @@
 package it.polito.elite.enocean.enj.EEP26;
 
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPAttribute;
+import it.polito.elite.enocean.enj.EEP26.packet.EEP26Telegram;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -218,4 +219,9 @@ public abstract class EEP
 	 * @return
 	 */
 	public abstract EEPIdentifier getEEPIdentifier();
+	
+	/**
+	 * Handles the profile data update, must be specifically implemented by each profile class
+	 */
+	public abstract boolean handleProfileUpdate(EEP26Telegram telegram);
 }

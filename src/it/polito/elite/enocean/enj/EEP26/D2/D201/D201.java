@@ -5,6 +5,7 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
 
 import it.polito.elite.enocean.enj.EEP26.EEP;
 import it.polito.elite.enocean.enj.EEP26.Rorg;
+import it.polito.elite.enocean.enj.EEP26.packet.VLDTelegram;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
@@ -321,11 +322,11 @@ public abstract class D201 extends EEP
 		// dataPayload[dataPayload.length] --> LSB
 
 		// power failure 0 -> disabled, 1->enabled
-		byte powerFailure = (byte) (dataPayload[0] & (byte) 0x80);
+		byte powerFailure = (byte) ((dataPayload[0] & (byte) 0x80) >> 7);
 
 		// power failure detection 0->power failure not detected / supported
 		// /enabled, 1-> power failure detected
-		byte powerFailureDetection = (byte) (dataPayload[0] & (byte) 0x40);
+		byte powerFailureDetection = (byte) ((dataPayload[0] & (byte) 0x40) >> 3);
 
 		// the command id, should be 0x04
 		byte commandId = (byte) (dataPayload[0] & (byte) 0x0F);
@@ -333,14 +334,14 @@ public abstract class D201 extends EEP
 		// the status of the overcurrent switch off function
 		// 0 -> ready / not supported
 		// 1 -> executed
-		byte overCurrentSwitchOff = (byte) (dataPayload[1] & (byte) 0x80);
+		byte overCurrentSwitchOff = (byte) ((dataPayload[1] & (byte) 0x80) >> 7);
 
 		// the current error level
 		// 0 -> hardware ok
 		// 1 -> hardware warning
 		// 2 -> hardware failure
 		// 3 -> not supported
-		byte errorLevel = (byte) (dataPayload[1] & (byte) 0x60);
+		byte errorLevel = (byte) ((dataPayload[1] & (byte) 0x60) >> 5);
 
 		// the channel id
 		// 0x00..0x1D -> Output Channel
@@ -351,14 +352,14 @@ public abstract class D201 extends EEP
 		// local control
 		// 0 -> disabled / not supported
 		// 1 -> enabled
-		byte localControl = (byte) (dataPayload[2] & (byte) 0x80);
+		byte localControl = (byte) ((dataPayload[2] & (byte) 0x80) >> 7);
 
 		// output value
 		// 0x00 -> 0% or OFF
 		// 0x01 - 0x64 -> 1% -100% (or ON)
 		// 0x65 - 0x7E -> Not used
 		// 0x7F -> Output not valid / not set
-		byte outputValue = (byte) (dataPayload[2] & (byte) 0x7F);
+		byte outputValue = (byte) ((dataPayload[2] & (byte) 0x7F));
 
 		return new D201ActuatorStatusResponse(powerFailure,
 				powerFailureDetection, commandId, overCurrentSwitchOff,
@@ -381,7 +382,7 @@ public abstract class D201 extends EEP
 		// 0x03 --> Power [W]
 		// 0x04 --> Power [kW]
 		// 0x05..0x07 --> Not used
-		byte unit = (byte) (dataPayload[1] & (byte) 0xE0);
+		byte unit = (byte) ((dataPayload[1] & (byte) 0xE0) >> 5);
 
 		// the channel id
 		// 0x00..0x1D -> Output Channel
@@ -391,15 +392,10 @@ public abstract class D201 extends EEP
 		
 		byte measureValue[] = new byte[4];
 		measureValue[0] = dataPayload[2];
-		measureValue[1] =  dataPayload[3];
+		measureValue[1] = dataPayload[3];
 		measureValue[2] = dataPayload[4];
 		measureValue[3]	= dataPayload[5];
 
 		return new D201ActuatorMeasurementResponse(commandId, channelId, measureValue, unit);
-	}
-	
-	public void handleProfileUpdate(Radio pkt)
-	{
-		
 	}
 }

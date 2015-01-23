@@ -24,7 +24,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
  * @author bonino
  *
  */
-public class VLDPacket
+public class VLDTelegram extends EEP26Telegram
 {
 	// the raw (link layer) packet wrapped by this instance
 	private ESP3Packet rawPacket;
@@ -42,8 +42,10 @@ public class VLDPacket
 	 * @param pkt
 	 * 
 	 */
-	public VLDPacket(ESP3Packet pkt)
+	public VLDTelegram(ESP3Packet pkt)
 	{
+		super(TelegramType.VLD);
+		
 		// store the raw packet wrapped by this VLDPacket instance
 		this.rawPacket = pkt;
 
@@ -65,19 +67,19 @@ public class VLDPacket
 		int startingOffset = 1;
 		for (int i = startingOffset; i < (startingOffset+payloadLength); i++)
 		{
-			// reverse fill
-			this.payload[this.payload.length - i] = rawData[i];
+			// fill
+			this.payload[i-startingOffset] = rawData[i];
 		}
 
 		// intialize the packet address
 		this.address = new byte[4];
 
 		// get the actual address
-		startingOffset = rawData.length-(1+this.payload.length);
+		startingOffset = 1+this.payload.length;
 		for (int i = startingOffset; i < (startingOffset+this.address.length); i++)
 		{
-			// reverse fill, TODO check if works!
-			this.address[this.address.length - (i - 8)] = rawData[i];
+			// not needed
+			this.address[i-startingOffset] = rawData[i];
 		}
 		
 		// build the actual Rorg

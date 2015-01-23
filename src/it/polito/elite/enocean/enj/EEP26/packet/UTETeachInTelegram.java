@@ -25,7 +25,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
  * @author bonino
  * 
  */
-public class UTETeachInPacket
+public class UTETeachInTelegram extends EEP26Telegram
 {
 	// packet identifiers according to the EnOcean EEP2.6 specification
 	public static final byte TEACHIN_REQUEST = (byte) 0x00;
@@ -79,8 +79,10 @@ public class UTETeachInPacket
 	/**
 	 * 
 	 */
-	public UTETeachInPacket(ESP3Packet pkt)
+	public UTETeachInTelegram(ESP3Packet pkt)
 	{
+		super(TelegramType.UTETeachIn);
+		
 		// by default the packet is not a response
 		this.response = false;
 
@@ -150,36 +152,36 @@ public class UTETeachInPacket
 	}
 
 	/**
-	 * Checks if this {@link UTETeachInPacket} instance is a teach-in request
+	 * Checks if this {@link UTETeachInTelegram} instance is a teach-in request
 	 * 
 	 * @return true if it is a teach-in request, false otherwise
 	 */
 	public boolean isTeachInRequest()
 	{
-		return ((this.payload[6] & (0x30)) == UTETeachInPacket.TEACHIN_REQUEST)
+		return ((this.payload[6] & (0x30)) == UTETeachInTelegram.TEACHIN_REQUEST)
 				|| ((this.payload[6] & (0x30)) == (byte) 0x20);
 	}
 
 	/**
-	 * Checks if this {@link UTETeachInPacket} instance is a teach-in deletion
+	 * Checks if this {@link UTETeachInTelegram} instance is a teach-in deletion
 	 * request
 	 * 
 	 * @return true if it is a teach-in deletion request, false otherwise
 	 */
 	public boolean isTeachInDeletionRequest()
 	{
-		return ((payload[6] & (0x30)) == UTETeachInPacket.TEACHIN_DELECTION_REQUEST);
+		return ((payload[6] & (0x30)) == UTETeachInTelegram.TEACHIN_DELECTION_REQUEST);
 	}
 
 	/**
-	 * Checks if this {@link UTETeachInPacket} instance is a not specified
+	 * Checks if this {@link UTETeachInTelegram} instance is a not specified
 	 * teach-in
 	 * 
 	 * @return true if it is a not-specified teach-in packet, false otherwise.
 	 */
 	public boolean isNotSpecifiedTeachIn()
 	{
-		return ((payload[6] & (0x30)) == UTETeachInPacket.TEACHIN_NOT_SPECIFIED);
+		return ((payload[6] & (0x30)) == UTETeachInTelegram.TEACHIN_NOT_SPECIFIED);
 	}
 
 	/**
@@ -190,7 +192,7 @@ public class UTETeachInPacket
 	 */
 	public boolean isResponseRequired()
 	{
-		return ((payload[6] & UTETeachInPacket.IS_RESPONSE_MASK) == 0x00);
+		return ((payload[6] & UTETeachInTelegram.IS_RESPONSE_MASK) == 0x00);
 	}
 
 	/**
@@ -232,6 +234,7 @@ public class UTETeachInPacket
 	 * 
 	 *         TODO: integer would be better?
 	 */
+	@Override
 	public byte[] getAddress()
 	{
 		return address;
@@ -280,11 +283,11 @@ public class UTETeachInPacket
 	 * }
 	 * </pre>
 	 * @param response The response to send
-	 * @return the {@link UTETeachInPacket} response packet.
+	 * @return the {@link UTETeachInTelegram} response packet.
 	 * 
 	 * 
 	 */
-	public UTETeachInPacket buildResponse(byte response)
+	public UTETeachInTelegram buildResponse(byte response)
 	{
 
 		// build the response packet
@@ -326,7 +329,7 @@ public class UTETeachInPacket
 		ESP3Packet uteTeachInresponse = new ESP3Packet(ESP3Packet.RADIO,
 				payloadResp, opt);
 		// the UTE teach in packet
-		UTETeachInPacket responsePacket = new UTETeachInPacket(
+		UTETeachInTelegram responsePacket = new UTETeachInTelegram(
 				uteTeachInresponse);
 
 		// set the response flag

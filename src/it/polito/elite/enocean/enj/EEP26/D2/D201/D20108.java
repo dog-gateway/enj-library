@@ -29,6 +29,7 @@ import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerFailure;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerMeasurement;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPSwitching;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPUserInterfaceMode;
+import it.polito.elite.enocean.enj.EEP26.packet.EEP26Telegram;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 
 import java.io.Serializable;
@@ -242,6 +243,13 @@ public class D20108 extends D201 implements Serializable
 	public EEPIdentifier getEEPIdentifier()
 	{
 		return new EEPIdentifier(D201.rorg, D201.func, D20108.type);
+	}
+
+	@Override
+	public boolean handleProfileUpdate(EEP26Telegram telegram)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

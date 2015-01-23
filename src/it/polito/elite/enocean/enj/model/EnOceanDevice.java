@@ -22,6 +22,7 @@ import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.Collection;
 import java.util.Hashtable;
 
 /**
@@ -46,7 +47,7 @@ public class EnOceanDevice implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	// the set of supported profiles
-	private Hashtable<EEPIdentifier, EEP> supportedProfiles;
+	private EEP profile;
 
 	// the device address
 	byte[] address = new byte[4];
@@ -70,9 +71,6 @@ public class EnOceanDevice implements Serializable
 
 		// store the manufacturer id
 		this.manufacturerId = manufacturerId;
-
-		// prepare the EEP set
-		this.supportedProfiles = new Hashtable<>();
 	}
 
 	/**
@@ -104,8 +102,7 @@ public class EnOceanDevice implements Serializable
 	 * @param eepClass
 	 *            The corresponding class, which must extend {@link EEP}
 	 */
-	public void addSupportedEEP(EEPIdentifier eepId,
-			Class<? extends EEP> eepClass)
+	public void setEEP(	Class<? extends EEP> eepClass)
 	{
 		// store the entry by building the corresponding instances
 		try
@@ -114,7 +111,7 @@ public class EnOceanDevice implements Serializable
 			EEP eep = eepClass.newInstance();
 
 			// add the instance to the set of supported instances
-			this.supportedProfiles.put(eepId, eep);
+			this.profile = eep;
 
 		}
 		catch (InstantiationException | IllegalAccessException e)
@@ -126,18 +123,16 @@ public class EnOceanDevice implements Serializable
 
 	/**
 	 * Get the <code>&lt;T extends {@link EEP}&gt;</code> instance associated to
-	 * this device, given the corresponding EEP identifier.
-	 * 
-	 * @param eepId
-	 *            The {@link EEPIdentifier} of the
-	 *            <code>&lt;T extends {@link EEP}&gt;</code> to retrieve.
+	 * implemented bythis device.
+	 *
 	 * @return the <code>&lt;T extends {@link EEP}&gt;</code> instance, if
 	 *         present, or null otherwise.
 	 */
-	public EEP getSupportedEEP(EEPIdentifier eepId)
+	public EEP getEEP()
 	{
-		return this.supportedProfiles.get(eepId);
+		return this.profile;
 	}
+
 
 	/**
 	 * Provides back the device address as an integer. The returned id is meant
