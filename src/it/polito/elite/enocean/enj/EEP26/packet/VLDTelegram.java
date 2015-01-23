@@ -44,7 +44,7 @@ public class VLDTelegram extends EEP26Telegram
 	 */
 	public VLDTelegram(ESP3Packet pkt)
 	{
-		super(TelegramType.VLD);
+		super(EEP26TelegramType.VLD);
 		
 		// store the raw packet wrapped by this VLDPacket instance
 		this.rawPacket = pkt;

@@ -28,7 +28,7 @@ public class RPSTelegram extends EEP26Telegram
 
 	public RPSTelegram(ESP3Packet pkt)
 	{
-		super(TelegramType.RPS);
+		super(EEP26TelegramType.RPS);
 		// TODO Auto-generated constructor stub
 	}
 

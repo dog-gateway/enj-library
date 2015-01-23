@@ -81,7 +81,7 @@ public class UTETeachInTelegram extends EEP26Telegram
 	 */
 	public UTETeachInTelegram(ESP3Packet pkt)
 	{
-		super(TelegramType.UTETeachIn);
+		super(EEP26TelegramType.UTETeachIn);
 		
 		// by default the packet is not a response
 		this.response = false;

@@ -28,7 +28,7 @@ public class OneBSTelegram extends EEP26Telegram
 
 	public OneBSTelegram(ESP3Packet pkt)
 	{
-		super(TelegramType.OneBS);
+		super(EEP26TelegramType.OneBS);
 		// TODO Auto-generated constructor stub
 	}
 

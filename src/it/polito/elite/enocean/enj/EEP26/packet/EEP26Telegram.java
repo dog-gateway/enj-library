@@ -24,14 +24,14 @@ package it.polito.elite.enocean.enj.EEP26.packet;
  */
 public abstract class EEP26Telegram
 {
-	private TelegramType type;
+	private EEP26TelegramType type;
 	
-	public EEP26Telegram(TelegramType type)
+	public EEP26Telegram(EEP26TelegramType type)
 	{
 		this.type = type;
 	}
 	
-	public TelegramType getTelegramType()
+	public EEP26TelegramType getTelegramType()
 	{
 		return this.type;
 	}

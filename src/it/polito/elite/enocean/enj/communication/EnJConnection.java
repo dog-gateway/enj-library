@@ -21,7 +21,7 @@ import it.polito.elite.enocean.enj.EEP26.EEP;
 import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
 import it.polito.elite.enocean.enj.EEP26.packet.EEP26Telegram;
 import it.polito.elite.enocean.enj.EEP26.packet.EEP26TelegramFactory;
-import it.polito.elite.enocean.enj.EEP26.packet.TelegramType;
+import it.polito.elite.enocean.enj.EEP26.packet.EEP26TelegramType;
 import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
@@ -238,7 +238,7 @@ public class EnJConnection implements PacketListener
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
 
 		if ((this.teachIn)
-				&& (telegram.getTelegramType() == TelegramType.UTETeachIn))
+				&& (telegram.getTelegramType() == EEP26TelegramType.UTETeachIn))
 		{
 			this.handleUTETeachIn((UTETeachInTelegram) telegram);
 		}

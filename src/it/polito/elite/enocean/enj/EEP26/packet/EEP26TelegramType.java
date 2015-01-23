@@ -1,6 +1,6 @@
 package it.polito.elite.enocean.enj.EEP26.packet;
 
-public enum TelegramType
+public enum EEP26TelegramType
 {
 	UTETeachIn,
 	RPS,

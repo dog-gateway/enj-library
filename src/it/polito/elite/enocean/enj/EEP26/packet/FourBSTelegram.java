@@ -28,7 +28,7 @@ public class FourBSTelegram extends EEP26Telegram
 
 	public FourBSTelegram(ESP3Packet pkt)
 	{
-		super(TelegramType.FourBS);
+		super(EEP26TelegramType.FourBS);
 		// TODO Auto-generated constructor stub
 	}
 
