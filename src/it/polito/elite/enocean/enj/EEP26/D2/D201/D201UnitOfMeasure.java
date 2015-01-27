@@ -61,4 +61,14 @@ public enum D201UnitOfMeasure
 		
 		return unit;
 	}
+	
+	public boolean isEnergy()
+	{
+		return ((this.code == (byte)0x00)||(this.code == (byte)0x01)||(this.code == (byte)0x02));
+	}
+	
+	public boolean isPower()
+	{
+		return ((this.code == (byte)0x03)||(this.code == (byte)0x04));
+	}
 }

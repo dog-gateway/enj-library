@@ -5,14 +5,15 @@ package it.polito.elite.enocean.enj.EEP26.D2.D201;
 
 import it.polito.elite.enocean.enj.EEP26.EEP;
 import it.polito.elite.enocean.enj.EEP26.Rorg;
-import it.polito.elite.enocean.enj.EEP26.packet.VLDTelegram;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
-import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
 /**
+ * A class representing the D2-01 family of EnOcean Equipment Profiles. Cannot
+ * be directly istantiated, instead specific classes matching the real device
+ * EEP must be used.
+ * 
  * @author <a href="mailto:biasiandrea04@gmail.com">Andrea Biasi</a>, <a
  *         href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
- * @param <T>
  * 
  */
 public abstract class D201 extends EEP
@@ -389,13 +390,14 @@ public abstract class D201 extends EEP
 		// 0x1E -> not applicable / do not use
 		// 0x1F -> input channel (from mains supply)
 		byte channelId = (byte) (dataPayload[1] & (byte) 0x1F);
-		
+
 		byte measureValue[] = new byte[4];
 		measureValue[0] = dataPayload[2];
 		measureValue[1] = dataPayload[3];
 		measureValue[2] = dataPayload[4];
-		measureValue[3]	= dataPayload[5];
+		measureValue[3] = dataPayload[5];
 
-		return new D201ActuatorMeasurementResponse(commandId, channelId, measureValue, unit);
+		return new D201ActuatorMeasurementResponse(commandId, channelId,
+				measureValue, unit);
 	}
 }

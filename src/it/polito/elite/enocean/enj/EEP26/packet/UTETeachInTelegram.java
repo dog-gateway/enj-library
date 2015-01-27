@@ -22,7 +22,10 @@ import it.polito.elite.enocean.enj.EEP26.Rorg;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
- * @author bonino
+ * A class representing an UTE Teach-In telegram as defined by the EEP2.6
+ * specification.
+ * 
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  * 
  */
 public class UTETeachInTelegram extends EEP26Telegram
@@ -77,12 +80,16 @@ public class UTETeachInTelegram extends EEP26Telegram
 	protected boolean response;
 
 	/**
+	 * Class constructor, builds an instance of {@link UTETeachInTelegram} given
+	 * the {@link ESP3Packet} containing the telegram as payload.
 	 * 
+	 * @param The {@link ESP3Packet} containing the telegram as payload.
 	 */
 	public UTETeachInTelegram(ESP3Packet pkt)
 	{
+		//call the superclass constructor
 		super(EEP26TelegramType.UTETeachIn);
-		
+
 		// by default the packet is not a response
 		this.response = false;
 
@@ -110,8 +117,8 @@ public class UTETeachInTelegram extends EEP26Telegram
 		// get the actual address
 		for (int i = 8; i < 12; i++)
 		{
-			//reverse fill, TODO check if works!
-			this.address[this.address.length - (i-8)] = rawData[i];
+			// reverse fill, TODO check if works!
+			this.address[this.address.length - (i - 8)] = rawData[i];
 		}
 
 		// get the manufacturer id
@@ -257,9 +264,12 @@ public class UTETeachInTelegram extends EEP26Telegram
 	 * <ul>
 	 * <li><code>UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL</code></li>
 	 * <li><code>UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_REFUSED</code></li>
-	 * <li><code>UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_DELETION_ACCEPTED</code></li>
+	 * <li>
+	 * <code>UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_DELETION_ACCEPTED</code></li>
 	 * </ul>
-	 * <p> the typical usage is as follows:<br/>
+	 * <p>
+	 * the typical usage is as follows:<br/>
+	 * 
 	 * <pre>
 	 * //The teach-in request
 	 * UTETeachInPacket uteRequest = new UTETeachInPacket(rawPacket);
@@ -271,18 +281,20 @@ public class UTETeachInTelegram extends EEP26Telegram
 	 * 		if(uteRequest.isTeachInRequest())
 	 * 		{
 	 * 			//check if the eep is available
-	 *			if(this.isEEPAvailable(uteRequest.getEEP())
-	 *			{
-	 *				//build the accept response
-	 *				UTETeachInPacket response = uteRequest.buildResponse(UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
-	 *				
-	 *				//send the response
-	 *				
-	 *			}
+	 * 		if(this.isEEPAvailable(uteRequest.getEEP())
+	 * 		{
+	 * 			//build the accept response
+	 * 			UTETeachInPacket response = uteRequest.buildResponse(UTETeachInPacket.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
+	 * 			
+	 * 			//send the response
+	 * 			
+	 * 		}
 	 * 		}
 	 * }
 	 * </pre>
-	 * @param response The response to send
+	 * 
+	 * @param response
+	 *            The response to send
 	 * @return the {@link UTETeachInTelegram} response packet.
 	 * 
 	 * 

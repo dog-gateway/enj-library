@@ -30,6 +30,8 @@ import it.polito.elite.enocean.enj.EEP26.attributes.EEPPowerMeasurement;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPSwitching;
 import it.polito.elite.enocean.enj.EEP26.attributes.EEPUserInterfaceMode;
 import it.polito.elite.enocean.enj.EEP26.packet.EEP26Telegram;
+import it.polito.elite.enocean.enj.EEP26.packet.EEP26TelegramType;
+import it.polito.elite.enocean.enj.EEP26.packet.VLDTelegram;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 
 import java.io.Serializable;
@@ -222,21 +224,25 @@ public class D20108 extends D201 implements Serializable
 			throw new NumberFormatException(
 					"Only positive numbers allowed for time values");
 	}
-	
+
 	/**
-	 * Asks for the current power or energy measurement on a given channel Id of a given EnOcean actuator
+	 * Asks for the current power or energy measurement on a given channel Id of
+	 * a given EnOcean actuator
+	 * 
 	 * @param connection
 	 * @param deviceAddress
 	 * @param powerMode
 	 * @param channelId
 	 */
-	public void actuatorMeasurementQuery(EnJConnection connection, byte[] deviceAddress, boolean powerMode, int channelId)
+	public void actuatorMeasurementQuery(EnJConnection connection,
+			byte[] deviceAddress, boolean powerMode, int channelId)
 	{
-		//get the measurement mode as a byte value
+		// get the measurement mode as a byte value
 		byte powerModeAsByte = powerMode ? (byte) 0x01 : (byte) 0x00;
-		
-		//call the superclass method
-		super.actuatorMeasurementQuery(connection, deviceAddress, powerModeAsByte, (byte)channelId);
+
+		// call the superclass method
+		super.actuatorMeasurementQuery(connection, deviceAddress,
+				powerModeAsByte, (byte) channelId);
 	}
 
 	@Override
@@ -248,8 +254,66 @@ public class D20108 extends D201 implements Serializable
 	@Override
 	public boolean handleProfileUpdate(EEP26Telegram telegram)
 	{
+		boolean success = false;
+		// handle the telegram, as first cast it at the right type (or fail)
+		if (telegram.getTelegramType() == EEP26TelegramType.VLD)
+		{
+			// cast the telegram to the right type
+			VLDTelegram profileUpdate = (VLDTelegram) telegram;
+
+			// check the telegram type:actuator status response (CMD_ID = 0x04),
+			// Actuator Measurement Response (CMD_ID = 0x07)
+			byte dataPayload[] = profileUpdate.getPayload();
+
+			// get the command id
+			byte commandId = (byte) (dataPayload[0] & (byte) 0x0F);
+
+			if (commandId == (byte) 0x04)
+			{
+				// parse actuator status response
+				D201ActuatorStatusResponse response = this
+						.parseActuatorStatusResponse(dataPayload);
+
+				// TODO: update attributes
+
+				// TODO: check how to notify attribute listeners
+			}
+			else if (commandId == (byte) 0x07)
+			{
+				// parse the actuator measurement response
+				D201ActuatorMeasurementResponse response = this
+						.parseActuatorMeasurementResponse(dataPayload);
+
+				// TODO: update attributes
+
+				// get the channel to attribute to update, can either be Energy
+				// or Power measurement, detect it depending on the unit of
+				// measure.
+				D201UnitOfMeasure uom = response.getUnit();
+				
+				if(uom.isEnergy())
+					//handle energy attribute update
+					this.updateEnergyAttribute(response);
+				else if(uom.isPower())
+					//handle power attribute update
+					this.updatePowerAttribute(response);
+
+				// TODO: check how to notify attribute listeners
+			}
+		}
+		return success;
+	}
+
+	private void updatePowerAttribute(D201ActuatorMeasurementResponse response)
+	{
 		// TODO Auto-generated method stub
-		return false;
+		
+	}
+
+	private void updateEnergyAttribute(D201ActuatorMeasurementResponse response)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

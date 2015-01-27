@@ -20,20 +20,38 @@ package it.polito.elite.enocean.enj.EEP26.packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 /**
- * @author bonino
+ * A class representing a 4BS telegram as defined in the EEP2.6 specification.
+ * It provides means for parsing / encoding packets and to extract relevant data
+ * encoded as data-payload in packet.
+ * 
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
 public class FourBSTelegram extends EEP26Telegram
 {
 
+	/**
+	 * Class constructor, builds an instance of {@link FourBSTelegram} given the
+	 * {@link ESP3Packet} containing the telegram as payload.
+	 * 
+	 * @param pkt
+	 *            The {@link ESP3Packet} containing the telegram as payload.
+	 */
 	public FourBSTelegram(ESP3Packet pkt)
 	{
 		super(EEP26TelegramType.FourBS);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Checks if the given {@link ESP3Packet} contains a 4BS packet as payload.
+	 * 
+	 * @param pkt
+	 *            The {@link ESP3Packet} to check
+	 * @return true if it contains a 4BS telegram, false otherwise.
+	 */
 	public static boolean is4BSPacket(ESP3Packet pkt)
-	{		
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
