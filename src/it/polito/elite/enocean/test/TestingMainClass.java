@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 import gnu.io.SerialPort;
-import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
-import it.polito.elite.enocean.enj.EEP26.Rorg;
 import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
+import it.polito.elite.enocean.enj.eep.EEPIdentifier;
+import it.polito.elite.enocean.enj.eep.Rorg;
 import it.polito.elite.enocean.enj.link.PacketQueueItem;
 import it.polito.elite.enocean.enj.link.PacketReceiver;
 import it.polito.elite.enocean.enj.link.PacketTransmitter;

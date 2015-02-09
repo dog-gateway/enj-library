@@ -18,8 +18,10 @@ limitations under the License
 import serial
 import getopt
 import sys
+import rest
 import time
-from dog import DogGateway
+import json
+import random
 
 def usage():
     print "EnOcean Packet Sniffer"
@@ -44,7 +46,7 @@ def decode_message(message_bytes):
             
             # print ("Status: %s")%(status.encode("hex"))
             print ("Sender id:"),
-            for i in range(8,12):
+            for i in range(8, 12):
                 print message_bytes[i].encode("hex"),
             print "\n"
             
@@ -67,8 +69,10 @@ def main():
     # the baudrate to use
     rate = 0
     # optional 
-    dog_gateway = None
-    dog_device_uri = None
+    device_service_endpoint = None
+    device_id = None
+    brightness = 125
+    on = False
     
     # parse arguments
     try:
@@ -104,12 +108,12 @@ def main():
         elif o in ("-a", "--address"):
             
            # store the dog address
-           dog_gateway = DogGateway(("http://%s/api/v1") % a);
+           device_service_endpoint = a;
         
         elif o in ("-d", "--device"):
             
            # store the dog device
-           dog_device_uri = a
+           device_id = a;
             
          # handle not supported options
         else:
@@ -150,17 +154,38 @@ def main():
                         action = decode_message(message_chars)
                         if (action == 0):
                             print "Button 1 OFF"
-                            if((dog_gateway != None) and (dog_device_uri != None)):
-                                dog_gateway.sendCommand(dog_device_uri, "off")
+                            if((device_id != None) and (device_service_endpoint != None)):
+                                device_url = ("%s%s") % (device_service_endpoint, device_id)
+                                rest.send("POST", device_url, json.dumps({"commandName":"changeRGBColor", "params" : {"R": random.randint(0, 255), "G": random.randint(0, 255), "B": random.randint(0, 255)}}), {'Content-Type':'application/json'})
+                            
                         elif(action == 1):
                             print "Button1 ON"
-                            if((dog_gateway != None) and (dog_device_uri != None)):
-                                dog_gateway.sendCommand(dog_device_uri, "on")
+                            if((device_id != None) and (device_service_endpoint != None)):
+                                device_url = ("%s%s") % (device_service_endpoint, device_id)
+                                
+                                if(not on):
+                                    rest.send("POST", device_url, json.dumps({"commandName":"turnOn"}), {'Content-Type':'application/json'})
+                                    on = True
+                                else:    
+                                    rest.send('POST', device_url, json.dumps({"commandName":"turnOff"}), {'Content-Type':'application/json'})
+                                    on = False
                         elif (action == 2):
                             print "Button 2 OFF"
+                            if((device_id != None) and (device_service_endpoint != None)):
+                                device_url = ("%s%s") % (device_service_endpoint, device_id)
+                                if(brightness >= 5):
+                                    brightness = brightness - 5
+                                print brightness
+                                rest.send("POST", device_url, json.dumps({"commandName":"changeBrightness", "params" : {"brightness": brightness}}), {'Content-Type':'application/json'})
                         elif(action == 3):
                             print "Button 2 ON"
-                            
+                            if((device_id != None) and (device_service_endpoint != None)):
+                                device_url = ("%s%s") % (device_service_endpoint, device_id)
+                                if(brightness <= 245):
+                                    brightness = brightness + 5
+                                print brightness
+                                rest.send("POST", device_url, json.dumps({"commandName":"changeBrightness", "params" : {"brightness": brightness}}), {'Content-Type':'application/json'})
+                                
                         # reset buffers
                         message_bytes = []
                         message_chars = []
@@ -182,8 +207,8 @@ def main():
                 print "stopped"
                 sys.stdout.flush()
         
-            except:
-                pass
+            except :
+               pass
 
 if __name__ == '__main__':
     # start main

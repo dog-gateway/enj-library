@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import it.polito.elite.enocean.enj.EEP26.D2.D201.D20108;
 import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
+import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20108;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketQueueItem;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;

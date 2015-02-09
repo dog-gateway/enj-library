@@ -5,6 +5,7 @@ Created on Apr 15, 2014
 '''
 
 import rest
+import json
 
 class DogGateway:
     
@@ -35,7 +36,7 @@ class DogGateway:
         Sends a command to the dog gateway wrapped by this client, also passing any given parameter
         '''
         #print 'sending: '+self.all_devices_url+'/'+device_id+'/commands/'+command
-        rest.send('PUT', self.all_devices_url+'/'+device_id+'/commands/'+command, str(parameters), 
+        rest.send('PUT', self.all_devices_url+'/'+device_id+'/commands/'+command, json.dumps(parameters), 
                   {'Accept':'application/json', 'Content-Type':'application/json'})
         
     def getStatus(self,device_id):

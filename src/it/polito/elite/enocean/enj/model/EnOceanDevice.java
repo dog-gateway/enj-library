@@ -17,8 +17,8 @@
  */
 package it.polito.elite.enocean.enj.model;
 
-import it.polito.elite.enocean.enj.EEP26.EEP;
-import it.polito.elite.enocean.enj.EEP26.EEPIdentifier;
+import it.polito.elite.enocean.enj.eep.EEP;
+import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;

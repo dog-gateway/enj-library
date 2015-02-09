@@ -17,15 +17,15 @@
  */
 package it.polito.elite.enocean.enj.communication;
 
-import it.polito.elite.enocean.enj.EEP26.EEP;
-import it.polito.elite.enocean.enj.EEP26.EEPRegistry;
-import it.polito.elite.enocean.enj.EEP26.packet.EEP26Telegram;
-import it.polito.elite.enocean.enj.EEP26.packet.EEP26TelegramFactory;
-import it.polito.elite.enocean.enj.EEP26.packet.EEP26TelegramType;
-import it.polito.elite.enocean.enj.EEP26.packet.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDeliveryTask;
+import it.polito.elite.enocean.enj.eep.EEP;
+import it.polito.elite.enocean.enj.eep.EEPRegistry;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramFactory;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
