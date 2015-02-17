@@ -1,13 +1,26 @@
-/**
+/*
+ * EnJ - EnOcean Java API
  * 
+ * Copyright 2015 Dario Bonino 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License
  */
 package it.polito.elite.enocean.enj.eep.eep26.D2.D201;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
-import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
-import it.polito.elite.enocean.enj.eep.EEPAttributeChangePublisher;
+import it.polito.elite.enocean.enj.eep.EEPAttributeChangeDispatcher;
 import it.polito.elite.enocean.enj.eep.Rorg;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26DimLevel;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26EnergyMeasurement;
@@ -23,28 +36,27 @@ import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.VLDTelegram;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.xml.ws.soap.AddressingFeature.Responses;
-
-import org.omg.CORBA.RepositoryIdHelper;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A class representing the D2-01 family of EnOcean Equipment Profiles. Cannot
  * be directly istantiated, instead specific classes matching the real device
  * EEP must be used.
  * 
- * @author <a href="mailto:biasiandrea04@gmail.com">Andrea Biasi</a>, <a
- *         href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  * 
  */
-public abstract class D201 extends EEP implements EEPAttributeChangePublisher
+public abstract class D201 extends EEP
 {
 	// the EEP26 definition, according to the EEP26 specification
 	public static final Rorg rorg = new Rorg((byte) 0xd2);
 	public static final byte func = (byte) 0x01;
 
 	// func must be defined by extending classes
+
+	// Executor Thread Pool for handling attribute updates
+	private ExecutorService attributeNotificationWorker;
 
 	// -------------------------------------------------
 	// Parameters defined by this EEP, which
@@ -59,6 +71,9 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 	{
 		// call the superclass constructor
 		super(version);
+
+		// build the attribute dispatching worker
+		this.attributeNotificationWorker = Executors.newFixedThreadPool(1);
 	}
 
 	/**
@@ -430,6 +445,9 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 		// handle the telegram, as first cast it at the right type (or fail)
 		if (telegram.getTelegramType() == EEP26TelegramType.VLD)
 		{
+			// prepare the list of changed attributes (only one)
+			ArrayList<EEPAttribute<?>> changedAttributes = new ArrayList<EEPAttribute<?>>();
+
 			// cast the telegram to the right type
 			VLDTelegram profileUpdate = (VLDTelegram) telegram;
 
@@ -440,25 +458,21 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 			// get the command id
 			byte commandId = (byte) (dataPayload[0] & (byte) 0x0F);
 
+			// the channel id
+			int channelId = -1;
+
 			if (commandId == (byte) 0x04)
 			{
 				// parse actuator status response
 				D201ActuatorStatusResponse response = this
 						.parseActuatorStatusResponse(dataPayload);
 
+				// update the channelId
+				channelId = response.getChannelId();
+
 				// updates all the attributes associated to the status change
 				// message
-				ArrayList<EEPAttribute<?>> changedAttributes = this
-						.updateStatusAttributes(response);
-
-				// notify all listeners
-				// TODO: check if it is better to perform this task in a worker
-				// thread
-				for(EEPAttribute<?> attribute : changedAttributes)
-				{
-					attribute.notifyAttributeListeners(response
-							.getChannelId());;
-				}
+				changedAttributes.addAll(this.updateStatusAttributes(response));
 
 			}
 			else if (commandId == (byte) 0x07)
@@ -466,6 +480,9 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 				// parse the actuator measurement response
 				D201ActuatorMeasurementResponse response = this
 						.parseActuatorMeasurementResponse(dataPayload);
+
+				// update the channelId
+				channelId = response.getChannelId();
 
 				// get the channel to attribute to update, can either be Energy
 				// or Power measurement, detect it depending on the unit of
@@ -475,23 +492,36 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 				if (uom.isEnergy())
 				{
 					// handle energy attribute update
-					EEPAttribute<?> energyAttribute = this.updateEnergyAttribute(response);
-					
-					energyAttribute.notifyAttributeListeners(response
-							.getChannelId());
-					
-					
+					EEPAttribute<?> energyAttribute = this
+							.updateEnergyAttribute(response);
+
+					// add the attribute to the list of changed ones
+					changedAttributes.add(energyAttribute);
+
 				}
 				else if (uom.isPower())
 				{
 					// handle power attribute update
-					EEPAttribute<?> powerAttribute = this.updatePowerAttribute(response);
-				
-					powerAttribute.notifyAttributeListeners(response
-							.getChannelId());
+					EEPAttribute<?> powerAttribute = this
+							.updatePowerAttribute(response);
+
+					changedAttributes.add(powerAttribute);
 				}
-				
-				// TODO: check how to notify attribute listeners
+			}
+
+			if ((!changedAttributes.isEmpty()) && (channelId >= 0))
+			{
+				// build the dispatching task
+				EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
+						changedAttributes, channelId);
+
+				// submit the task for execution
+				this.attributeNotificationWorker.submit(dispatcherTask);
+
+				// set success at true
+				// TODO check what to do if nothing changes, i.e., with success
+				// equal to false.
+				success = true;
 			}
 		}
 		return success;
@@ -658,7 +688,8 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 	 * @param response
 	 *            The response carrying updated power data.
 	 */
-	private EEPAttribute<?> updatePowerAttribute(D201ActuatorMeasurementResponse response)
+	private EEPAttribute<?> updatePowerAttribute(
+			D201ActuatorMeasurementResponse response)
 	{
 		// get the right channel attribute and update the current power figure
 		EEP26PowerMeasurement powerMeasurementAttribute = (EEP26PowerMeasurement) this
@@ -668,7 +699,7 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 		powerMeasurementAttribute.setValue(response.getMeasureAsDouble());
 		powerMeasurementAttribute.setUnit(response.getUnit().name());
 
-		//return the changed attribute
+		// return the changed attribute
 		return powerMeasurementAttribute;
 	}
 
@@ -679,7 +710,8 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 	 * @param response
 	 *            The response carrying updated energy data.
 	 */
-	private EEPAttribute<?> updateEnergyAttribute(D201ActuatorMeasurementResponse response)
+	private EEPAttribute<?> updateEnergyAttribute(
+			D201ActuatorMeasurementResponse response)
 	{
 		// get the right channel attribute and update the current energy figure
 		EEP26EnergyMeasurement energyMeasurementAttribute = (EEP26EnergyMeasurement) this
@@ -690,56 +722,5 @@ public abstract class D201 extends EEP implements EEPAttributeChangePublisher
 		energyMeasurementAttribute.setUnit(response.getUnit().name());
 
 		return energyMeasurementAttribute;
-	}
-
-	@Override
-	/**
-	 * Provides the base implementation of the {@link EEP26AttributeChangePublisher) interface
-	 */
-	public boolean addEEP26AttributeListener(int channelId,
-			String attributeName, EEPAttributeChangeListener listener)
-	{
-		// the success flag, initially false
-		boolean success = false;
-
-		// the map of attributes associated to the given channel
-		HashMap<String, EEPAttribute<?>> attributes = this.channelAttributes
-				.get(channelId);
-
-		// get the required attribute name
-		EEPAttribute<?> attribute = attributes.get(attributeName);
-
-		// if not null, register the listener and store the result of the
-		// process
-		if (attribute != null)
-			success = attribute.addAttributeChangeListener(listener);
-
-		// return the final status of the registration (either true or false)
-		return success;
-	}
-
-	@Override
-	/**
-	 * Provides the base implementation of the {@link EEP26AttributeChangePublisher) interface
-	 */
-	public boolean removeEEP26AttributeListener(int channelId,
-			String attributeName, EEPAttributeChangeListener listener)
-	{
-		// the success flag, initially false
-		boolean success = false;
-
-		// the map of attributes associated to the given channel
-		HashMap<String, EEPAttribute<?>> attributes = this.channelAttributes
-				.get(channelId);
-
-		// get the required attribute name
-		EEPAttribute<?> attribute = attributes.get(attributeName);
-
-		// if not null, remove the listener and store the operation result
-		if (attribute != null)
-			success = attribute.removeAttributeChangeListener(listener);
-
-		// return the final status of the registration (either true or false)
-		return success;
 	}
 }

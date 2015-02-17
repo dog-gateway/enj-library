@@ -321,7 +321,7 @@ public class ESP3Packet
 		//byte to unsigned int conversion
 		int optLenght = this.optLenght & 0xFF;
 
-		// Inizializzo il vettore dei dati opzionali alla lunghezza effettiva
+		// Inizializzo il vettore dei dati alla lunghezza effettiva
 		this.data = new byte[dataLenght];
 
 		for (int i = 0; i < dataLenght; i++)
@@ -329,7 +329,7 @@ public class ESP3Packet
 			this.data[i] = buffer[6 + i];
 		}
 
-		// Inizializzo il vettore data alla lunghezza effettiva
+		// Inizializzo il vettore dati opzionali alla lunghezza effettiva
 		this.optData = new byte[optLenght];
 
 		for (int i = 0; i < optLenght; i++)

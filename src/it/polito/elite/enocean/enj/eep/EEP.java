@@ -28,7 +28,7 @@ import java.util.Set;
  * @param <T>
  * 
  */
-public abstract class EEP
+public abstract class EEP implements EEPAttributeChangePublisher
 {
 
 	// the EnOcean Equipment Profile version
@@ -210,6 +210,57 @@ public abstract class EEP
 	public int getNumberOfChannels()
 	{
 		return this.channelAttributes.size();
+	}
+	
+	@Override
+	/**
+	 * Provides the base implementation of the {@link EEP26AttributeChangePublisher) interface
+	 */
+	public boolean addEEP26AttributeListener(int channelId,
+			String attributeName, EEPAttributeChangeListener listener)
+	{
+		// the success flag, initially false
+		boolean success = false;
+
+		// the map of attributes associated to the given channel
+		HashMap<String, EEPAttribute<?>> attributes = this.channelAttributes
+				.get(channelId);
+
+		// get the required attribute name
+		EEPAttribute<?> attribute = attributes.get(attributeName);
+
+		// if not null, register the listener and store the result of the
+		// process
+		if (attribute != null)
+			success = attribute.addAttributeChangeListener(listener);
+
+		// return the final status of the registration (either true or false)
+		return success;
+	}
+
+	@Override
+	/**
+	 * Provides the base implementation of the {@link EEP26AttributeChangePublisher) interface
+	 */
+	public boolean removeEEP26AttributeListener(int channelId,
+			String attributeName, EEPAttributeChangeListener listener)
+	{
+		// the success flag, initially false
+		boolean success = false;
+
+		// the map of attributes associated to the given channel
+		HashMap<String, EEPAttribute<?>> attributes = this.channelAttributes
+				.get(channelId);
+
+		// get the required attribute name
+		EEPAttribute<?> attribute = attributes.get(attributeName);
+
+		// if not null, remove the listener and store the operation result
+		if (attribute != null)
+			success = attribute.removeAttributeChangeListener(listener);
+
+		// return the final status of the registration (either true or false)
+		return success;
 	}
 
 	/**
