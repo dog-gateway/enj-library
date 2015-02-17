@@ -22,8 +22,6 @@ import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.Hashtable;
 
 /**
  * A class representing EnOcean devices, it allows easier composition of
