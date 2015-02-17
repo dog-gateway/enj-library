@@ -63,6 +63,8 @@ public class F60201 extends F602 implements Serializable
 		// add attributes
 		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerAction());
 		this.addChannelAttribute(2, new EEP26RockerSwitch2RockerAction());
+		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerButtonCount());
+		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerEnergyBow());
 	}
 
 	@Override
@@ -147,7 +149,7 @@ public class F60201 extends F602 implements Serializable
 
 						// build the dispatching task
 						EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-								rockerSwitchAttribute2, 1);
+								rockerSwitchAttribute2, 2);
 
 						// submit the task for execution
 						this.attributeNotificationWorker.submit(dispatcherTask);
