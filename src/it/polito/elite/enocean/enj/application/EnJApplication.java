@@ -17,7 +17,6 @@
  */
 package it.polito.elite.enocean.enj.application;
 
-import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 
 /**
  * The EnOcean for Java application layer, takes care of device tracking,
