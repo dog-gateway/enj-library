@@ -146,7 +146,8 @@ public class PacketDelivery implements Runnable
 	@Override
 	public void run()
 	{
-		// main delivery loop, packets are consumed only if at least one listener is
+		// main delivery loop, packets are consumed only if at least one
+		// listener is
 		// registered, possible leaks here, check if it is better to:
 		// 1) use a circular buffer as queue
 		// 2) always poll data from the queue
@@ -155,20 +156,24 @@ public class PacketDelivery implements Runnable
 			// check that there are listeners registered for the packet delivery
 			if ((this.listeners != null) && (!this.listeners.isEmpty()))
 			{
-				// poll the current queue item
-				ESP3Packet pkt = this.theQueue.poll().getPkt();
-				
-				// deliver the current packet to the set of registered listeners
-				// this migh be improved using a thread pool of executors if
-				// timing becomes critical
-				for (PacketListener listener : this.listeners)
+				if (this.theQueue.size() > 0)
 				{
-					//deliver the packet
-					listener.handlePacket(pkt);
+					// poll the current queue item
+					ESP3Packet pkt = this.theQueue.poll().getPkt();
+
+					// deliver the current packet to the set of registered
+					// listeners
+					// this migh be improved using a thread pool of executors if
+					// timing becomes critical
+					for (PacketListener listener : this.listeners)
+					{
+						// deliver the packet
+						listener.handlePacket(pkt);
+					}
 				}
 			}
 
-			//sleep for the current delivery time
+			// sleep for the current delivery time
 			try
 			{
 				Thread.sleep(this.deliveryTime);

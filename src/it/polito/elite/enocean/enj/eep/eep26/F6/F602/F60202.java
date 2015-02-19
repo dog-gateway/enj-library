@@ -17,8 +17,6 @@
  */
 package it.polito.elite.enocean.enj.eep.eep26.F6.F602;
 
-import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.EEPRegistry;
 
 /**
  * A class representing devices belonging to the F6-02-02 profile, it is exactly
@@ -41,10 +39,10 @@ public class F60202 extends F60201
 
 	// register the type in the EEPProfile even if no instance of this class is
 	// created.
-	static
+	/*static
 	{
 		EEPRegistry.getInstance().addProfile(
 				new EEPIdentifier(F602.rorg, F602.func, F60202.type),
 				F60202.class);
-	}
+	}*/
 }

@@ -57,6 +57,9 @@ public class PacketReceiver implements SerialPortEventListener
 	// PacketTransmitter over the serial connection and no other operations
 	// could be performed until a response is received.
 	private Semaphore expectedResponse;
+	
+	// the data buffer
+	private ArrayList<Byte> buffer;
 
 	/**
 	 * Create a {@link PacketReceiver} instance, attached to the given serial
@@ -91,6 +94,9 @@ public class PacketReceiver implements SerialPortEventListener
 
 		// store a reference to the expected response semaphore
 		this.expectedResponse = expectedResponse;
+		
+		//prepare the data buffer
+		this.buffer = new ArrayList<Byte>();
 	}
 
 	/**
@@ -108,17 +114,10 @@ public class PacketReceiver implements SerialPortEventListener
 			// Input Stream of the serial port
 			InputStream serialInputStream = this.serialPort.getInputStream();
 
-			// Input byte buffer as Vector (check if needed)
-			ArrayList<Byte> buffer = new ArrayList<Byte>();
-
 			// check if data is available
 			if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE)
 			{
 				// read the incoming packet if data is available
-
-				// Clean the input buffer
-				if (buffer.size() > 0)
-					buffer.clear();
 
 				// byte placeholder for data reading
 				int readedIntValue = 0;
@@ -136,28 +135,30 @@ public class PacketReceiver implements SerialPortEventListener
 					if (readedByteValue == ESP3Packet.SYNC_BYTE)
 					{
 
+						// parsed packet
+						//System.out.println("Detected new packet");
+						
 						// parse the Packet and enqueue it in the right
 						// place
-						ESP3Packet pkt = this.parsePacket(buffer);
+						ESP3Packet pkt = this.parsePacket(this.buffer);
 
 						// check not null
 						if (pkt != null)
 						{
 							// place the packet in the right queue
 							putInQueue(pkt);
-
-							// clear the buffer
-							buffer.clear();
 						}
+						// clear the buffer
+						this.buffer.clear();
 					}
 
 					// Store the current byte in the packet buffer (always
 					// starts with a sync byte)
-					buffer.add(Byte.valueOf(readedByteValue));
+					this.buffer.add(Byte.valueOf(readedByteValue));
 
 					// debug, TODO use a logging system here
-					System.out.println(""
-							+ String.format("%x", readedByteValue));
+					/*System.out.println(""
+							+ String.format("%02x", readedByteValue));*/
 
 				}
 
@@ -165,7 +166,7 @@ public class PacketReceiver implements SerialPortEventListener
 				// sync bytes can be exploited as packet delimiter
 
 				// parse the Packet and enqueue it in the right place
-				ESP3Packet pkt = this.parsePacket(buffer);
+				/*ESP3Packet pkt = this.parsePacket(buffer);
 
 				// check not null
 				if (pkt != null)
@@ -175,10 +176,10 @@ public class PacketReceiver implements SerialPortEventListener
 
 					// clear the buffer
 					buffer.clear();
-				}
+				}*/
 
 				// debug, TODO use a logging system here
-				System.out.println("Data read");
+				//System.out.println("Ended data available on serial port");
 			}
 
 		}

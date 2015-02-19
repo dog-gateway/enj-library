@@ -117,4 +117,63 @@ public class EEPIdentifier implements Serializable
 		// checks if the part and the whole have the same rorg and function
 		return ((part.rorg.getRorgValue() == whole.rorg.getRorgValue()) && (part.function == whole.function));
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + function;
+		result = prime * result + ((rorg == null) ? 0 : rorg.hashCode());
+		result = prime * result + type;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (!(obj instanceof EEPIdentifier))
+		{
+			return false;
+		}
+		EEPIdentifier other = (EEPIdentifier) obj;
+		if (function != other.function)
+		{
+			return false;
+		}
+		if (rorg == null)
+		{
+			if (other.rorg != null)
+			{
+				return false;
+			}
+		}
+		else if (!rorg.equals(other.rorg))
+		{
+			return false;
+		}
+		if (type != other.type)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	
+
+
 }

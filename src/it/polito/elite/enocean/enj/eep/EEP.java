@@ -144,9 +144,8 @@ public abstract class EEP implements EEPAttributeChangePublisher
 		}
 
 		// check if the insertion was successful
-		if (channelAttributes.put(attribute.getClass().getSimpleName(),
-				attribute).equals(attribute))
-			stored = true;
+		channelAttributes.put(attribute.getName(), attribute);
+		stored = true;
 
 		// return the insertion result
 		return stored;
@@ -211,7 +210,7 @@ public abstract class EEP implements EEPAttributeChangePublisher
 	{
 		return this.channelAttributes.size();
 	}
-	
+
 	@Override
 	/**
 	 * Provides the base implementation of the {@link EEP26AttributeChangePublisher) interface
@@ -269,9 +268,10 @@ public abstract class EEP implements EEPAttributeChangePublisher
 	 * @return
 	 */
 	public abstract EEPIdentifier getEEPIdentifier();
-	
+
 	/**
-	 * Handles the profile data update, must be specifically implemented by each profile class
+	 * Handles the profile data update, must be specifically implemented by each
+	 * profile class
 	 */
 	public abstract boolean handleProfileUpdate(EEP26Telegram telegram);
 }

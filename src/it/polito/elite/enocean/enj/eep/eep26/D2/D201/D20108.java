@@ -20,7 +20,6 @@ package it.polito.elite.enocean.enj.eep.eep26.D2.D201;
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.EEPRegistry;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26DefaultState;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26EnergyMeasurement;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ErrorLevel;
@@ -67,15 +66,6 @@ public class D20108 extends D201 implements Serializable
 
 	// the "data" fields accessible through this eep (and updated upon network
 	// data reception)
-
-	// register the type in the EEPProfile even if no instance of this class is
-	// created.
-	static
-	{
-		EEPRegistry.getInstance().addProfile(
-				new EEPIdentifier(D201.rorg, D201.func, D20108.type),
-				D20108.class);
-	}
 
 	/**
 	 * Builds a new EEPProfile instance of type D2.01.08 as specified in the

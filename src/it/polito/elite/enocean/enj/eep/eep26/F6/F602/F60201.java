@@ -19,7 +19,6 @@ package it.polito.elite.enocean.enj.eep.eep26.F6.F602;
 
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeDispatcher;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.EEPRegistry;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerButtonCount;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerEnergyBow;
@@ -43,15 +42,6 @@ public class F60201 extends F602 implements Serializable
 
 	// the type definition
 	public static final byte type = (byte) 0x01;
-
-	// register the type in the EEPProfile even if no instance of this class is
-	// created.
-	static
-	{
-		EEPRegistry.getInstance().addProfile(
-				new EEPIdentifier(F602.rorg, F602.func, F60201.type),
-				F60201.class);
-	}
 
 	/**
 	 * 

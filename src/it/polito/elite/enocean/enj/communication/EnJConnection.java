@@ -21,10 +21,14 @@ import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDeliveryTask;
 import it.polito.elite.enocean.enj.eep.EEP;
+import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.EEPRegistry;
+import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F602;
+import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramFactory;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.RPSTelegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
@@ -207,7 +211,7 @@ public class EnJConnection implements PacketListener
 
 	/**
 	 * Disables the teach mode on the connection layer. Teach-in requests are
-	 * ignored.
+	 * handlePacket * ignored.
 	 */
 	public void disableTeachIn()
 	{
@@ -250,6 +254,43 @@ public class EnJConnection implements PacketListener
 
 			// get the corresponding device...
 			EnOceanDevice device = this.knownDevices.getByLowAddress(address);
+
+			// check null
+			if (device == null)
+			{
+				// the device has never been seen before, this is typical for
+				// devices which do not support teach in
+
+				// check if the packet is an RPS one
+				if (RPSTelegram.isRPSPacket(pkt))
+				{
+					// parse the packet
+					RPSTelegram rpsTelegram = new RPSTelegram(pkt);
+
+					// build a new RPS device,
+					device = new EnOceanDevice(rpsTelegram.getAddress(), null);
+
+					// TODO: as per the EEP specification there is no "way" to
+					// identify which variant of EEP is using the RPS message,
+					// therefore some "heuristic" shall be actuated to assign
+					// the right EEP, by default F60201 will be assigned.
+					Class<? extends EEP> eep = EEPRegistry.getInstance()
+							.getEEP(new EEPIdentifier(F602.rorg, F602.func,
+									F60201.type));
+					if (eep != null)
+					{
+						device.setEEP(eep);
+
+						// notify listeners
+						this.notifyEnJDeviceListeners(device,
+								EnJDeviceChangeType.CREATED);
+
+						// store the device
+						this.knownDevices.add(device);
+					}
+				}
+
+			}
 
 			// delegate to the device
 			EEP deviceEEP = device.getEEP();
