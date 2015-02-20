@@ -15,11 +15,10 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 public class ESP3Packet
 {
 	/*
-	 * Attenzione ho tolto la classe Abstract la uso come una normale, perch� cosi posso impacchettare come generico Packet e
-	 * successivamente discriminarne il tipo
-	 * 
+	 * Attenzione ho tolto la classe Abstract la uso come una normale, perch�
+	 * cosi posso impacchettare come generico Packet e successivamente
+	 * discriminarne il tipo
 	 */
-
 
 	// --------------- Packet types -----------------
 
@@ -32,7 +31,7 @@ public class ESP3Packet
 	public static byte REMOTE_MAN_COMMAND = 7;
 	public static byte RADIO_MESSAGE = 9;
 	public static byte RADIO_ADVANCED = 10;
-	
+
 	// ---------------- The packet constants ---------
 	public static final byte SYNC_BYTE = 0x55;
 
@@ -60,7 +59,6 @@ public class ESP3Packet
 	// checksum for DATA and OPTIONAL_DATA
 	protected byte crc8d;
 
-
 	// --------------- Constructors --------------------
 
 	/**
@@ -81,7 +79,7 @@ public class ESP3Packet
 	 * @param optData
 	 * @param cRC8D
 	 */
-	public  ESP3Packet(byte packetType, byte[] data, byte[] optData)
+	public ESP3Packet(byte packetType, byte[] data, byte[] optData)
 	{
 		this.syncByte = 0x55;
 		this.packetType = packetType;
@@ -90,30 +88,37 @@ public class ESP3Packet
 		this.buildPacket();
 	}
 
-	public void buildPacket(){
-		this.dataLenght[0] = (byte) (data.length & 0xff); //Parte bassa dei 2 byte
-		this.dataLenght[1] = (byte) ((data.length & 0xff00)>>8); //Parte alta dei due byte
+	public void buildPacket()
+	{
+		this.dataLenght[0] = (byte) (data.length & 0xff); // Parte bassa dei 2
+															// byte
+		this.dataLenght[1] = (byte) ((data.length & 0xff00) >> 8); // Parte alta
+																	// dei due
+																	// byte
 		this.optLenght = (byte) (optData.length);
 		byte header[] = new byte[4];
-		header[0] = this.dataLenght[1];//ATTENZIONE BIG ENDIAN! devo mandare prima dataLenght[1] poi dataLenght[0]
+		header[0] = this.dataLenght[1];// ATTENZIONE BIG ENDIAN! devo mandare
+										// prima dataLenght[1] poi dataLenght[0]
 		header[1] = this.dataLenght[0];
 		header[2] = this.optLenght;
 		header[3] = this.packetType;
 
-		this.crc8h = Crc8.calc(header);		
-		byte vectData[] = new byte[data.length+optData.length];
-		for(int i=0 ; i<data.length; i++){
+		this.crc8h = Crc8.calc(header);
+		byte vectData[] = new byte[data.length + optData.length];
+		for (int i = 0; i < data.length; i++)
+		{
 			vectData[i] = data[i];
 		}
 		// Se non ho dati opzionali non metto piu nulla nel vettore
-		if(optLenght != 0){
-			for(int i = 0 ; i<optData.length; i++){
-				vectData[i+data.length] = optData[i];
+		if (optLenght != 0)
+		{
+			for (int i = 0; i < optData.length; i++)
+			{
+				vectData[i + data.length] = optData[i];
 			}
 		}
 		this.crc8d = Crc8.calc(vectData);
 	}
-
 
 	/**
 	 * @return the syncByte
@@ -255,22 +260,26 @@ public class ESP3Packet
 	{
 		// 1 syncByte + 2 dataLenght + 1 optLenght + 1 packetType + 1 crcr8h +
 		// 1crc8d + dataLength + optDataLenght
-		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length + this.optData.length; //Ci va 5 e non 6 come lunghezza iniziale
+		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length
+				+ this.optData.length; // Ci va 5 e non 6 come lunghezza
+										// iniziale
 
-		byte[] packetAsBytes = new byte[packetLengthInBytes]; 
+		byte[] packetAsBytes = new byte[packetLengthInBytes];
 
-		//Header
+		// Header
 		packetAsBytes[0] = this.syncByte;
-		packetAsBytes[1] = this.dataLenght[1]; //Attenzione mando prima la parte alta
+		packetAsBytes[1] = this.dataLenght[1]; // Attenzione mando prima la
+												// parte alta
 		packetAsBytes[2] = this.dataLenght[0];
 		packetAsBytes[3] = this.optLenght;
 		packetAsBytes[4] = this.packetType;
 		packetAsBytes[5] = this.crc8h;
 
-		//byte array to unsigned int conversion
-		int dataLenght = ((this.dataLenght[1] << 8) & 0xff00) + ((this.dataLenght[0]) & 0xff);
+		// byte array to unsigned int conversion
+		int dataLenght = ((this.dataLenght[1] << 8) & 0xff00)
+				+ ((this.dataLenght[0]) & 0xff);
 
-		//byte to unsigned int conversion
+		// byte to unsigned int conversion
 		int optLenght = this.optLenght & 0xFF;
 
 		for (int i = 0; i < dataLenght; i++)
@@ -278,47 +287,50 @@ public class ESP3Packet
 			packetAsBytes[6 + i] = this.data[i];
 		}
 
-		if(optLenght>0){
+		if (optLenght > 0)
+		{
 			for (int i = 0; i < optLenght; i++)
 			{
 				packetAsBytes[6 + dataLenght + i] = this.optData[i];
-			}	
+			}
 		}
 
 		packetAsBytes[6 + dataLenght + optLenght] = this.crc8d;
 
-		//return the packet as byte array		
+		// return the packet as byte array
 		return packetAsBytes;
-	} 
+	}
 
-
-	public byte[] getDataPayload(){
+	public byte[] getDataPayload()
+	{
 		byte[] dataPayload = new byte[this.data.length + this.optData.length];
 		dataPayload = data;
-		if(optData.length>0){
-			for(int i = 0 ; i < optData.length ; i++){
-				dataPayload[i + data.length] = optData[i]; 
+		if (optData.length > 0)
+		{
+			for (int i = 0; i < optData.length; i++)
+			{
+				dataPayload[i + data.length] = optData[i];
 			}
 		}
 		return dataPayload;
 	}
 
-
 	public void parsePacket(byte[] buffer)
-	{ 
+	{
 		// "Inpacchetto" cio che arriva in ingresso
 
 		this.syncByte = buffer[0];
-		this.dataLenght[0] = buffer[1]; 
+		this.dataLenght[0] = buffer[1];
 		this.dataLenght[1] = buffer[2];
 		this.optLenght = buffer[3];
 		packetType = buffer[4];
 		this.crc8h = buffer[5];
 
-		//byte array to unsigned int conversion
-		int dataLenght = ((this.dataLenght[0] << 8) & 0xff00) + ((this.dataLenght[1]) & 0xff);
+		// byte array to unsigned int conversion
+		int dataLenght = ((this.dataLenght[0] << 8) & 0xff00)
+				+ ((this.dataLenght[1]) & 0xff);
 
-		//byte to unsigned int conversion
+		// byte to unsigned int conversion
 		int optLenght = this.optLenght & 0xFF;
 
 		// Inizializzo il vettore dei dati alla lunghezza effettiva
@@ -351,11 +363,38 @@ public class ESP3Packet
 		return packetType == EVENT;
 	}
 
-	public boolean isRadio(){
+	public boolean isRadio()
+	{
 		return packetType == RADIO;
 	}
 
-	public boolean requiresResponse(){
-		return this.isEvent()&&( (this.packetType==Event.SA_RECLAIM_NOT_SUCCESFUL) || (this.packetType==Event.SA_CONFIRM_LEARN) || (this.packetType==Event.SA_LEARN_ACK));
+	public boolean requiresResponse()
+	{
+		return this.isEvent()
+				&& ((this.packetType == Event.SA_RECLAIM_NOT_SUCCESFUL)
+						|| (this.packetType == Event.SA_CONFIRM_LEARN) || (this.packetType == Event.SA_LEARN_ACK));
+	}
+
+	/**
+	 * Computes the lenght of an ESP3Packet packet given the first 4 bytes
+	 * 
+	 * @param partialBuffer
+	 * @return
+	 */
+	public static int getPacketLenght(byte partialBuffer[])
+	{
+		byte dataLenght[] = new byte[2];
+		dataLenght[0] = partialBuffer[1];
+		dataLenght[1] = partialBuffer[2];
+		byte optLenght = partialBuffer[3];
+
+		// byte array to unsigned int conversion
+		int dLenght = ((dataLenght[0] << 8) & 0xff00)
+				+ ((dataLenght[1]) & 0xff);
+
+		// byte to unsigned int conversion
+		int oLenght = optLenght & 0xFF;
+		
+		return (7+dLenght+oLenght);
 	}
 }
