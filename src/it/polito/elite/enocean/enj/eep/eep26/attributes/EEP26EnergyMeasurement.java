@@ -99,13 +99,6 @@ public class EEP26EnergyMeasurement extends EEPAttribute<Double>
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * it.polito.elite.enocean.enj.EEP26.functions.EEPFunction#setValue(java
-	 * .lang.Object)
-	 */
 	@Override
 	public boolean setValue(Double value)
 	{
@@ -123,13 +116,7 @@ public class EEP26EnergyMeasurement extends EEPAttribute<Double>
 		return stored;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * it.polito.elite.enocean.enj.EEP26.functions.EEPFunction#setUnit(java.
-	 * lang.String)
-	 */
+
 	@Override
 	public boolean setUnit(String unit)
 	{

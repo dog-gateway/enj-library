@@ -27,21 +27,6 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 public class RPSTelegram extends EEP26Telegram
 {
 
-	// the raw (link layer) packet wrapped by this instance
-	private ESP3Packet rawPacket;
-
-	// the data payload
-	private byte payload[];
-
-	// the device address
-	private byte address[];
-	
-	// the status byte
-	private byte status;
-
-	// the packet Rorg
-	private Rorg rorg;
-
 	public RPSTelegram(ESP3Packet pkt)
 	{
 		super(EEP26TelegramType.RPS);
@@ -74,38 +59,6 @@ public class RPSTelegram extends EEP26Telegram
 		// store the status byte
 		this.status = rawData[startingOffset+this.address.length]; //shall be equal to rawData.length-1
 
-	}
-
-	/**
-	 * @return the payload
-	 */
-	public byte[] getPayload()
-	{
-		return payload;
-	}
-
-	/**
-	 * @return the address
-	 */
-	public byte[] getAddress()
-	{
-		return address;
-	}
-
-	/**
-	 * @return the rorg
-	 */
-	public Rorg getRorg()
-	{
-		return rorg;
-	}
- 
-	/**
-	 * @return the status byte
-	 */
-	public byte getStatus()
-	{
-		return status;
 	}
 
 	/**

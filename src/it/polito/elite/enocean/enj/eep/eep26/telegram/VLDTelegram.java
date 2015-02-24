@@ -26,17 +26,6 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
  */
 public class VLDTelegram extends EEP26Telegram
 {
-	// the raw (link layer) packet wrapped by this instance
-	private ESP3Packet rawPacket;
-
-	// the data payload
-	private byte payload[];
-
-	// the device address
-	private byte address[];
-	
-	// the packet Rorg
-	private Rorg rorg;
 
 	/**
 	 * @param pkt
@@ -87,48 +76,6 @@ public class VLDTelegram extends EEP26Telegram
 		
 		// no func nor type definitions are provided in these packets...
 	}
-	
-	
-
-	/**
-	 * @return the rawPacket
-	 */
-	public ESP3Packet getRawPacket()
-	{
-		return rawPacket;
-	}
-
-
-
-	/**
-	 * @return the payload
-	 */
-	public byte[] getPayload()
-	{
-		return payload;
-	}
-
-
-
-	/**
-	 * @return the address
-	 */
-	public byte[] getAddress()
-	{
-		return address;
-	}
-
-
-
-	/**
-	 * @return the rorg
-	 */
-	public Rorg getRorg()
-	{
-		return rorg;
-	}
-
-
 
 	public static boolean isVLDPacket(ESP3Packet pkt)
 	{
