@@ -20,7 +20,7 @@ package it.polito.elite.enocean.enj.eep.eep26.F6.F602;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
 
 /**
- * @author bonino
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
 public class F6020102RockerSwitchMessage

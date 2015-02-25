@@ -17,14 +17,10 @@
  */
 package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
 
-import java.io.Serializable;
-
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
-import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
-import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
-import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTelegram;
-import it.polito.elite.enocean.enj.eep.eep26.telegram.RPSTelegram;
+
+import java.io.Serializable;
 
 /**
  * @author bonino
@@ -64,31 +60,4 @@ public class A50205 extends A502 implements Serializable
 		return new EEPIdentifier(A502.rorg, A502.func, A50205.type);
 				
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * it.polito.elite.enocean.enj.eep.EEP#handleProfileUpdate(it.polito.elite
-	 * .enocean.enj.eep.eep26.telegram.EEP26Telegram)
-	 */
-	@Override
-	public boolean handleProfileUpdate(EEP26Telegram telegram)
-	{
-		boolean success = false;
-		// handle the telegram, as first cast it at the right type (or fail)
-		if (telegram.getTelegramType() == EEP26TelegramType.FourBS)
-		{
-			// cast the telegram to handle to its real type
-			FourBSTelegram profileUpdate = (FourBSTelegram) telegram;
-
-			// get the packet payload
-			byte[] payload = profileUpdate.getPayload();
-			
-			
-		}
-		
-		return success;
-	}
-
 }

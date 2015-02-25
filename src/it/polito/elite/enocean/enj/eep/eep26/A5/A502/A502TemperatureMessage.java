@@ -18,7 +18,12 @@
 package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
 
 /**
- * @author bonino
+ * A class representing the temperature measurement message sent by a sensor
+ * belonging to the A502 profile set. Basically, every message set by devices
+ * having a profile stemming from A502 use the same structure and the only
+ * difference is given the temperature linear range.
+ * 
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
 public class A502TemperatureMessage
@@ -27,28 +32,31 @@ public class A502TemperatureMessage
 	private boolean teachIn;
 
 	/**
-	 * 
+	 * Class constructor, builds a message instance given the raw byte payload
+	 * of the corresponding 4BS telegram.
 	 */
 	public A502TemperatureMessage(byte data[])
 	{
 		// temperature data has offset 16 (3rd byte)
 		byte temperature = data[2];
-		
+
 		// transform into a positive integer
-		this.temperature = 0x00FF & temperature; //TODO: check if the conversion is right
-		
+		this.temperature = 0x00FF & temperature; // TODO: check if the
+													// conversion is right
+
 		// get the teach-in flag (offset 28, 4th bit of the 4th byte)
-		byte teachIn = (byte) ((byte)(data[3] & (byte)0x01)>>3);
-		
-		//check the corresponding boolean value
-		if(teachIn == 0)
+		byte teachIn = (byte) ((byte) (data[3] & (byte) 0x01) >> 3);
+
+		// check the corresponding boolean value
+		if (teachIn == 0)
 			this.teachIn = true;
 		else
 			this.teachIn = false;
 	}
 
 	/**
-	 * @return the temperature
+	 * Get the temperature value "trasnferred" by means of this messageas an integer between 0 and 255.
+	 * @return the temperature as an integer, between 0 and 255
 	 */
 	public int getTemperature()
 	{
@@ -56,13 +64,12 @@ public class A502TemperatureMessage
 	}
 
 	/**
-	 * @return the teachIn
+	 * Get the teach-in status 
+	 * @return the teachIn, true if teach-in is active, false otherwise.
 	 */
 	public boolean isTeachIn()
 	{
 		return teachIn;
 	}
-	
-	
 
 }

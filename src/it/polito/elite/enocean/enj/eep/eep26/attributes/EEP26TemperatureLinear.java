@@ -22,7 +22,7 @@ import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import java.nio.ByteBuffer;
 
 /**
- * @author bonino
+ * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
 public class EEP26TemperatureLinear extends EEPAttribute<Double>
@@ -144,7 +144,8 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 	public void setRawValue(int value)
 	{
 		//perform the scaling
-		this.value = ((this.maxT-this.minT)*((double) value))/255.0 + this.minT;
+		//TODO check conversion
+		this.value = ((this.maxT-this.minT)*((double) (255-value)))/255.0 + this.minT;
 	}
 
 	/*

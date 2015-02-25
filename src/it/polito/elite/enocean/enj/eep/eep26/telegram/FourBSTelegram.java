@@ -79,7 +79,6 @@ public class FourBSTelegram extends EEP26Telegram
 																		// equal
 																		// to
 																		// rawData.length-
-
 	}
 
 	/**

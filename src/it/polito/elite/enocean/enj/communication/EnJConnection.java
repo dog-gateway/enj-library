@@ -23,11 +23,16 @@ import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDel
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.EEPRegistry;
+import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502;
+import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50205;
+import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502TemperatureMessage;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F602;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramFactory;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTeachInTelegram;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTelegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.RPSTelegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.link.EnJLink;
@@ -90,6 +95,9 @@ public class EnJConnection implements PacketListener
 	// The set of known devices
 	private EnJPersistentDeviceSet knownDevices;
 
+	// The EEP registry
+	private EEPRegistry registry;
+
 	/**
 	 * Build a connection layer instance on top of the given link layer
 	 * instance.
@@ -118,6 +126,10 @@ public class EnJConnection implements PacketListener
 
 		// store a reference to the link layer
 		this.linkLayer = linkLayer;
+
+		// store a reference to the EEPRegistry, this call also triggers dynamic
+		// discovery of supported EEPs
+		this.registry = EEPRegistry.getInstance();
 
 		// initialize the persistent device store and sets autosave at on
 		// TODO: check how to pass the filename here...
@@ -274,7 +286,7 @@ public class EnJConnection implements PacketListener
 					// identify which variant of EEP is using the RPS message,
 					// therefore some "heuristic" shall be actuated to assign
 					// the right EEP, by default F60201 will be assigned.
-					Class<? extends EEP> eep = EEPRegistry.getInstance()
+					Class<? extends EEP> eep = this.registry
 							.getEEP(new EEPIdentifier(F602.rorg, F602.func,
 									F60201.type));
 					if (eep != null)
@@ -289,23 +301,105 @@ public class EnJConnection implements PacketListener
 						this.knownDevices.add(device);
 					}
 				}
-
-			}
-
-			// delegate to the device
-			EEP deviceEEP = device.getEEP();
-
-			// check not null
-			if (deviceEEP != null)
-			{
-				if (!deviceEEP.handleProfileUpdate(telegram))
+				else if (FourBSTelegram.is4BSPacket(pkt))
 				{
-					// TODO: log the error
+					// parse the packet
+					FourBSTelegram bs4Telegram = new FourBSTelegram(pkt);
+
+					// actually everything shall be ignored unless teach-in is
+					// enabled
+					if (this.teachIn)
+					{
+						// check if the received packet is teach in
+						if (FourBSTeachInTelegram.isTeachIn(bs4Telegram))
+						{
+							// wrap the telegram
+							FourBSTeachInTelegram bs4TeachInTelegram = new FourBSTeachInTelegram(
+									bs4Telegram);
+
+							// --------- Teach-in variation 2 ------
+							if (bs4TeachInTelegram.isWithEEP())
+							{
+								// build a new 4BS device,
+								device = new EnOceanDevice(
+										bs4TeachInTelegram.getAddress(),
+										bs4TeachInTelegram.getManId());
+
+								// get the right EEP
+								Class<? extends EEP> eep = this.registry
+										.getEEP(new EEPIdentifier(
+												bs4TeachInTelegram.getRorg(),
+												bs4TeachInTelegram.getEEPFunc(),
+												bs4TeachInTelegram.getEEPType()));
+
+								if (eep != null)
+								{
+									device.setEEP(eep);
+
+									// notify listeners
+									this.notifyEnJDeviceListeners(device,
+											EnJDeviceChangeType.CREATED);
+
+									// store the device
+									this.knownDevices.add(device);
+								}
+							}
+							else
+							{
+								// build a new 4BS device,
+								device = new EnOceanDevice(
+										bs4TeachInTelegram.getAddress(), null);
+
+								// get the right EEP
+								Class<? extends EEP> eep = this.registry
+										.getEEP(new EEPIdentifier(A502.rorg,
+												A502.func, A50205.type));
+
+								if (eep != null)
+								{
+									device.setEEP(eep);
+
+									// notify listeners
+									this.notifyEnJDeviceListeners(device,
+											EnJDeviceChangeType.CREATED);
+
+									// store the device
+									this.knownDevices.add(device);
+								}
+							}
+
+						}
+					}
+					else
+					{
+						// log
+						A502TemperatureMessage msg = new A502TemperatureMessage(
+								bs4Telegram.getPayload());
+						System.out
+								.println(40.0 * (225-(double) msg.getTemperature()) / 255.0);
+						System.out.println(msg.isTeachIn());
+					}
 				}
+
 			}
 			else
 			{
-				// TODO: log the error
+
+				// delegate to the device
+				EEP deviceEEP = device.getEEP();
+
+				// check not null
+				if (deviceEEP != null)
+				{
+					if (!deviceEEP.handleProfileUpdate(telegram))
+					{
+						// TODO: log the error
+					}
+				}
+				else
+				{
+					// TODO: log the error
+				}
 			}
 		}
 	}
@@ -327,7 +421,7 @@ public class EnJConnection implements PacketListener
 		if (pkt.isTeachInRequest())
 		{
 			// check the eep
-			if (EEPRegistry.getInstance().isEEPSupported(pkt.getEEP()))
+			if (this.registry.isEEPSupported(pkt.getEEP()))
 			{
 				// build the response packet
 				response = pkt
@@ -338,7 +432,7 @@ public class EnJConnection implements PacketListener
 						pkt.getManId());
 
 				// add the supported EEP
-				device.setEEP(EEPRegistry.getInstance().getEEP(pkt.getEEP()));
+				device.setEEP(this.registry.getEEP(pkt.getEEP()));
 
 				// store the device locally
 				this.knownDevices.add(device);
