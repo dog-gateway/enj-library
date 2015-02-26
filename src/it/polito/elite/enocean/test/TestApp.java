@@ -53,6 +53,11 @@ public class TestApp
 		//wait for 60s
 		for(int i=0; i<60; i++)
 		{
+			if(i == 30)
+			{
+				System.out.println("Teach-in active");
+				connection.enableTeachIn();
+			}
 			Thread.sleep(1000);
 			//System.out.println("--");
 		}

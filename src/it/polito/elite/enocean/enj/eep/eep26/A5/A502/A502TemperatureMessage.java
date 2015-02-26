@@ -45,7 +45,7 @@ public class A502TemperatureMessage
 													// conversion is right
 
 		// get the teach-in flag (offset 28, 4th bit of the 4th byte)
-		byte teachIn = (byte) ((byte) (data[3] & (byte) 0x01) >> 3);
+		byte teachIn = (byte) ((byte) (data[3] & (byte) 0x08) >> 3);
 
 		// check the corresponding boolean value
 		if (teachIn == 0)

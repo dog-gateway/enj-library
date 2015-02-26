@@ -92,6 +92,9 @@ public class EnJConnection implements PacketListener
 	// the teach in disabling task
 	private CancelTeachInTask teachInResetTask;
 
+	// the device to teach-in
+	private EnOceanDevice deviceToTeachIn;
+
 	// The set of known devices
 	private EnJPersistentDeviceSet knownDevices;
 
@@ -117,6 +120,7 @@ public class EnJConnection implements PacketListener
 
 		// initialize the teachIn flag at false
 		this.teachIn = false;
+		this.deviceToTeachIn = null;
 
 		// initialize the teach in timer
 		this.teachInTimer = new Timer();
@@ -184,6 +188,54 @@ public class EnJConnection implements PacketListener
 		this.enableTeachIn(EnJConnection.TEACH_IN_TIME);
 	}
 
+	public void enableTeachIn(String hexDeviceAddress,
+			String eepIdentifierAsString)
+	{
+		if ((hexDeviceAddress != null) && (!hexDeviceAddress.isEmpty())
+				&& (eepIdentifierAsString != null)
+				&& (!eepIdentifierAsString.isEmpty()))
+		{
+			// convert - parse strings to corresponding data
+
+			// allowed format for EEPIdentifier is with or without dashes
+			if (eepIdentifierAsString.contains("-"))
+				eepIdentifierAsString.replaceAll("-", "");
+
+			// trim leading and trailing spaces
+			eepIdentifierAsString = eepIdentifierAsString.trim();
+
+			// parse the identifier
+			EEPIdentifier eepIdentifier = EEPIdentifier
+					.parse(eepIdentifierAsString);
+
+			// trim leading and trailing spaces around the device address
+			hexDeviceAddress = hexDeviceAddress.trim();
+
+			// prepare the byte[] for hosting the address
+			byte address[] = new byte[4];
+
+			// parse the address
+			if (hexDeviceAddress.length() == 8)
+			{
+
+				for (int i = 0; i < hexDeviceAddress.length(); i += 2)
+				{
+					address[(i / 2)] = Byte.parseByte("0x"
+							+ eepIdentifierAsString.substring(i, i + 2));
+				}
+			}
+
+			EnOceanDevice device = new EnOceanDevice(address, null);
+			device.setEEP(this.registry.getEEP(eepIdentifier));
+
+			// store the device to learn
+			this.deviceToTeachIn = device;
+
+			// start reset timer
+			this.enableTeachIn(EnJConnection.TEACH_IN_TIME);
+		}
+	}
+
 	/**
 	 * Enables the teach in procedure, it forces the connection layer to listen
 	 * for teach-in requests coming from the physical network. whenever a new
@@ -233,6 +285,7 @@ public class EnJConnection implements PacketListener
 
 		// disable the teach in procedure
 		this.teachIn = false;
+		this.deviceToTeachIn = null;
 	}
 
 	// TODO: change this to abstract the link layer packet composition!!
@@ -270,119 +323,31 @@ public class EnJConnection implements PacketListener
 			// check null
 			if (device == null)
 			{
-				// the device has never been seen before, this is typical for
-				// devices which do not support teach in
+				// the device has never been seen before,
+				// therefore the device must be learned, either
+				// implicitly or
+				// explicitly
 
 				// check if the packet is an RPS one
 				if (RPSTelegram.isRPSPacket(pkt))
 				{
-					// parse the packet
-					RPSTelegram rpsTelegram = new RPSTelegram(pkt);
-
-					// build a new RPS device,
-					device = new EnOceanDevice(rpsTelegram.getAddress(), null);
-
-					// TODO: as per the EEP specification there is no "way" to
-					// identify which variant of EEP is using the RPS message,
-					// therefore some "heuristic" shall be actuated to assign
-					// the right EEP, by default F60201 will be assigned.
-					Class<? extends EEP> eep = this.registry
-							.getEEP(new EEPIdentifier(F602.rorg, F602.func,
-									F60201.type));
-					if (eep != null)
-					{
-						device.setEEP(eep);
-
-						// notify listeners
-						this.notifyEnJDeviceListeners(device,
-								EnJDeviceChangeType.CREATED);
-
-						// store the device
-						this.knownDevices.add(device);
-					}
+					// handle RPS teach-in, can either be done implicitly, an
+					// F60201 EEP will be used, or explicitly if teachIn is true
+					// and the device to teach in has been completely specified.
+					device = this.handleRPSTeachIn(pkt);
 				}
 				else if (FourBSTelegram.is4BSPacket(pkt))
 				{
-					// parse the packet
-					FourBSTelegram bs4Telegram = new FourBSTelegram(pkt);
-
-					// actually everything shall be ignored unless teach-in is
-					// enabled
-					if (this.teachIn)
-					{
-						// check if the received packet is teach in
-						if (FourBSTeachInTelegram.isTeachIn(bs4Telegram))
-						{
-							// wrap the telegram
-							FourBSTeachInTelegram bs4TeachInTelegram = new FourBSTeachInTelegram(
-									bs4Telegram);
-
-							// --------- Teach-in variation 2 ------
-							if (bs4TeachInTelegram.isWithEEP())
-							{
-								// build a new 4BS device,
-								device = new EnOceanDevice(
-										bs4TeachInTelegram.getAddress(),
-										bs4TeachInTelegram.getManId());
-
-								// get the right EEP
-								Class<? extends EEP> eep = this.registry
-										.getEEP(new EEPIdentifier(
-												bs4TeachInTelegram.getRorg(),
-												bs4TeachInTelegram.getEEPFunc(),
-												bs4TeachInTelegram.getEEPType()));
-
-								if (eep != null)
-								{
-									device.setEEP(eep);
-
-									// notify listeners
-									this.notifyEnJDeviceListeners(device,
-											EnJDeviceChangeType.CREATED);
-
-									// store the device
-									this.knownDevices.add(device);
-								}
-							}
-							else
-							{
-								// build a new 4BS device,
-								device = new EnOceanDevice(
-										bs4TeachInTelegram.getAddress(), null);
-
-								// get the right EEP
-								Class<? extends EEP> eep = this.registry
-										.getEEP(new EEPIdentifier(A502.rorg,
-												A502.func, A50205.type));
-
-								if (eep != null)
-								{
-									device.setEEP(eep);
-
-									// notify listeners
-									this.notifyEnJDeviceListeners(device,
-											EnJDeviceChangeType.CREATED);
-
-									// store the device
-									this.knownDevices.add(device);
-								}
-							}
-
-						}
-					}
-					else
-					{
-						// log
-						A502TemperatureMessage msg = new A502TemperatureMessage(
-								bs4Telegram.getPayload());
-						System.out
-								.println(40.0 * (225-(double) msg.getTemperature()) / 255.0);
-						System.out.println(msg.isTeachIn());
-					}
+					// handle 3 variations of 4BS teach in: explicit with
+					// application-specified EEP, explicit with device-specified
+					// EEP or bi-directional.
+					device = this.handle4BSTeachIn(pkt);
 				}
 
 			}
 			else
+			// the device is already known therefore message handling can be
+			// delegated
 			{
 
 				// delegate to the device
@@ -470,6 +435,121 @@ public class EnJConnection implements PacketListener
 			// priority as a maximum 500ms latency is allowed.
 			this.linkLayer.send(response.getRawPacket(), true);
 		}
+	}
+
+	private EnOceanDevice handleRPSTeachIn(ESP3Packet pkt)
+	{
+		// parse the packet
+		RPSTelegram rpsTelegram = new RPSTelegram(pkt);
+
+		// build a new RPS device,
+		EnOceanDevice device = new EnOceanDevice(rpsTelegram.getAddress(), null);
+
+		// TODO: as per the EEP specification there is no "way" to
+		// identify which variant of EEP is using the RPS message,
+		// therefore some "heuristic" shall be actuated to assign
+		// the right EEP, by default F60201 will be assigned.
+		Class<? extends EEP> eep = this.registry.getEEP(new EEPIdentifier(
+				F602.rorg, F602.func, F60201.type));
+		if (eep != null)
+		{
+			device.setEEP(eep);
+
+			// notify listeners
+			this.notifyEnJDeviceListeners(device, EnJDeviceChangeType.CREATED);
+
+			// store the device
+			this.knownDevices.add(device);
+		}
+
+		return device;
+
+	}
+
+	private EnOceanDevice handle4BSTeachIn(ESP3Packet pkt)
+	{
+		// parse the packet
+		FourBSTelegram bs4Telegram = new FourBSTelegram(pkt);
+
+		// prepare the device to return
+		EnOceanDevice device = null;
+
+		// actually everything shall be ignored unless teach-in is
+		// enabled
+		if (this.teachIn)
+		{
+			// check if the received packet is teach in
+			if (FourBSTeachInTelegram.isTeachIn(bs4Telegram))
+			{
+				// wrap the telegram
+				FourBSTeachInTelegram bs4TeachInTelegram = new FourBSTeachInTelegram(
+						bs4Telegram);
+
+				// --------- Teach-in variation 2 ------
+				if (bs4TeachInTelegram.isWithEEP())
+				{
+					// build a new 4BS device,
+					device = new EnOceanDevice(bs4TeachInTelegram.getAddress(),
+							bs4TeachInTelegram.getManId());
+
+					// get the right EEP
+					Class<? extends EEP> eep = this.registry
+							.getEEP(new EEPIdentifier(bs4TeachInTelegram
+									.getRorg(),
+									bs4TeachInTelegram.getEEPFunc(),
+									bs4TeachInTelegram.getEEPType()));
+
+					if (eep != null)
+					{
+						device.setEEP(eep);
+
+						// notify listeners
+						this.notifyEnJDeviceListeners(device,
+								EnJDeviceChangeType.CREATED);
+
+						// store the device
+						this.knownDevices.add(device);
+					}
+				}
+				else if(this.deviceToTeachIn != null)
+				{
+					//TODO: check if the address of the device and the address of the telegram match
+					
+					// build a new 4BS device,
+					device = new EnOceanDevice(bs4TeachInTelegram.getAddress(),
+							null);
+
+					// get the right EEP
+					Class<? extends EEP> eep = this.registry
+							.getEEP(new EEPIdentifier(A502.rorg, A502.func,
+									A50205.type));
+
+					if (eep != null)
+					{
+						device.setEEP(eep);
+
+						// notify listeners
+						this.notifyEnJDeviceListeners(device,
+								EnJDeviceChangeType.CREATED);
+
+						// store the device
+						this.knownDevices.add(device);
+					}
+				}
+
+			}
+		}
+		else
+		{
+			// log
+			A502TemperatureMessage msg = new A502TemperatureMessage(
+					bs4Telegram.getPayload());
+			System.out
+					.println(40.0 * (225 - (double) msg.getTemperature()) / 255.0);
+			System.out.println(msg.isTeachIn());
+		}
+
+		return device;
 	}
 
 	private void notifyEnJDeviceListeners(EnOceanDevice device,
