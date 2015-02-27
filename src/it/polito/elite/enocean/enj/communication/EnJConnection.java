@@ -23,8 +23,6 @@ import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDel
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.EEPRegistry;
-import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502;
-import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50205;
 import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502TemperatureMessage;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F602;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
@@ -41,11 +39,15 @@ import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The EnOcean for Java (EnJ) connection layer. It decouples link-level
@@ -69,6 +71,9 @@ import java.util.concurrent.Executors;
  */
 public class EnJConnection implements PacketListener
 {
+	//the class logger
+	private Logger logger;
+	
 	// the wrapped link layer
 	private EnJLink linkLayer;
 
@@ -88,9 +93,6 @@ public class EnJConnection implements PacketListener
 
 	// the teach in timer
 	private Timer teachInTimer;
-
-	// the teach in disabling task
-	private CancelTeachInTask teachInResetTask;
 
 	// the device to teach-in
 	private EnOceanDevice deviceToTeachIn;
@@ -112,6 +114,9 @@ public class EnJConnection implements PacketListener
 	public EnJConnection(EnJLink linkLayer,
 			String peristentDeviceStorageFilename)
 	{
+		//initialize the logger
+		this.logger = LoggerFactory.getLogger(EnJConnection.class);
+
 		// initialize the set of device listeners
 		this.deviceListeners = new HashSet<>();
 
@@ -124,9 +129,6 @@ public class EnJConnection implements PacketListener
 
 		// initialize the teach in timer
 		this.teachInTimer = new Timer();
-
-		// intialize the teach in reset task
-		this.teachInResetTask = new CancelTeachInTask(this);
 
 		// store a reference to the link layer
 		this.linkLayer = linkLayer;
@@ -191,6 +193,13 @@ public class EnJConnection implements PacketListener
 	public void enableTeachIn(String hexDeviceAddress,
 			String eepIdentifierAsString)
 	{
+		this.enableTeachIn(hexDeviceAddress, eepIdentifierAsString,
+				EnJConnection.TEACH_IN_TIME);
+	}
+
+	public void enableTeachIn(String hexDeviceAddress,
+			String eepIdentifierAsString, int time)
+	{
 		if ((hexDeviceAddress != null) && (!hexDeviceAddress.isEmpty())
 				&& (eepIdentifierAsString != null)
 				&& (!eepIdentifierAsString.isEmpty()))
@@ -199,7 +208,8 @@ public class EnJConnection implements PacketListener
 
 			// allowed format for EEPIdentifier is with or without dashes
 			if (eepIdentifierAsString.contains("-"))
-				eepIdentifierAsString.replaceAll("-", "");
+				eepIdentifierAsString = eepIdentifierAsString.replaceAll("-",
+						"");
 
 			// trim leading and trailing spaces
 			eepIdentifierAsString = eepIdentifierAsString.trim();
@@ -220,8 +230,8 @@ public class EnJConnection implements PacketListener
 
 				for (int i = 0; i < hexDeviceAddress.length(); i += 2)
 				{
-					address[(i / 2)] = Byte.parseByte("0x"
-							+ eepIdentifierAsString.substring(i, i + 2));
+					address[(i / 2)] = (byte) Integer.parseInt(
+							hexDeviceAddress.substring(i, i + 2), 16);
 				}
 			}
 
@@ -232,7 +242,7 @@ public class EnJConnection implements PacketListener
 			this.deviceToTeachIn = device;
 
 			// start reset timer
-			this.enableTeachIn(EnJConnection.TEACH_IN_TIME);
+			this.enableTeachIn(time);
 		}
 	}
 
@@ -257,7 +267,11 @@ public class EnJConnection implements PacketListener
 			this.teachIn = true;
 
 			// start the teach in reset timer
-			this.teachInTimer.schedule(this.teachInResetTask, teachInTime);
+			this.teachInTimer
+					.schedule(new CancelTeachInTask(this), teachInTime);
+
+			// TODO place logger here
+			this.logger.info("Teach-in enabled");
 		}
 	}
 
@@ -277,15 +291,17 @@ public class EnJConnection implements PacketListener
 	 * Disables the teach mode on the connection layer. Teach-in requests are
 	 * handlePacket * ignored.
 	 */
-	public void disableTeachIn()
+	public synchronized void disableTeachIn()
 	{
 		// stop any pending timer
-		this.teachInTimer.cancel();
 		this.teachInTimer.purge();
 
 		// disable the teach in procedure
 		this.teachIn = false;
 		this.deviceToTeachIn = null;
+
+		// TODO place logger here
+		this.logger.info("Teach-in disabled");
 	}
 
 	// TODO: change this to abstract the link layer packet composition!!
@@ -511,30 +527,39 @@ public class EnJConnection implements PacketListener
 						this.knownDevices.add(device);
 					}
 				}
-				else if(this.deviceToTeachIn != null)
+				else if (this.deviceToTeachIn != null)
 				{
-					//TODO: check if the address of the device and the address of the telegram match
+					// debug
 					
-					// build a new 4BS device,
-					device = new EnOceanDevice(bs4TeachInTelegram.getAddress(),
-							null);
+					String msg = "toTeachIn: ";
+					for(int i= 0; i < 4; i++)
+						msg = msg+String.format("%02x",this.deviceToTeachIn.getAddress()[i]);
+					this.logger.info(msg);
+					
+					msg = "received: ";
+					for(int i= 0; i < 4; i++)
+						msg = msg+String.format("%02x",bs4TeachInTelegram.getAddress()[i]);
+					this.logger.info(msg);
 
-					// get the right EEP
-					Class<? extends EEP> eep = this.registry
-							.getEEP(new EEPIdentifier(A502.rorg, A502.func,
-									A50205.type));
-
-					if (eep != null)
+					// check if the address of the device and the address
+					// of the telegram match
+					if (Arrays.equals(this.deviceToTeachIn.getAddress(),
+							bs4TeachInTelegram.getAddress()))
 					{
-						device.setEEP(eep);
+
+						// use the device to teach in
 
 						// notify listeners
-						this.notifyEnJDeviceListeners(device,
+						this.notifyEnJDeviceListeners(this.deviceToTeachIn,
 								EnJDeviceChangeType.CREATED);
 
 						// store the device
-						this.knownDevices.add(device);
+						this.knownDevices.add(this.deviceToTeachIn);
+
+						// reset the device to teach in
+						this.deviceToTeachIn = null;
 					}
+
 				}
 
 			}
@@ -546,7 +571,8 @@ public class EnJConnection implements PacketListener
 					bs4Telegram.getPayload());
 			System.out
 					.println(40.0 * (225 - (double) msg.getTemperature()) / 255.0);
-			System.out.println(msg.isTeachIn());
+			
+			this.logger.info(""+msg.isTeachIn());
 		}
 
 		return device;

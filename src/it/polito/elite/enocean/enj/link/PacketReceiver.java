@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A class implementing the receiver tier of the Java EnOcean Serial Protocol
  * API, EnJ. It listens for new incoming packets on the attached serial port,
@@ -40,6 +43,9 @@ import java.util.concurrent.Semaphore;
  */
 public class PacketReceiver implements SerialPortEventListener
 {
+	// the class logger
+	private Logger logger;
+
 	// The serial port from which packets are received (i.e., read)
 	private SerialPort serialPort;
 
@@ -85,6 +91,9 @@ public class PacketReceiver implements SerialPortEventListener
 			SerialPort serialPort, Semaphore expectedResponse)
 	{
 		super();
+
+		// initialize the logger
+		this.logger = LoggerFactory.getLogger(PacketReceiver.class);
 
 		// store the serial port
 		this.serialPort = serialPort;
@@ -142,7 +151,7 @@ public class PacketReceiver implements SerialPortEventListener
 					{
 
 						// parsed packet
-						// System.out.println("Detected new packet");
+						this.logger.debug("Detected new packet");
 
 						// clear the buffer
 						this.buffer.clear();
@@ -189,10 +198,8 @@ public class PacketReceiver implements SerialPortEventListener
 					}
 
 					// debug, TODO use a logging system here
-					/*
-					 * System.out.println("" + String.format("%02x",
-					 * readedByteValue));
-					 */
+					this.logger.debug(""
+							+ String.format("%02x", readedByteValue));
 
 				}
 			}

@@ -93,17 +93,14 @@ public class EEPIdentifier implements Serializable
 		{
 			// parses the eep identifier expressed according to the EEP
 			// specification, i.e., rrfftt
-			byte rorg = Byte.parseByte("0x"
-					+ eepIdentifierAsString.substring(0, 2));
-			byte func = Byte.parseByte("0x"
-					+ eepIdentifierAsString.substring(2, 4));
+			byte rorg = (byte)Integer.parseInt(eepIdentifierAsString.substring(0, 2),16);
+			byte func = (byte)Integer.parseInt(eepIdentifierAsString.substring(2, 4),16);
 
 			// TODO handle higher EEP e.g. D201
 			byte type = (byte) 0xff;
 			if (eepIdentifierAsString.length() == 6)
 			{
-				type = Byte.parseByte("0x"
-						+ eepIdentifierAsString.substring(4, 6));
+				type = (byte)Integer.parseInt(eepIdentifierAsString.substring(4, 6),16);
 			}
 
 			identifier = new EEPIdentifier(new Rorg(rorg), func, type);
