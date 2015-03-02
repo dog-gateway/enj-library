@@ -23,7 +23,6 @@ import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDel
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.EEPRegistry;
-import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502TemperatureMessage;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F602;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
@@ -71,9 +70,9 @@ import org.slf4j.LoggerFactory;
  */
 public class EnJConnection implements PacketListener
 {
-	//the class logger
+	// the class logger
 	private Logger logger;
-	
+
 	// the wrapped link layer
 	private EnJLink linkLayer;
 
@@ -114,7 +113,7 @@ public class EnJConnection implements PacketListener
 	public EnJConnection(EnJLink linkLayer,
 			String peristentDeviceStorageFilename)
 	{
-		//initialize the logger
+		// initialize the logger
 		this.logger = LoggerFactory.getLogger(EnJConnection.class);
 
 		// initialize the set of device listeners
@@ -530,15 +529,19 @@ public class EnJConnection implements PacketListener
 				else if (this.deviceToTeachIn != null)
 				{
 					// debug
-					
+
 					String msg = "toTeachIn: ";
-					for(int i= 0; i < 4; i++)
-						msg = msg+String.format("%02x",this.deviceToTeachIn.getAddress()[i]);
+					for (int i = 0; i < 4; i++)
+						msg = msg
+								+ String.format("%02x",
+										this.deviceToTeachIn.getAddress()[i]);
 					this.logger.info(msg);
-					
+
 					msg = "received: ";
-					for(int i= 0; i < 4; i++)
-						msg = msg+String.format("%02x",bs4TeachInTelegram.getAddress()[i]);
+					for (int i = 0; i < 4; i++)
+						msg = msg
+								+ String.format("%02x",
+										bs4TeachInTelegram.getAddress()[i]);
 					this.logger.info(msg);
 
 					// check if the address of the device and the address
@@ -561,18 +564,13 @@ public class EnJConnection implements PacketListener
 					}
 
 				}
-
+				else
+				{
+					// log not supported
+					this.logger
+							.warn("Bi-directional teach-in currently not supported for 4BS telegrams.");
+				}
 			}
-		}
-		else
-		{
-			// log
-			A502TemperatureMessage msg = new A502TemperatureMessage(
-					bs4Telegram.getPayload());
-			System.out
-					.println(40.0 * (225 - (double) msg.getTemperature()) / 255.0);
-			
-			this.logger.info(""+msg.isTeachIn());
 		}
 
 		return device;

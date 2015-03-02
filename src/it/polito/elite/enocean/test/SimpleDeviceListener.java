@@ -18,7 +18,10 @@
 package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
+import it.polito.elite.enocean.enj.eep.EEPIdentifier;
+import it.polito.elite.enocean.enj.eep.Rorg;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 
 /**
@@ -36,33 +39,56 @@ public class SimpleDeviceListener implements EnJDeviceListener
 		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see it.polito.elite.enocean.enj.communication.EnJDeviceListener#addedEnOceanDevice(it.polito.elite.enocean.enj.model.EnOceanDevice)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.polito.elite.enocean.enj.communication.EnJDeviceListener#
+	 * addedEnOceanDevice(it.polito.elite.enocean.enj.model.EnOceanDevice)
 	 */
 	@Override
 	public void addedEnOceanDevice(EnOceanDevice device)
 	{
-		System.out.println("Added device:"+device.getDeviceUID()+" - low-address: "+device.getAddress());
-		device.getEEP().addEEP26AttributeListener(1, EEP26RockerSwitch2RockerAction.NAME, new SimpleRockerSwitchListener());
+		System.out.println("Added device:" + device.getDeviceUID()
+				+ " - low-address: " + device.getAddress());
+
+		// handle device types
+		if (device.getEEP().getEEPIdentifier() == new EEPIdentifier(new Rorg(
+				(byte) 0xf6), (byte) 0x02, (byte) 0x01))
+			device.getEEP().addEEP26AttributeListener(1,
+					EEP26RockerSwitch2RockerAction.NAME,
+					new SimpleRockerSwitchListener());
+		else if (device.getEEP().getEEPIdentifier() == new EEPIdentifier(
+				new Rorg((byte) 0xA5), (byte) 0x02, (byte) 0x05))
+			device.getEEP().addEEP26AttributeListener(1,
+					EEP26TemperatureLinear.NAME,
+					new SimpleTemperatureListener());
 	}
 
-	/* (non-Javadoc)
-	 * @see it.polito.elite.enocean.enj.communication.EnJDeviceListener#modifiedEnOceanDevice(it.polito.elite.enocean.enj.model.EnOceanDevice)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.polito.elite.enocean.enj.communication.EnJDeviceListener#
+	 * modifiedEnOceanDevice(it.polito.elite.enocean.enj.model.EnOceanDevice)
 	 */
 	@Override
 	public void modifiedEnOceanDevice(EnOceanDevice device)
 	{
-		System.out.println("Modified device:"+device.getDeviceUID()+" - low-address: "+device.getAddress());
+		System.out.println("Modified device:" + device.getDeviceUID()
+				+ " - low-address: " + device.getAddress());
 
 	}
 
-	/* (non-Javadoc)
-	 * @see it.polito.elite.enocean.enj.communication.EnJDeviceListener#removedEnOceanDevice(it.polito.elite.enocean.enj.model.EnOceanDevice)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see it.polito.elite.enocean.enj.communication.EnJDeviceListener#
+	 * removedEnOceanDevice(it.polito.elite.enocean.enj.model.EnOceanDevice)
 	 */
 	@Override
 	public void removedEnOceanDevice(EnOceanDevice device)
 	{
-		System.out.println("Removed device:"+device.getDeviceUID()+" - low-address: "+device.getAddress());
+		System.out.println("Removed device:" + device.getDeviceUID()
+				+ " - low-address: " + device.getAddress());
 	}
 
 }
