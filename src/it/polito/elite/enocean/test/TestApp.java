@@ -18,7 +18,6 @@
 package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
-import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50205;
 import it.polito.elite.enocean.enj.link.EnJLink;
 
 /**
@@ -52,10 +51,22 @@ public class TestApp
 		linkLayer.connect();
 		
 		// the device to learn
-		connection.enableTeachIn("018a781f", "A5-02-05",40000);
+		System.out.println("Enabling explicit teach-in for 018a781f");
+		connection.enableTeachIn("018a781f", "A5-02-05",30000);
+		
+		Thread.sleep(30000);
 		
 		// teach-in for 40s
+		System.out.println("Enabling smart teach-in for 40s");
+		connection.setSmartTeachIn(true);
+		System.out.println("SmartTeachIn: "+connection.isSmartTeachInEnabled());
 		connection.enableTeachIn(40000);
+		System.out.println("SmartTeachIn: "+connection.isSmartTeachInEnabled());
+		
+		Thread.sleep(40000);
+		
+		connection.setSmartTeachIn(false);
+		System.out.println("SmartTeachIn: "+connection.isSmartTeachInEnabled());
 		
 		
 	}

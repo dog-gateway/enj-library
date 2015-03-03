@@ -102,6 +102,10 @@ public class EnJConnection implements PacketListener
 	// The EEP registry
 	private EEPRegistry registry;
 
+	// a flag for enabling / disabling smart (non-standard) teach-in for a
+	// selected subset of telegrams (RPS and 1BS)
+	private boolean smartTeachIn;
+
 	/**
 	 * Build a connection layer instance on top of the given link layer
 	 * instance.
@@ -125,6 +129,9 @@ public class EnJConnection implements PacketListener
 		// initialize the teachIn flag at false
 		this.teachIn = false;
 		this.deviceToTeachIn = null;
+
+		// set the smart teach-in at false by default
+		this.smartTeachIn = false;
 
 		// initialize the teach in timer
 		this.teachInTimer = new Timer();
@@ -313,6 +320,23 @@ public class EnJConnection implements PacketListener
 		this.linkLayer.send(enjLinkPacket);
 	}
 
+	/**
+	 * @return the smartTeachIn
+	 */
+	public boolean isSmartTeachInEnabled()
+	{
+		return smartTeachIn;
+	}
+
+	/**
+	 * @param smartTeachIn
+	 *            the smartTeachIn to set
+	 */
+	public void setSmartTeachIn(boolean smartTeachIn)
+	{
+		this.smartTeachIn = smartTeachIn;
+	}
+
 	@Override
 	/**
 	 * Handles packets received at the link layer
@@ -457,24 +481,51 @@ public class EnJConnection implements PacketListener
 		// parse the packet
 		RPSTelegram rpsTelegram = new RPSTelegram(pkt);
 
-		// build a new RPS device,
-		EnOceanDevice device = new EnOceanDevice(rpsTelegram.getAddress(), null);
+		// initially null
+		EnOceanDevice device = null;
 
-		// TODO: as per the EEP specification there is no "way" to
-		// identify which variant of EEP is using the RPS message,
-		// therefore some "heuristic" shall be actuated to assign
-		// the right EEP, by default F60201 will be assigned.
-		Class<? extends EEP> eep = this.registry.getEEP(new EEPIdentifier(
-				F602.rorg, F602.func, F60201.type));
-		if (eep != null)
+		// actually everything shall be ignored unless teach-in is
+		// enabled
+		if (this.teachIn)
 		{
-			device.setEEP(eep);
 
-			// notify listeners
-			this.notifyEnJDeviceListeners(device, EnJDeviceChangeType.CREATED);
+			// the only teach-in procedure supported by the EEP2.6 specification
+			// is direct and esplicit tech-in, mening that the device to
+			// teach-in and the corresponding profile are known in advance.
+			// Since this assumption may sometimes be a little bit limiting, a
+			// mechanism for enabling implicit teach-in is also provided. This
+			// latter option, however always matches 2 rocker switches as there
+			// is no way to distinguish between the two EEPs by just looking at
+			// the packet content.
+			if (this.deviceToTeachIn != null)
+			{
+				this.explicitTeachIn(rpsTelegram);
+			}
+			else if(this.smartTeachIn)
+			{
 
-			// store the device
-			this.knownDevices.add(device);
+				// build a new RPS device,
+				device = new EnOceanDevice(rpsTelegram.getAddress(), null);
+
+				// TODO: as per the EEP specification there is no "way" to
+				// identify which variant of EEP is using the RPS message,
+				// therefore some "heuristic" shall be actuated to assign
+				// the right EEP, by default F60201 will be assigned.
+				Class<? extends EEP> eep = this.registry
+						.getEEP(new EEPIdentifier(F602.rorg, F602.func,
+								F60201.type));
+				if (eep != null)
+				{
+					device.setEEP(eep);
+
+					// notify listeners
+					this.notifyEnJDeviceListeners(device,
+							EnJDeviceChangeType.CREATED);
+
+					// store the device
+					this.knownDevices.add(device);
+				}
+			}
 		}
 
 		return device;
@@ -528,41 +579,7 @@ public class EnJConnection implements PacketListener
 				}
 				else if (this.deviceToTeachIn != null)
 				{
-					// debug
-
-					String msg = "toTeachIn: ";
-					for (int i = 0; i < 4; i++)
-						msg = msg
-								+ String.format("%02x",
-										this.deviceToTeachIn.getAddress()[i]);
-					this.logger.info(msg);
-
-					msg = "received: ";
-					for (int i = 0; i < 4; i++)
-						msg = msg
-								+ String.format("%02x",
-										bs4TeachInTelegram.getAddress()[i]);
-					this.logger.info(msg);
-
-					// check if the address of the device and the address
-					// of the telegram match
-					if (Arrays.equals(this.deviceToTeachIn.getAddress(),
-							bs4TeachInTelegram.getAddress()))
-					{
-
-						// use the device to teach in
-
-						// notify listeners
-						this.notifyEnJDeviceListeners(this.deviceToTeachIn,
-								EnJDeviceChangeType.CREATED);
-
-						// store the device
-						this.knownDevices.add(this.deviceToTeachIn);
-
-						// reset the device to teach in
-						this.deviceToTeachIn = null;
-					}
-
+					device = this.explicitTeachIn(bs4TeachInTelegram);
 				}
 				else
 				{
@@ -586,4 +603,51 @@ public class EnJConnection implements PacketListener
 						this.deviceListeners));
 	}
 
+	private EnOceanDevice explicitTeachIn(EEP26Telegram telegram)
+	{
+		// device initially null
+		EnOceanDevice device = null;
+
+		// Debug can be commented out in production
+
+		// dump the address of the device to be taught in
+		String msg = "toTeachIn: ";
+		for (int i = 0; i < 4; i++)
+			msg = msg
+					+ String.format("%02x",
+							this.deviceToTeachIn.getAddress()[i]);
+		this.logger.info(msg);
+
+		// dump the address of the device sending the data message
+		msg = "received: ";
+		for (int i = 0; i < 4; i++)
+			msg = msg + String.format("%02x", telegram.getAddress()[i]);
+
+		// write the debug information in the log
+		this.logger.debug(msg);
+
+		// check if the address of the device and the address
+		// of the telegram match
+		if (Arrays.equals(this.deviceToTeachIn.getAddress(),
+				telegram.getAddress()))
+		{
+
+			// use the device to teach in
+
+			// notify listeners
+			this.notifyEnJDeviceListeners(this.deviceToTeachIn,
+					EnJDeviceChangeType.CREATED);
+
+			// store the device
+			this.knownDevices.add(this.deviceToTeachIn);
+
+			// set the device learnt
+			device = this.deviceToTeachIn;
+
+			// reset the device to teach in
+			this.deviceToTeachIn = null;
+		}
+
+		return device;
+	}
 }

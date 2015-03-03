@@ -18,8 +18,6 @@
 package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
-import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.Rorg;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
@@ -52,13 +50,11 @@ public class SimpleDeviceListener implements EnJDeviceListener
 				+ " - low-address: " + device.getAddress());
 
 		// handle device types
-		if (device.getEEP().getEEPIdentifier() == new EEPIdentifier(new Rorg(
-				(byte) 0xf6), (byte) 0x02, (byte) 0x01))
+		if(device.getEEP().getChannelAttribute(1,EEP26RockerSwitch2RockerAction.NAME)!=null)
 			device.getEEP().addEEP26AttributeListener(1,
 					EEP26RockerSwitch2RockerAction.NAME,
 					new SimpleRockerSwitchListener());
-		else if (device.getEEP().getEEPIdentifier() == new EEPIdentifier(
-				new Rorg((byte) 0xA5), (byte) 0x02, (byte) 0x05))
+		else if (device.getEEP().getChannelAttribute(1, EEP26TemperatureLinear.NAME)!=null)
 			device.getEEP().addEEP26AttributeListener(1,
 					EEP26TemperatureLinear.NAME,
 					new SimpleTemperatureListener());
