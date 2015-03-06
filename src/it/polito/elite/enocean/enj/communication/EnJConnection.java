@@ -23,6 +23,8 @@ import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDel
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.EEPRegistry;
+import it.polito.elite.enocean.enj.eep.D5.D500.D500;
+import it.polito.elite.enocean.enj.eep.D5.D500.D50001;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F602;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
@@ -30,6 +32,7 @@ import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramFactory;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTeachInTelegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTelegram;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.OneBSTelegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.RPSTelegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.link.EnJLink;
@@ -375,6 +378,11 @@ public class EnJConnection implements PacketListener
 					// and the device to teach in has been completely specified.
 					device = this.handleRPSTeachIn(pkt);
 				}
+				else if (OneBSTelegram.is1BSPacket(pkt))
+				{
+					// handle 1BS telegrams (much similar to RPS)
+					device = this.handle1BSTeachIn(pkt);
+				}
 				else if (FourBSTelegram.is4BSPacket(pkt))
 				{
 					// handle 3 variations of 4BS teach in: explicit with
@@ -501,7 +509,7 @@ public class EnJConnection implements PacketListener
 			{
 				this.explicitTeachIn(rpsTelegram);
 			}
-			else if(this.smartTeachIn)
+			else if (this.smartTeachIn)
 			{
 
 				// build a new RPS device,
@@ -514,6 +522,61 @@ public class EnJConnection implements PacketListener
 				Class<? extends EEP> eep = this.registry
 						.getEEP(new EEPIdentifier(F602.rorg, F602.func,
 								F60201.type));
+				if (eep != null)
+				{
+					device.setEEP(eep);
+
+					// notify listeners
+					this.notifyEnJDeviceListeners(device,
+							EnJDeviceChangeType.CREATED);
+
+					// store the device
+					this.knownDevices.add(device);
+				}
+			}
+		}
+
+		return device;
+
+	}
+
+	private EnOceanDevice handle1BSTeachIn(ESP3Packet pkt)
+	{
+		// parse the packet
+		OneBSTelegram oneBSTelegram = new OneBSTelegram(pkt);
+
+		// initially null
+		EnOceanDevice device = null;
+
+		// actually everything shall be ignored unless teach-in is
+		// enabled
+		if (this.teachIn)
+		{
+
+			// the only teach-in procedure supported by the EEP2.6 specification
+			// is direct and esplicit tech-in, mening that the device to
+			// teach-in and the corresponding profile are known in advance.
+			// Since this assumption may sometimes be a little bit limiting, a
+			// mechanism for enabling implicit teach-in is also provided. This
+			// latter option, matches the only device defined by the
+			// specification i.e., the D5-00-01 Contact Switch
+			if (this.deviceToTeachIn != null)
+			{
+				this.explicitTeachIn(oneBSTelegram);
+			}
+			else if (this.smartTeachIn)
+			{
+
+				// build a new RPS device,
+				device = new EnOceanDevice(oneBSTelegram.getAddress(), null);
+
+				// TODO: as per the EEP specification there is no "way" to
+				// identify which variant of EEP is using the RPS message,
+				// therefore some "heuristic" shall be actuated to assign
+				// the right EEP, by default F60201 will be assigned.
+				Class<? extends EEP> eep = this.registry
+						.getEEP(new EEPIdentifier(D500.rorg, D500.func,
+								D50001.type));
 				if (eep != null)
 				{
 					device.setEEP(eep);

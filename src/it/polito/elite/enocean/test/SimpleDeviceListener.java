@@ -19,6 +19,7 @@ package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 
@@ -58,6 +59,10 @@ public class SimpleDeviceListener implements EnJDeviceListener
 			device.getEEP().addEEP26AttributeListener(1,
 					EEP26TemperatureLinear.NAME,
 					new SimpleTemperatureListener());
+		else if (device.getEEP().getChannelAttribute(1, EEP26Switching.NAME)!=null)
+			device.getEEP().addEEP26AttributeListener(1,
+					EEP26Switching.NAME,
+					new SimpleContactSwitchListener());
 	}
 
 	/*

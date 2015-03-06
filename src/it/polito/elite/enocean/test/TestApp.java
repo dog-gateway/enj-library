@@ -52,9 +52,9 @@ public class TestApp
 		
 		// the device to learn
 		System.out.println("Enabling explicit teach-in for 018a781f");
-		connection.enableTeachIn("018a781f", "A5-02-05",30000);
+		connection.enableTeachIn("018a781f", "A5-02-05",10000);
 		
-		Thread.sleep(30000);
+		Thread.sleep(11000);
 		
 		// teach-in for 40s
 		System.out.println("Enabling smart teach-in for 40s");
