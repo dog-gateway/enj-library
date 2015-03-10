@@ -17,108 +17,108 @@
  */
 package it.polito.elite.enocean.enj.eep.eep26.attributes;
 
-import it.polito.elite.enocean.enj.eep.EEPAttribute;
-
 import java.nio.ByteBuffer;
 
+import it.polito.elite.enocean.enj.eep.EEPAttribute;
+
 /**
- * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
+ * @author bonino
  *
  */
-public class EEP26TemperatureLinear extends EEPAttribute<Double>
+public class EEP26SupplyVoltage extends EEPAttribute<Double>
 {
 	// the EEPFunction name
-	public static final String NAME = "Temperature";
+	public static final String NAME = "SupplyVoltage";
 
 	// the allowed range
-	private double minT;
-	private double maxT;
+	private double minV;
+	private double maxV;
 
 	/**
 	 * @param name
 	 */
-	public EEP26TemperatureLinear()
+	public EEP26SupplyVoltage()
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26SupplyVoltage.NAME);
 
-		// default value= -273 °C
-		this.value = -273.0;
-		this.unit = "Celsius";
-		this.minT = -273.0;
-		this.maxT = Double.MAX_VALUE;
+		// set the default value
+		this.value = 0.0;
+		this.unit = "V";
+		this.minV = 0;
+		this.maxV = 5;
 	}
 
-	public EEP26TemperatureLinear(Double value, String unit)
+	public EEP26SupplyVoltage(Double value, String unit)
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26SupplyVoltage.NAME);
 
 		if ((unit != null)
-				&& (value != null)
+
 				&& (!unit.isEmpty())
-				&& ((unit.equalsIgnoreCase("Celsius")
-						|| unit.equalsIgnoreCase("°C") || unit
-							.equalsIgnoreCase("C"))))
+				&& ((unit.equalsIgnoreCase("Volt") || unit
+						.equalsIgnoreCase("V"))))
 		{
 			// store the value
 			this.value = value;
 
 			// store the unit
 			this.unit = unit;
-			
+
 			// set the maximum range
-			this.minT = -273.0;
-			this.maxT = Double.MAX_VALUE;
+			this.minV = 0.0;
+			this.maxV = 5.0;
 		}
 
 		else
 		{
 			throw new NumberFormatException(
-					"Wrong unit or null value for temperature in Celsius degrees");
+					"Wrong unit or null value for supply voltage in Volt (V)");
 		}
 
 	}
 
-	public EEP26TemperatureLinear(Double minT, Double maxT)
+	public EEP26SupplyVoltage(Double minV, Double maxV)
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26SupplyVoltage.NAME);
 
-		// default value= -273 °C
-		this.value = -273.0;
-		this.unit = "Celsius";
-		this.minT = minT;
-		this.maxT = maxT;
+		// default value 0V
+		this.value = 0.0;
+		this.unit = "V";
+		this.minV = minV;
+		this.maxV = maxV;
+	}
+
+	
+	/**
+	 * @return the minV
+	 */
+	public double getMinV()
+	{
+		return minV;
 	}
 
 	/**
-	 * @return the minT
+	 * @param minV the minV to set
 	 */
-	public double getMinT()
+	public void setMinV(double minV)
 	{
-		return minT;
+		this.minV = minV;
 	}
 
 	/**
-	 * @param minT the minT to set
+	 * @return the maxV
 	 */
-	public void setMinT(double minT)
+	public double getMaxV()
 	{
-		this.minT = minT;
+		return maxV;
 	}
 
 	/**
-	 * @return the maxT
+	 * @param maxV the maxV to set
 	 */
-	public double getMaxT()
+	public void setMaxV(double maxV)
 	{
-		return maxT;
-	}
-
-	/**
-	 * @param maxT the maxT to set
-	 */
-	public void setMaxT(double maxT)
-	{
-		this.maxT = maxT;
+		this.maxV = maxV;
 	}
 
 	/*
@@ -140,12 +140,13 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 
 		return stored;
 	}
-	
+
 	public void setRawValue(int value)
 	{
-		//perform the scaling
-		//TODO check conversion
-		this.value = ((this.maxT-this.minT)*((double) (255-value)))/255.0 + this.minT;
+		// perform scaling (value should be between 0 and 250 included
+		if ((value >= 0) && (value <= 250))
+			this.value = ((this.maxV - this.minV) * ((double) value) / 250.0)
+					+ this.minV;
 	}
 
 	/*
@@ -159,9 +160,8 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 		if ((unit != null)
 
 				&& (!unit.isEmpty())
-				&& ((unit.equalsIgnoreCase("Celsius")
-						|| unit.equalsIgnoreCase("°C") || unit
-							.equalsIgnoreCase("C"))))
+				&& ((unit.equalsIgnoreCase("Volt") || unit
+						.equalsIgnoreCase("V"))))
 		{
 
 			// store the unit
@@ -204,7 +204,7 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 	 */
 	public boolean isValid()
 	{
-		return ((this.value >= this.minT) && (this.value <= this.maxT));
+		return ((this.value >= this.minV) && (this.value <= this.maxV));
 	}
 
 }

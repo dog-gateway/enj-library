@@ -39,7 +39,7 @@ public class D50001ContactSwitchMessage
 		{
 			//------- single byte data ----------
 			
-			// decode the contect status
+			// decode the teach in status
 			byte teachInAsByte = (byte) ((byte) (data[0] & (byte) 0x08) >> 3);
 			
 			//convert to boolean
@@ -48,7 +48,7 @@ public class D50001ContactSwitchMessage
 			else
 				this.teachIn = false;
 			
-			//decode the teach-in status
+			//decode the contact status
 			byte contactAsByte = (byte)(data[0] & (byte)0x01);
 			
 			//convert to boolean

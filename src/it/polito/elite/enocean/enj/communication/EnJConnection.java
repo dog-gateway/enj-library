@@ -648,7 +648,7 @@ public class EnJConnection implements PacketListener
 				{
 					// log not supported
 					this.logger
-							.warn("Bi-directional teach-in currently not supported for 4BS telegrams.");
+							.warn("Neither implicit or explicit learn succeeded; bi-directional teach-in currently not supported for 4BS telegrams.");
 				}
 			}
 		}
