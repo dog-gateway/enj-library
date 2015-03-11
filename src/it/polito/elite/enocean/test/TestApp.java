@@ -37,7 +37,7 @@ public class TestApp
 
 	/**
 	 * @param args
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException
 	{
@@ -46,29 +46,37 @@ public class TestApp
 		EnJConnection connection = new EnJConnection(linkLayer, null);
 		SimpleDeviceListener listener = new SimpleDeviceListener();
 		connection.addEnJDeviceListener(listener);
-		
-		//connect the link
+
+		// connect the link
 		linkLayer.connect();
-		
+
 		// the device to learn
 		System.out.println("Enabling explicit teach-in for 018a781f");
-		connection.enableTeachIn("018a781f", "A5-02-05",10000);
-		
+		connection.enableTeachIn("018a781f", "A5-02-05", 10000);
+
 		Thread.sleep(11000);
 		
+		//0187ae92
+		System.out.println("Enabling explicit teach-in for 0187ae92");
+		connection.enableTeachIn("0187ae92", "A5-07-01", 10000);
+
+		Thread.sleep(11000);
+
 		// teach-in for 40s
 		System.out.println("Enabling smart teach-in for 40s");
 		connection.setSmartTeachIn(true);
-		System.out.println("SmartTeachIn: "+connection.isSmartTeachInEnabled());
+		System.out.println("SmartTeachIn: "
+				+ connection.isSmartTeachInEnabled());
 		connection.enableTeachIn(40000);
-		System.out.println("SmartTeachIn: "+connection.isSmartTeachInEnabled());
-		
+		System.out.println("SmartTeachIn: "
+				+ connection.isSmartTeachInEnabled());
+
 		Thread.sleep(40000);
-		
+
 		connection.setSmartTeachIn(false);
-		System.out.println("SmartTeachIn: "+connection.isSmartTeachInEnabled());
-		
-		
+		System.out.println("SmartTeachIn: "
+				+ connection.isSmartTeachInEnabled());
+
 	}
 
 }

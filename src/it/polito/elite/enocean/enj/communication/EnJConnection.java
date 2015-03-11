@@ -649,6 +649,14 @@ public class EnJConnection implements PacketListener
 					// log not supported
 					this.logger
 							.warn("Neither implicit or explicit learn succeeded; bi-directional teach-in currently not supported for 4BS telegrams.");
+
+					// log the address
+					String msg = "";
+					for (int i = 0; i < 4; i++)
+						msg = msg
+								+ String.format("%02x",
+										bs4TeachInTelegram.getAddress()[i]);
+					this.logger.info("Device address:" + msg);
 				}
 			}
 		}

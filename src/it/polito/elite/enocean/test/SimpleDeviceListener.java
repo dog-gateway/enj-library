@@ -18,7 +18,10 @@
 package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltageAvailability;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
@@ -49,6 +52,8 @@ public class SimpleDeviceListener implements EnJDeviceListener
 	{
 		System.out.println("Added device:" + device.getDeviceUID()
 				+ " - low-address: " + device.getAddress());
+		
+		SimpleMovementListener movementListener = new SimpleMovementListener();
 
 		// handle device types
 		if(device.getEEP().getChannelAttribute(1,EEP26RockerSwitch2RockerAction.NAME)!=null)
@@ -63,6 +68,12 @@ public class SimpleDeviceListener implements EnJDeviceListener
 			device.getEEP().addEEP26AttributeListener(1,
 					EEP26Switching.NAME,
 					new SimpleContactSwitchListener());
+		else if (device.getEEP().getChannelAttribute(1, EEP26PIRStatus.NAME)!=null)
+			device.getEEP().addEEP26AttributeListener(1, EEP26PIRStatus.NAME, movementListener);
+		else if (device.getEEP().getChannelAttribute(1, EEP26SupplyVoltage.NAME)!=null)
+			device.getEEP().addEEP26AttributeListener(1, EEP26SupplyVoltage.NAME, movementListener);
+		else if (device.getEEP().getChannelAttribute(1, EEP26SupplyVoltageAvailability.NAME)!=null)
+			device.getEEP().addEEP26AttributeListener(1, EEP26SupplyVoltageAvailability.NAME, movementListener);
 	}
 
 	/*

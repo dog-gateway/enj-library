@@ -72,19 +72,71 @@ public class A50701OccupancySensingMessage
 
 			// convert the value to an integer
 			this.supplyVoltage = (int) supplyVoltageAsByte & (int) 0x00ff;
-			
+
 			// decode the pir status
 			byte pirStatusAsByte = data[2];
-			
+
 			// convert to a boolean value
-			if(pirStatusAsByte >= 0)
+			if (pirStatusAsByte >= 0)
 				this.motionDetected = false;
 			else
 				this.motionDetected = true;
-			
-			//decode the teach-in flag
-			
+
+			// decode the teach-in flag
+			// get the teach-in flag (offset 28, 4th bit of the 4th byte)
+			byte teachIn = (byte) ((byte) (data[3] & (byte) 0x08) >> 3);
+
+			// check the corresponding boolean value
+			if (teachIn == 0)
+				this.teachIn = true;
+			else
+				this.teachIn = false;
+
+			// everything fine....
+			// TODO: check if it is better to check the values of instance
+			// variables to assess validity of the message.
+			this.valid = true;
 		}
+	}
+
+	/**
+	 * @return the supplyVoltage
+	 */
+	public int getSupplyVoltage()
+	{
+		return supplyVoltage;
+	}
+
+	/**
+	 * @return the supplyVoltageAvailable
+	 */
+	public boolean isSupplyVoltageAvailable()
+	{
+		return supplyVoltageAvailable;
+	}
+
+	/**
+	 * @return the motionDetected
+	 */
+	public boolean isMotionDetected()
+	{
+		return motionDetected;
+	}
+
+	/**
+	 * @return the teachIn
+	 */
+	public boolean isTeachIn()
+	{
+		return teachIn;
+	}
+
+	/**
+	 * @return the valid
+	 */
+	public boolean isValid()
+	{
+		return valid;
 	}
 
 }

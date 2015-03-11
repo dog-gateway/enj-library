@@ -17,6 +17,8 @@
  */
 package it.polito.elite.enocean.enj.eep.eep26.A5.A507;
 
+import it.polito.elite.enocean.enj.eep.EEPAttribute;
+import it.polito.elite.enocean.enj.eep.EEPAttributeChangeDispatcher;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
@@ -26,6 +28,7 @@ import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTelegram;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * @author bonino
@@ -85,6 +88,74 @@ public class A50701 extends A507 implements Serializable
 
 			// get the packet payload
 			byte[] payload = profileUpdate.getPayload();
+			
+			//parse the telegram as an A50701 message
+			A50701OccupancySensingMessage message = new A50701OccupancySensingMessage(payload);
+			
+			//check if its valid
+			if(message.isValid())
+			{
+				// prepare the list of changed attributes (only one)
+				ArrayList<EEPAttribute<?>> changedAttributes = new ArrayList<EEPAttribute<?>>();
+				
+				//------- get the attributes
+				
+				// supply voltage
+				EEP26SupplyVoltage supplyVoltage = (EEP26SupplyVoltage)this.getChannelAttribute(1, EEP26SupplyVoltage.NAME);
+				
+				// supply voltage availability
+				EEP26SupplyVoltageAvailability supplyVoltageAvailability = (EEP26SupplyVoltageAvailability)this.getChannelAttribute(1, EEP26SupplyVoltageAvailability.NAME);
+				
+				// occupancy status
+				EEP26PIRStatus pirStatus = (EEP26PIRStatus)this.getChannelAttribute(1, EEP26PIRStatus.NAME);
+				
+				//set the attribute values
+				if(supplyVoltageAvailability!=null)
+				{
+					//set the availability value
+					supplyVoltageAvailability.setValue(message.isSupplyVoltageAvailable());
+					
+					//update the list of changed attributes
+					changedAttributes.add(supplyVoltageAvailability);
+					
+					// if the supply voltage attribute exists and a valid value had been specified in the message
+					if((message.isSupplyVoltageAvailable())&&(supplyVoltage!=null))
+					{
+						//store the voltage value
+						supplyVoltage.setRawValue(message.getSupplyVoltage());
+						
+						//update the list of changed attributes
+						changedAttributes.add(supplyVoltage);
+					}
+				}
+				
+				// set the pir status if the corresponding attribute is available
+				if(pirStatus!=null)
+				{
+					//set the pir status value
+					pirStatus.setValue(message.isMotionDetected());
+					
+					//update the list of changed attributes
+					changedAttributes.add(pirStatus);
+				}
+				
+				
+				//if some attribute changed, notify it to listeners
+				if(!changedAttributes.isEmpty())
+				{
+					// build the dispatching task
+					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
+							changedAttributes, 1);
+
+					// submit the task for execution
+					this.attributeNotificationWorker.submit(dispatcherTask);
+
+					// set success at true
+					// TODO check what to do if nothing changes, i.e., with success
+					// equal to false.
+					success = true;
+				}
+			}
 		}			
 
 		return success;

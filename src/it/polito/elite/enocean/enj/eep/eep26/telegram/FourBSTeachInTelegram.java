@@ -65,7 +65,7 @@ public class FourBSTeachInTelegram extends FourBSTelegram
 		this.manId[1] = this.payload[2];
 
 		// get the learn type
-		byte learnTypeByte = (byte) (this.payload[3] & 0x10);
+		byte learnTypeByte = (byte) (this.payload[3] & (byte)0x80);
 		
 		if(learnTypeByte != 0)
 			this.withEEP = true;
@@ -113,7 +113,7 @@ public class FourBSTeachInTelegram extends FourBSTelegram
 		byte data[] = telegram.getPayload();
 
 		// get the teach-in flag (offset 28, 4th bit of the 4th byte)
-		byte teachInByte = (byte) ((byte) (data[3] & (byte) 0x01) >> 3);
+		byte teachInByte = (byte) ((byte) (data[3] & (byte) 0x08) >> 3);
 
 		// check the corresponding boolean value
 		if (teachInByte == 0)
