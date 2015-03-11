@@ -57,10 +57,10 @@ public class TestApp
 		Thread.sleep(11000);
 		
 		//0187ae92
-		System.out.println("Enabling explicit teach-in for 0187ae92");
-		connection.enableTeachIn("0187ae92", "A5-07-01", 10000);
+		//System.out.println("Enabling explicit teach-in for 0187ae92");
+		//connection.enableTeachIn("0187ae92", "A5-07-01", 10000);
 
-		Thread.sleep(11000);
+		//Thread.sleep(11000);
 
 		// teach-in for 40s
 		System.out.println("Enabling smart teach-in for 40s");
