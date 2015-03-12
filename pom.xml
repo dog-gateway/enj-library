@@ -4,6 +4,8 @@
 	<groupId>EnOceanSP3Library</groupId>
 	<artifactId>EnOceanSP3Library</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+	<name>EnJ-Library</name>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -27,6 +29,20 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>it.polito.elite.enocean.enj.*,
+							it.polito.elite.enocean.protocol.*</Export-Package>
+						<Private-Package>it.polito.elite.enocean.test</Private-Package>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+					</instructions>
 				</configuration>
 			</plugin>
 		</plugins>
