@@ -52,5 +52,11 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.10</version>
 		</dependency>
+		<dependency>
+			<groupId>com.kenai.nbpwr</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7-201002241900</version>
+			<type>nbm</type>
+		</dependency>
 	</dependencies>
 </project>
