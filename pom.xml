@@ -39,14 +39,29 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Import-Package>!org.junit.*,*</Import-Package>
+						<Import-Package>!org.junit.*, !org.reflections.*,!it.polito.elite.enocean.*,*</Import-Package>
 						<Export-Package>it.polito.elite.enocean.enj.*,
 							it.polito.elite.enocean.protocol.*</Export-Package>
 						<Private-Package>it.polito.elite.enocean.test</Private-Package>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+						<Embed-Dependency>org.reflections.*;scope=compile|runtime;inline=false</Embed-Dependency>
+						<Embed-Directory>target/dependency</Embed-Directory>
+						<Embed-StripGroup>true</Embed-StripGroup>
 					</instructions>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
