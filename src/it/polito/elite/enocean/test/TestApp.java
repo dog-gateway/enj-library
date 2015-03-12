@@ -1,7 +1,7 @@
 /*
  * EnJ - EnOcean Java API
  * 
- * Copyright 2014 Andrea Biasi, Dario Bonino 
+ * Copyright 2014-2015 Andrea Biasi, Dario Bonino 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class TestApp
 	 */
 	public TestApp()
 	{
-		// TODO Auto-generated constructor stub
+		// empty
 	}
 
 	/**
@@ -42,6 +42,8 @@ public class TestApp
 	public static void main(String[] args) throws InterruptedException
 	{
 		// The EnOcean link layer
+		try
+		{
 		EnJLink linkLayer = new EnJLink("/dev/ttyUSB0");
 		EnJConnection connection = new EnJConnection(linkLayer, null);
 		SimpleDeviceListener listener = new SimpleDeviceListener();
@@ -77,6 +79,11 @@ public class TestApp
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
 
+		}
+		catch(Exception e)
+		{
+			System.err.println("The given port does not exist or no device is plugged in");
+		}
 	}
 
 }

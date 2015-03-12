@@ -87,20 +87,31 @@ public class EEPIdentifier implements Serializable
 	public static EEPIdentifier parse(String eepIdentifierAsString)
 	{
 		EEPIdentifier identifier = null;
+
+		// allowed format for EEPIdentifier is with or without dashes
+		if (eepIdentifierAsString.contains("-"))
+			eepIdentifierAsString = eepIdentifierAsString.replaceAll("-", "");
+
+		// trim leading and trailing spaces
+		eepIdentifierAsString = eepIdentifierAsString.trim();
+		
 		// check the right lenght
 		if ((eepIdentifierAsString.length() == 6)
 				|| (eepIdentifierAsString.length() == 4))
 		{
 			// parses the eep identifier expressed according to the EEP
 			// specification, i.e., rrfftt
-			byte rorg = (byte)Integer.parseInt(eepIdentifierAsString.substring(0, 2),16);
-			byte func = (byte)Integer.parseInt(eepIdentifierAsString.substring(2, 4),16);
+			byte rorg = (byte) Integer.parseInt(
+					eepIdentifierAsString.substring(0, 2), 16);
+			byte func = (byte) Integer.parseInt(
+					eepIdentifierAsString.substring(2, 4), 16);
 
 			// TODO handle higher EEP e.g. D201
 			byte type = (byte) 0xff;
 			if (eepIdentifierAsString.length() == 6)
 			{
-				type = (byte)Integer.parseInt(eepIdentifierAsString.substring(4, 6),16);
+				type = (byte) Integer.parseInt(
+						eepIdentifierAsString.substring(4, 6), 16);
 			}
 
 			identifier = new EEPIdentifier(new Rorg(rorg), func, type);
@@ -115,7 +126,9 @@ public class EEPIdentifier implements Serializable
 		return ((part.rorg.getRorgValue() == whole.rorg.getRorgValue()) && (part.function == whole.function));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -129,7 +142,9 @@ public class EEPIdentifier implements Serializable
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -169,8 +184,5 @@ public class EEPIdentifier implements Serializable
 		}
 		return true;
 	}
-
-	
-
 
 }

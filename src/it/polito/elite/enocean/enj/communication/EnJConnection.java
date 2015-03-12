@@ -110,8 +110,8 @@ public class EnJConnection implements PacketListener
 	private boolean smartTeachIn;
 
 	/**
-	 * Build a connection layer instance on top of the given link layer
-	 * instance.
+	 * filename * Build a connection layer instance on top of the given link
+	 * layer instance.
 	 * 
 	 * @param linkLayer
 	 *            The {@link EnJLink} instance upon which basing the connection
@@ -160,7 +160,7 @@ public class EnJConnection implements PacketListener
 	 * device events: creation, modification, deletion.
 	 * 
 	 * @param listener
-	 *            The {@link EnJDeviceListener} to notify to.
+	 *            filename * The {@link EnJDeviceListener} to notify to.
 	 */
 	public void addEnJDeviceListener(EnJDeviceListener listener)
 	{
@@ -170,7 +170,7 @@ public class EnJConnection implements PacketListener
 
 	/**
 	 * Removes a device listener from the ste of listeners to be notified about
-	 * device events.
+	 * filename * device events.
 	 * 
 	 * @param listener
 	 *            The {@link EnJDeviceListener} to remove.
@@ -215,34 +215,11 @@ public class EnJConnection implements PacketListener
 		{
 			// convert - parse strings to corresponding data
 
-			// allowed format for EEPIdentifier is with or without dashes
-			if (eepIdentifierAsString.contains("-"))
-				eepIdentifierAsString = eepIdentifierAsString.replaceAll("-",
-						"");
-
-			// trim leading and trailing spaces
-			eepIdentifierAsString = eepIdentifierAsString.trim();
-
 			// parse the identifier
 			EEPIdentifier eepIdentifier = EEPIdentifier
 					.parse(eepIdentifierAsString);
 
-			// trim leading and trailing spaces around the device address
-			hexDeviceAddress = hexDeviceAddress.trim();
-
-			// prepare the byte[] for hosting the address
-			byte address[] = new byte[4];
-
-			// parse the address
-			if (hexDeviceAddress.length() == 8)
-			{
-
-				for (int i = 0; i < hexDeviceAddress.length(); i += 2)
-				{
-					address[(i / 2)] = (byte) Integer.parseInt(
-							hexDeviceAddress.substring(i, i + 2), 16);
-				}
-			}
+			byte address[] = EnOceanDevice.parseAddress(hexDeviceAddress);
 
 			EnOceanDevice device = new EnOceanDevice(address, null);
 			device.setEEP(this.registry.getEEP(eepIdentifier));
@@ -338,6 +315,48 @@ public class EnJConnection implements PacketListener
 	public void setSmartTeachIn(boolean smartTeachIn)
 	{
 		this.smartTeachIn = smartTeachIn;
+	}
+
+	/**
+	 * 
+	 * @param hexDeviceAddress
+	 * @param eepIdentifier
+	 */
+	public void addNewDevice(String hexDeviceAddress, String eepIdentifier)
+	{
+		byte deviceAddress[] = EnOceanDevice.parseAddress(hexDeviceAddress);
+		EEPIdentifier eepId = EEPIdentifier.parse(eepIdentifier);
+
+		// check if the device is already known
+		if ((this.knownDevices.getByLowAddress(deviceAddress) == null)
+				&& (deviceAddress != null) && (eepId != null))
+		{
+			this.addNewDevice(deviceAddress, null, eepId);
+		}
+	}
+
+	/**
+	 * 
+	 * @param address
+	 * @param manufacturerId
+	 * @param eepId
+	 */
+	private void addNewDevice(byte address[], byte manufacturerId[],
+			EEPIdentifier eepId)
+	{
+		EnOceanDevice device = new EnOceanDevice(address, manufacturerId);
+		Class<? extends EEP> deviceEEP = this.registry.getEEP(eepId);
+
+		if (deviceEEP != null)
+		{
+			device.setEEP(deviceEEP);
+
+			// notify listeners
+			this.notifyEnJDeviceListeners(device, EnJDeviceChangeType.CREATED);
+
+			// store the device
+			this.knownDevices.add(device);
+		}
 	}
 
 	@Override
@@ -440,18 +459,8 @@ public class EnJConnection implements PacketListener
 						.buildResponse(UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
 
 				// build the device
-				EnOceanDevice device = new EnOceanDevice(pkt.getAddress(),
-						pkt.getManId());
-
-				// add the supported EEP
-				device.setEEP(this.registry.getEEP(pkt.getEEP()));
-
-				// store the device locally
-				this.knownDevices.add(device);
-
-				// notify the new device discovery
-				this.notifyEnJDeviceListeners(device,
-						EnJDeviceChangeType.CREATED);
+				this.addNewDevice(pkt.getAddress(), pkt.getManId(),
+						pkt.getEEP());
 			}
 			else
 				// build the response packet
@@ -511,28 +520,9 @@ public class EnJConnection implements PacketListener
 			}
 			else if (this.smartTeachIn)
 			{
-
-				// build a new RPS device,
-				device = new EnOceanDevice(rpsTelegram.getAddress(), null);
-
-				// TODO: as per the EEP specification there is no "way" to
-				// identify which variant of EEP is using the RPS message,
-				// therefore some "heuristic" shall be actuated to assign
-				// the right EEP, by default F60201 will be assigned.
-				Class<? extends EEP> eep = this.registry
-						.getEEP(new EEPIdentifier(F602.rorg, F602.func,
-								F60201.type));
-				if (eep != null)
-				{
-					device.setEEP(eep);
-
-					// notify listeners
-					this.notifyEnJDeviceListeners(device,
-							EnJDeviceChangeType.CREATED);
-
-					// store the device
-					this.knownDevices.add(device);
-				}
+				// build a new RPS device
+				this.addNewDevice(rpsTelegram.getAddress(), null,
+						new EEPIdentifier(F602.rorg, F602.func, F60201.type));
 			}
 		}
 
@@ -568,26 +558,8 @@ public class EnJConnection implements PacketListener
 			{
 
 				// build a new RPS device,
-				device = new EnOceanDevice(oneBSTelegram.getAddress(), null);
-
-				// TODO: as per the EEP specification there is no "way" to
-				// identify which variant of EEP is using the RPS message,
-				// therefore some "heuristic" shall be actuated to assign
-				// the right EEP, by default F60201 will be assigned.
-				Class<? extends EEP> eep = this.registry
-						.getEEP(new EEPIdentifier(D500.rorg, D500.func,
-								D50001.type));
-				if (eep != null)
-				{
-					device.setEEP(eep);
-
-					// notify listeners
-					this.notifyEnJDeviceListeners(device,
-							EnJDeviceChangeType.CREATED);
-
-					// store the device
-					this.knownDevices.add(device);
-				}
+				this.addNewDevice(oneBSTelegram.getAddress(), null,
+						new EEPIdentifier(D500.rorg, D500.func, D50001.type));
 			}
 		}
 
@@ -618,27 +590,11 @@ public class EnJConnection implements PacketListener
 				if (bs4TeachInTelegram.isWithEEP())
 				{
 					// build a new 4BS device,
-					device = new EnOceanDevice(bs4TeachInTelegram.getAddress(),
-							bs4TeachInTelegram.getManId());
-
-					// get the right EEP
-					Class<? extends EEP> eep = this.registry
-							.getEEP(new EEPIdentifier(bs4TeachInTelegram
-									.getRorg(),
+					this.addNewDevice(bs4TeachInTelegram.getAddress(),
+							bs4TeachInTelegram.getManId(), new EEPIdentifier(
+									bs4TeachInTelegram.getRorg(),
 									bs4TeachInTelegram.getEEPFunc(),
 									bs4TeachInTelegram.getEEPType()));
-
-					if (eep != null)
-					{
-						device.setEEP(eep);
-
-						// notify listeners
-						this.notifyEnJDeviceListeners(device,
-								EnJDeviceChangeType.CREATED);
-
-						// store the device
-						this.knownDevices.add(device);
-					}
 				}
 				else if (this.deviceToTeachIn != null)
 				{

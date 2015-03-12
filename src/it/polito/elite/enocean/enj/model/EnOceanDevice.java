@@ -100,7 +100,7 @@ public class EnOceanDevice implements Serializable
 	 * @param eepClass
 	 *            The corresponding class, which must extend {@link EEP}
 	 */
-	public void setEEP(	Class<? extends EEP> eepClass)
+	public void setEEP(Class<? extends EEP> eepClass)
 	{
 		// store the entry by building the corresponding instances
 		try
@@ -130,7 +130,6 @@ public class EnOceanDevice implements Serializable
 	{
 		return this.profile;
 	}
-
 
 	/**
 	 * Provides back the device address as an integer. The returned id is meant
@@ -167,5 +166,43 @@ public class EnOceanDevice implements Serializable
 	public static int byteAddressToUID(byte[] address)
 	{
 		return ByteBuffer.wrap(address).getInt();
+	}
+
+	/**
+	 * Parses a device address expressed as an hexadecimal string
+	 * @param hexDeviceAddress
+	 * @return
+	 */
+	public static byte[] parseAddress(String hexDeviceAddress)
+	{
+		//to lower case
+		hexDeviceAddress = hexDeviceAddress.toLowerCase();
+		
+		// allowed format for Device address is with or without dashes
+		if (hexDeviceAddress.contains("-"))
+			hexDeviceAddress = hexDeviceAddress.replaceAll("-", "");
+		if(hexDeviceAddress.contains("0x"))
+			hexDeviceAddress = hexDeviceAddress.replaceAll("0x", "");
+
+		// trim leading and trailing spaces around the device address
+		hexDeviceAddress = hexDeviceAddress.trim();
+
+		// prepare the byte[] for hosting the address
+		byte address[] = new byte[4];
+
+		// parse the address
+		if (hexDeviceAddress.length() == 8)
+		{
+
+			for (int i = 0; i < hexDeviceAddress.length(); i += 2)
+			{
+				address[(i / 2)] = (byte) Integer.parseInt(
+						hexDeviceAddress.substring(i, i + 2), 16);
+			}
+		}
+		else
+			address = null;
+
+		return address;
 	}
 }

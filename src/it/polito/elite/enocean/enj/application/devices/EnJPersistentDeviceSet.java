@@ -79,6 +79,11 @@ public class EnJPersistentDeviceSet implements Serializable
 
 		// set the filename
 		this.filename = filename;
+		
+		// load persistent devices
+		if((this.filename!=null)&&(!this.filename.isEmpty()))
+			this.load(filename);
+		
 	}
 
 	/**

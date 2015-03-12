@@ -31,3 +31,5 @@ Export-Package: it.polito.elite.enocean.enj.application,
  it.polito.elite.enocean.protocol.serial.v3.network.packet.remotemancommand,
  it.polito.elite.enocean.protocol.serial.v3.network.packet.response,
  it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand
+Import-Package: gnu.io;version="2.1.7",
+ org.slf4j;version="1.7.7"

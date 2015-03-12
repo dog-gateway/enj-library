@@ -65,7 +65,7 @@ public class EnJLink
 	 * communication with any physical transceiver connected to the serial port
 	 * identified by given serial port id.
 	 */
-	public EnJLink(String serialPortId)
+	public EnJLink(String serialPortId) throws Exception
 	{
 		super();
 
@@ -83,6 +83,7 @@ public class EnJLink
 		// get the serial port
 		this.serialPort = SerialPortFactory.getPort(serialPortId,
 				EnJLink.SERIAL_TIMEOUT);
+
 
 		// check not null
 		if (this.serialPort != null)
