@@ -37,6 +37,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<Import-Package>!org.junit.*,*</Import-Package>
 						<Export-Package>it.polito.elite.enocean.enj.*,
 							it.polito.elite.enocean.protocol.*</Export-Package>
 						<Private-Package>it.polito.elite.enocean.test</Private-Package>
@@ -69,10 +70,9 @@
 			<version>1.7.10</version>
 		</dependency>
 		<dependency>
-			<groupId>com.kenai.nbpwr</groupId>
+			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7-201002241900</version>
-			<type>nbm</type>
+			<version>4.11</version>
 		</dependency>
 	</dependencies>
 </project>
