@@ -38,7 +38,9 @@ The library is organized as follows:
 * packages (and classes) stemming from ```it.polito.elite.enocean.protocol.serial.v3``` provide data models for the different low-level messages exchanged over the ESP3 communication with the gateway module;
 * packages (and classes) inheriting from ```it.polito.elite.enocean.test``` define unit tests and sample applications for testing the library functions.
 
-Dependencies of the library are managed through Maven, the corresponding project POM file is included in the repository.
+Dependencies of the library are managed through Maven, the corresponding project POM file is included in the repository. To compile the library just type:
+
+```mvn clean package```
 
 #### Extending supported profiles ####
 Supported profiles can be easily extended by developing the proper classes in the ```it.polito.elite.enocean.enj.eep.eep26``` tree. An abstract skeleton is already provided for EEPs and for attributes (values) defined in each EEP. Each specific profile should inherit from a family abstract class, e.g., A507 for devices belonging to the A5-07-XX EEPs. As an example the A507 superclass is defined as follows:
@@ -113,7 +115,7 @@ The A5-07-01 implementation class, conversely, is reported below and follows as 
 /*
 * EnJ - EnOcean Java API
 *
-* Copyright 2014  Dario Bonino 
+* Copyright 2014  Dario Bonino
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
