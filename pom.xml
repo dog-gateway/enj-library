@@ -34,8 +34,10 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
+				<version>1.2.1</version>
 				<extensions>true</extensions>
 				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<Import-Package>!org.junit.*,*</Import-Package>
 						<Export-Package>it.polito.elite.enocean.enj.*,
@@ -58,11 +60,6 @@
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 			<version>0.9.9-RC2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
