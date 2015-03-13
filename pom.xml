@@ -3,7 +3,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>EnOceanSP3Library</groupId>
 	<artifactId>EnOceanSP3Library</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<name>EnJ-Library</name>
 	<build>
@@ -88,4 +87,5 @@
 			<version>4.11</version>
 		</dependency>
 	</dependencies>
+	<version>0.9.0</version>
 </project>
