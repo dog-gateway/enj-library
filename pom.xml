@@ -19,6 +19,7 @@
 				<directory>resources</directory>
 				<includes>
 					<include>**/*.properties</include>
+					<include>LICENSE</include>
 				</includes>
 			</resource>
 		</resources>
