@@ -79,11 +79,11 @@ public class EnJPersistentDeviceSet implements Serializable
 
 		// set the filename
 		this.filename = filename;
-		
+
 		// load persistent devices
-		if((this.filename!=null)&&(!this.filename.isEmpty()))
+		if ((this.filename != null) && (!this.filename.isEmpty()))
 			this.load(filename);
-		
+
 	}
 
 	/**
@@ -171,22 +171,28 @@ public class EnJPersistentDeviceSet implements Serializable
 				// prepare a File object representing the persistent set
 				File persistentSet = new File(filename);
 
-				// Open a file input stream on the persistent set
-				FileInputStream fileIn = new FileInputStream(persistentSet);
+				// check if exists
+				if (persistentSet.exists())
+				{
 
-				// Open an object output stream to deserialize the objects in
-				// the
-				// file
-				ObjectInputStream in = new ObjectInputStream(fileIn);
+					// Open a file input stream on the persistent set
+					FileInputStream fileIn = new FileInputStream(persistentSet);
 
-				// restores in this object
-				this.theSet.clear();
-				this.theSet
-						.putAll(((EnJPersistentDeviceSet) in.readObject()).theSet);
+					// Open an object output stream to deserialize the objects
+					// in
+					// the
+					// file
+					ObjectInputStream in = new ObjectInputStream(fileIn);
 
-				// close the input streams
-				in.close();
-				fileIn.close();
+					// restores in this object
+					this.theSet.clear();
+					this.theSet.putAll(((EnJPersistentDeviceSet) in
+							.readObject()).theSet);
+
+					// close the input streams
+					in.close();
+					fileIn.close();
+				}
 			}
 			catch (ClassNotFoundException | IOException e)
 			{

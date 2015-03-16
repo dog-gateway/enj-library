@@ -56,7 +56,7 @@ public abstract class D201 extends EEP
 	// func must be defined by extending classes
 
 	// Executor Thread Pool for handling attribute updates
-	private ExecutorService attributeNotificationWorker;
+	private volatile ExecutorService attributeNotificationWorker;
 
 	// -------------------------------------------------
 	// Parameters defined by this EEP, which

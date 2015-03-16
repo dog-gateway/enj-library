@@ -39,7 +39,7 @@ public abstract class F602 extends EEP
 	// func must be defined by extending classes
 
 	// Executor Thread Pool for handling attribute updates
-	protected ExecutorService attributeNotificationWorker;
+	protected volatile ExecutorService attributeNotificationWorker;
 
 	// -------------------------------------------------
 	// Parameters defined by this EEP, which

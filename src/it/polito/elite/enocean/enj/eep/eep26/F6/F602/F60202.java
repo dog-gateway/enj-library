@@ -45,4 +45,9 @@ public class F60202 extends F60201
 				new EEPIdentifier(F602.rorg, F602.func, F60202.type),
 				F60202.class);
 	}*/
+	
+	public F60202()
+	{
+		super();
+	}
 }

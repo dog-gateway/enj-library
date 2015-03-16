@@ -38,7 +38,7 @@ public abstract class A507 extends EEP
 	// func must be defined by extending classes
 
 	// Executor Thread Pool for handling attribute updates
-	protected ExecutorService attributeNotificationWorker;
+	protected volatile ExecutorService attributeNotificationWorker;
 
 	// -------------------------------------------------
 	// Parameters defined by this EEP, which
