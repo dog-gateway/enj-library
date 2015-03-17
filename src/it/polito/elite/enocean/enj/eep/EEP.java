@@ -38,10 +38,10 @@ public abstract class EEP implements EEPAttributeChangePublisher
 	// the set of attributes associated to single channels defined by this
 	// profile: the key is the channel id. If the EEP has only one channel id
 	// the implementing classes might encode all attributes as device-wide
-	protected volatile HashMap<Integer, HashMap<String, EEPAttribute<? extends Object>>> channelAttributes;
+	protected HashMap<Integer, HashMap<String, EEPAttribute<? extends Object>>> channelAttributes;
 
 	// the set of EEPWide attributes
-	protected volatile HashMap<String, EEPAttribute<? extends Object>> eepAttributes;
+	protected HashMap<String, EEPAttribute<? extends Object>> eepAttributes;
 
 	/**
 	 * 
