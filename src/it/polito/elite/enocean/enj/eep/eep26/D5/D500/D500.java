@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.eep.D5.D500;
+package it.polito.elite.enocean.enj.eep.eep26.D5.D500;
 
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.Rorg;
@@ -53,9 +53,9 @@ public abstract class D500 extends EEP
 	/**
 	 * @param version
 	 */
-	public D500(String version)
+	public D500()
 	{
-		super(version);
+		super("2.6");
 
 		// build the attribute dispatching worker
 		this.attributeNotificationWorker = Executors.newFixedThreadPool(1);

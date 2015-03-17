@@ -57,10 +57,10 @@ public abstract class A502 extends EEP
 	/**
 	 *The class constructor
 	 */
-	public A502(String version)
+	public A502()
 	{
 		// call the superclass constructor
-		super(version);
+		super("2.6");
 
 		// build the attribute dispatching worker
 		this.attributeNotificationWorker = Executors.newFixedThreadPool(1);

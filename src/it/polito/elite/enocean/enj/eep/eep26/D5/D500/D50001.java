@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.eep.D5.D500;
+package it.polito.elite.enocean.enj.eep.eep26.D5.D500;
 
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeDispatcher;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
@@ -45,7 +45,7 @@ public class D50001 extends D500 implements Serializable
 	 */
 	public D50001()
 	{
-		super("2.6");
+		super();
 
 		// add attributes, basically a switching one
 		this.addChannelAttribute(1, new EEP26Switching(false));

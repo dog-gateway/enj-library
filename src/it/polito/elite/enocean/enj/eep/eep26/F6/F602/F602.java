@@ -50,10 +50,10 @@ public abstract class F602 extends EEP
 	// --------------------------------------------------
 
 	// the class constructor
-	public F602(String version)
+	public F602()
 	{
 		// call the superclass constructor
-		super(version);
+		super("2.6");
 
 		// build the attribute dispatching worker
 		this.attributeNotificationWorker = Executors.newFixedThreadPool(1);

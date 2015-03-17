@@ -48,7 +48,7 @@ public class F60201 extends F602 implements Serializable
 	 */
 	public F60201()
 	{
-		super("2.6");
+		super();
 
 		// add attributes
 		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerAction());

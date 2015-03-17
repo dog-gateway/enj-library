@@ -42,7 +42,7 @@ public class A50218 extends A502 implements Serializable
 	 */
 	public A50218()
 	{
-		super("2.6");
+		super();
 
 		// add attributes A50218 has operative range between 20.0 and 100.0 Celsius
 		this.addChannelAttribute(1, new EEP26TemperatureLinear(20.0, 100.0));

@@ -50,7 +50,7 @@ public class A50701 extends A507 implements Serializable
 	public A50701()
 	{
 
-		super("2.6");
+		super();
 
 		// add attributes,
 		this.addChannelAttribute(1, new EEP26SupplyVoltage(0.0,5.0));

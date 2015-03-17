@@ -67,10 +67,10 @@ public abstract class D201 extends EEP
 	// -------------------------------------------------
 
 	// the class constructor
-	public D201(String version)
+	public D201()
 	{
 		// call the superclass constructor
-		super(version);
+		super("2.6");
 
 		// build the attribute dispatching worker
 		this.attributeNotificationWorker = Executors.newFixedThreadPool(1);

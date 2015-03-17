@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.eep.D5.D500;
+package it.polito.elite.enocean.enj.eep.eep26.D5.D500;
 
 /**
  * @author bonino

@@ -23,8 +23,8 @@ import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDel
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.EEPRegistry;
-import it.polito.elite.enocean.enj.eep.D5.D500.D500;
-import it.polito.elite.enocean.enj.eep.D5.D500.D50001;
+import it.polito.elite.enocean.enj.eep.eep26.D5.D500.D500;
+import it.polito.elite.enocean.enj.eep.eep26.D5.D500.D50001;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F602;
 import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;

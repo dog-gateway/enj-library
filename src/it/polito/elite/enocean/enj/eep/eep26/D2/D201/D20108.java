@@ -73,7 +73,7 @@ public class D20108 extends D201 implements Serializable
 	 */
 	public D20108()
 	{
-		super("2.6");
+		super();
 
 		// add the supported functions
 		this.addChannelAttribute(1, new EEP26Switching());
