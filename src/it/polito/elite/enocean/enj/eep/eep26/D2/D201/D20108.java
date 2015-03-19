@@ -33,18 +33,12 @@ import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26UserInterfaceMode;
 
-import java.io.Serializable;
-
 /**
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  * 
  */
-public class D20108 extends D201 implements Serializable
+public class D20108 extends D201
 {
-	/**
-	 * class version number for serialization / de-serialization
-	 */
-	private static final long serialVersionUID = 1L;
 
 	// the type definition
 	public static final byte type = (byte) 0x08;

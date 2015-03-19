@@ -20,20 +20,12 @@ package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 
-import java.io.Serializable;
-
 /**
  * @author bonino
  *
  */
-public class A50211 extends A502 implements Serializable
+public class A50211 extends A502
 {
-
-
-	/**
-	 * Serializable version UID
-	 */
-	private static final long serialVersionUID = 1L;
 
 	// the type definition
 	public static final byte type = (byte) 0x11;
@@ -45,7 +37,8 @@ public class A50211 extends A502 implements Serializable
 	{
 		super();
 
-		// add attributes A50211 has operative range between -50.0 and 30.0 Celsius
+		// add attributes A50211 has operative range between -50.0 and 30.0
+		// Celsius
 		this.addChannelAttribute(1, new EEP26TemperatureLinear(-50.0, 30.0));
 	}
 
@@ -59,7 +52,7 @@ public class A50211 extends A502 implements Serializable
 	{
 		// return the EEPIdentifier for this profile
 		return new EEPIdentifier(A502.rorg, A502.func, A50211.type);
-		
+
 	}
 
 }

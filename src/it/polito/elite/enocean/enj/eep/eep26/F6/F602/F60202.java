@@ -28,12 +28,6 @@ package it.polito.elite.enocean.enj.eep.eep26.F6.F602;
  */
 public class F60202 extends F60201
 {
-
-	/**
-	 * class version number for serialization / de-serialization
-	 */
-	private static final long serialVersionUID = 1L;
-
 	// the type definition
 	public static final byte type = (byte) 0x02;
 

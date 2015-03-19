@@ -20,6 +20,9 @@ package it.polito.elite.enocean.enj.model;
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
@@ -45,7 +48,7 @@ public class EnOceanDevice implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	// the set of supported profiles
-	private EEP profile;
+	private transient EEP profile;
 
 	// the device address
 	byte[] address = new byte[4];
@@ -110,7 +113,6 @@ public class EnOceanDevice implements Serializable
 
 			// add the instance to the set of supported instances
 			this.profile = eep;
-
 		}
 		catch (InstantiationException | IllegalAccessException e)
 		{
@@ -156,6 +158,45 @@ public class EnOceanDevice implements Serializable
 	}
 
 	/**
+	 * Custom serialization
+	 * 
+	 * @param oos
+	 * @throws IOException
+	 */
+	private void writeObject(ObjectOutputStream oos) throws IOException
+	{
+		// default serialization
+		oos.defaultWriteObject();
+
+		// profile serialization
+		oos.writeUTF(profile.getClass().getName());
+	}
+
+	/**
+	 * Custom de-serialization
+	 * 
+	 * @param ois
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	private void readObject(ObjectInputStream ois)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException, IOException
+	{
+		// default de-serialization
+		ois.defaultReadObject();
+
+		// profile de-serialization
+		String profileClassName = ois.readUTF();
+
+		// restore the profile
+		this.profile = (EEP) this.getClass().getClassLoader()
+				.loadClass(profileClassName).newInstance();
+	}
+
+	/**
 	 * Given a device address expressed in the low level notation (array of
 	 * bytes) returns the device address in the high-level notation.
 	 * 
@@ -170,18 +211,19 @@ public class EnOceanDevice implements Serializable
 
 	/**
 	 * Parses a device address expressed as an hexadecimal string
+	 * 
 	 * @param hexDeviceAddress
 	 * @return
 	 */
 	public static byte[] parseAddress(String hexDeviceAddress)
 	{
-		//to lower case
+		// to lower case
 		hexDeviceAddress = hexDeviceAddress.toLowerCase();
-		
+
 		// allowed format for Device address is with or without dashes
 		if (hexDeviceAddress.contains("-"))
 			hexDeviceAddress = hexDeviceAddress.replaceAll("-", "");
-		if(hexDeviceAddress.contains("0x"))
+		if (hexDeviceAddress.contains("0x"))
 			hexDeviceAddress = hexDeviceAddress.replaceAll("0x", "");
 
 		// trim leading and trailing spaces around the device address

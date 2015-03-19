@@ -24,18 +24,14 @@ import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.OneBSTelegram;
 
-import java.io.Serializable;
+
 
 /**
  * @author bonino
  *
  */
-public class D50001 extends D500 implements Serializable
+public class D50001 extends D500 
 {
-	/**
-	 * class version number for serialization / de-serialization
-	 */
-	private static final long serialVersionUID = 1L;
 
 	// the type definition
 	public static final byte type = (byte) 0x01;

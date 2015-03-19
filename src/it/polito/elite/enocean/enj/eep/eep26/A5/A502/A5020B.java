@@ -20,19 +20,12 @@ package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 
-import java.io.Serializable;
-
 /**
  * @author bonino
  *
  */
-public class A5020B extends A502 implements Serializable
+public class A5020B extends A502
 {
-
-	/**
-	 * Serializable version UID
-	 */
-	private static final long serialVersionUID = 1L;
 
 	// the type definition
 	public static final byte type = (byte) 0x0b;
@@ -58,7 +51,7 @@ public class A5020B extends A502 implements Serializable
 	{
 		// return the EEPIdentifier for this profile
 		return new EEPIdentifier(A502.rorg, A502.func, A5020B.type);
-		
+
 	}
 
 }
