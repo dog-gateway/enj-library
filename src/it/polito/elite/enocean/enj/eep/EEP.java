@@ -30,7 +30,6 @@ import java.util.Set;
  */
 public abstract class EEP implements EEPAttributeChangePublisher
 {
-
 	// the EnOcean Equipment Profile version
 	// TODO: handle this as a real version
 	private String version;

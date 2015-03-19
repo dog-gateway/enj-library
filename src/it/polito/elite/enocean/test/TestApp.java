@@ -45,9 +45,8 @@ public class TestApp
 		try
 		{
 		EnJLink linkLayer = new EnJLink("/dev/ttyUSB0");
-		EnJConnection connection = new EnJConnection(linkLayer, "/home/bonino/Temp/devices.dat");
 		SimpleDeviceListener listener = new SimpleDeviceListener();
-		connection.addEnJDeviceListener(listener);
+		EnJConnection connection = new EnJConnection(linkLayer, "/home/bonino/Temp/devices.dat", listener);
 
 		// connect the link
 		linkLayer.connect();

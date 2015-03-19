@@ -110,15 +110,46 @@ public class EnJConnection implements PacketListener
 	private boolean smartTeachIn;
 
 	/**
-	 * filename * Build a connection layer instance on top of the given link
-	 * layer instance.
+	 * Build a connection layer instance on top of the given link layer
+	 * instance.
 	 * 
 	 * @param linkLayer
 	 *            The {@link EnJLink} instance upon which basing the connection
 	 *            layer.
+	 * 
+	 * @param peristentDeviceStorageFilename
+	 *            The name of the persistent storage to use (path on the file
+	 *            system), can be null for in-memory storage.
 	 */
 	public EnJConnection(EnJLink linkLayer,
 			String peristentDeviceStorageFilename)
+	{
+		this.initCommon(linkLayer, peristentDeviceStorageFilename, null);
+	}
+
+	/**
+	 * 
+	 * @param linkLayer
+	 *            The {@link EnJLink} instance upon which basing the connection
+	 *            layer.
+	 * 
+	 * @param peristentDeviceStorageFilename
+	 *            The name of the persistent storage to use (path on the file
+	 *            system), can be null for in-memory storage.
+	 * @param listener
+	 *            The device listener to notify when devices are added,
+	 *            modified, removed. This is the only listener "able" to listen
+	 *            to device notifications stemming from the restoring of a
+	 *            peristent storage.
+	 */
+	public EnJConnection(EnJLink linkLayer,
+			String peristentDeviceStorageFilename, EnJDeviceListener listener)
+	{
+		this.initCommon(linkLayer, peristentDeviceStorageFilename, listener);
+	}
+
+	private void initCommon(EnJLink linkLayer,
+			String peristentDeviceStorageFilename, EnJDeviceListener listener)
 	{
 		// initialize the logger
 		this.logger = LoggerFactory.getLogger(EnJConnection.class);
@@ -151,8 +182,23 @@ public class EnJConnection implements PacketListener
 		this.knownDevices = new EnJPersistentDeviceSet(
 				peristentDeviceStorageFilename, true);
 
+		// notify device listeners if any
+		if (listener != null)
+		{
+			// add the listener
+			this.deviceListeners.add(listener);
+
+			// notify the listener
+			for (EnOceanDevice device : this.knownDevices.listAll())
+			{
+				this.notifyEnJDeviceListeners(device,
+						EnJDeviceChangeType.CREATED);
+			}
+		}
+
 		// add this connection layer as listener for incoming events
 		this.linkLayer.addPacketListener(this);
+
 	}
 
 	/**

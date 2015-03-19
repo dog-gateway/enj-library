@@ -329,4 +329,14 @@ public class EnJPersistentDeviceSet implements Serializable
 
 		return removedItems;
 	}
+	
+	/**
+	 * Provides a collection of all devices currently stored in the set.
+	 * 
+	 * @return
+	 */
+	public Collection<EnOceanDevice> listAll()
+	{
+		return this.theSet.values();
+	}
 }
