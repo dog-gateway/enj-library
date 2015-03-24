@@ -186,7 +186,7 @@ public class PacketTransmitter implements Runnable
 							// is true at the ESP3 specification level or not.
 
 							// check if transmission is possible
-							if (currentMessage.getRetransmissionCounter() > 0)
+							if ((currentMessage!=null)&&(currentMessage.getRetransmissionCounter() > 0))
 							{
 								// ok can transmit
 								try

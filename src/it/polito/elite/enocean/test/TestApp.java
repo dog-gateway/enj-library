@@ -18,7 +18,9 @@
 package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
+import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
 import it.polito.elite.enocean.enj.link.EnJLink;
+import it.polito.elite.enocean.enj.model.EnOceanDevice;
 
 /**
  * @author bonino
@@ -47,6 +49,7 @@ public class TestApp
 		EnJLink linkLayer = new EnJLink("/dev/ttyUSB0");
 		SimpleDeviceListener listener = new SimpleDeviceListener();
 		EnJConnection connection = new EnJConnection(linkLayer, "/home/bonino/Temp/devices.dat", listener);
+		listener.setConnection(connection);
 
 		// connect the link
 		linkLayer.connect();
@@ -64,7 +67,7 @@ public class TestApp
 		//Thread.sleep(11000);
 
 		// teach-in for 40s
-		System.out.println("Enabling smart teach-in for 40s");
+		System.out.println("Enabling smart teach-in for 10s");
 		connection.setSmartTeachIn(true);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
@@ -72,16 +75,20 @@ public class TestApp
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
 
-		Thread.sleep(40000);
+		Thread.sleep(10000);
 
 		connection.setSmartTeachIn(false);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
+		
+		EnOceanDevice device = connection.getDevice(633112321);
+		D20109 eep = (D20109)device.getEEP();
+		eep.actuatorSetOuput(connection, device.getAddress(), true);
 
 		}
 		catch(Exception e)
 		{
-			System.err.println("The given port does not exist or no device is plugged in");
+			System.err.println("The given port does not exist or no device is plugged in"+e);
 		}
 	}
 

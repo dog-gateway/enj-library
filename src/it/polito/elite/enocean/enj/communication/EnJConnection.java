@@ -404,6 +404,16 @@ public class EnJConnection implements PacketListener
 			this.knownDevices.add(device);
 		}
 	}
+	
+	/**
+	 * Returns the EnOcean device having the given UID
+	 * @param deviceUID
+	 * @return
+	 */
+	public EnOceanDevice getDevice(int deviceUID)
+	{
+		return this.knownDevices.getByUID(deviceUID);
+	}
 
 	@Override
 	/**

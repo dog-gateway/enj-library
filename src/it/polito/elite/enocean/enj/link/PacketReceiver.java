@@ -254,7 +254,7 @@ public class PacketReceiver implements SerialPortEventListener
 		if (pkt.isResponse())
 		{
 			// debug, TODO use a logging system here
-			System.out.println("Received response packet");
+			System.out.println("Received response packet"+pkt.getData());
 
 			// free the expected response semaphore
 			this.expectedResponse.release();
