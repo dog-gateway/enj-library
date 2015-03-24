@@ -413,69 +413,79 @@ public class EnJConnection implements PacketListener
 	{
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
 
-		if ((this.teachIn)
-				&& (telegram.getTelegramType() == EEP26TelegramType.UTETeachIn))
+		if (telegram != null)
 		{
-			this.handleUTETeachIn((UTETeachInTelegram) telegram);
-		}
-		else
-		{
-			// get the sender id, i.e., the address of the device generating the
-			// packet
-			byte address[] = telegram.getAddress();
 
-			// get the corresponding device...
-			EnOceanDevice device = this.knownDevices.getByLowAddress(address);
-
-			// check null
-			if (device == null)
+			if ((this.teachIn)
+					&& (telegram.getTelegramType() == EEP26TelegramType.UTETeachIn))
 			{
-				// the device has never been seen before,
-				// therefore the device must be learned, either
-				// implicitly or
-				// explicitly
-
-				// check if the packet is an RPS one
-				if (RPSTelegram.isRPSPacket(pkt))
-				{
-					// handle RPS teach-in, can either be done implicitly, an
-					// F60201 EEP will be used, or explicitly if teachIn is true
-					// and the device to teach in has been completely specified.
-					device = this.handleRPSTeachIn(pkt);
-				}
-				else if (OneBSTelegram.is1BSPacket(pkt))
-				{
-					// handle 1BS telegrams (much similar to RPS)
-					device = this.handle1BSTeachIn(pkt);
-				}
-				else if (FourBSTelegram.is4BSPacket(pkt))
-				{
-					// handle 3 variations of 4BS teach in: explicit with
-					// application-specified EEP, explicit with device-specified
-					// EEP or bi-directional.
-					device = this.handle4BSTeachIn(pkt);
-				}
-
+				this.handleUTETeachIn((UTETeachInTelegram) telegram);
 			}
 			else
-			// the device is already known therefore message handling can be
-			// delegated
 			{
+				// get the sender id, i.e., the address of the device generating
+				// the
+				// packet
+				byte address[] = telegram.getAddress();
 
-				// delegate to the device
-				EEP deviceEEP = device.getEEP();
+				// get the corresponding device...
+				EnOceanDevice device = this.knownDevices
+						.getByLowAddress(address);
 
-				// check not null
-				if (deviceEEP != null)
+				// check null
+				if (device == null)
 				{
-					if (!deviceEEP.handleProfileUpdate(telegram))
+					// the device has never been seen before,
+					// therefore the device must be learned, either
+					// implicitly or
+					// explicitly
+
+					// check if the packet is an RPS one
+					if (RPSTelegram.isRPSPacket(pkt))
+					{
+						// handle RPS teach-in, can either be done implicitly,
+						// an
+						// F60201 EEP will be used, or explicitly if teachIn is
+						// true
+						// and the device to teach in has been completely
+						// specified.
+						device = this.handleRPSTeachIn(pkt);
+					}
+					else if (OneBSTelegram.is1BSPacket(pkt))
+					{
+						// handle 1BS telegrams (much similar to RPS)
+						device = this.handle1BSTeachIn(pkt);
+					}
+					else if (FourBSTelegram.is4BSPacket(pkt))
+					{
+						// handle 3 variations of 4BS teach in: explicit with
+						// application-specified EEP, explicit with
+						// device-specified
+						// EEP or bi-directional.
+						device = this.handle4BSTeachIn(pkt);
+					}
+
+				}
+				else
+				// the device is already known therefore message handling can be
+				// delegated
+				{
+
+					// delegate to the device
+					EEP deviceEEP = device.getEEP();
+
+					// check not null
+					if (deviceEEP != null)
+					{
+						if (!deviceEEP.handleProfileUpdate(telegram))
+						{
+							// TODO: log the error
+						}
+					}
+					else
 					{
 						// TODO: log the error
 					}
-				}
-				else
-				{
-					// TODO: log the error
 				}
 			}
 		}

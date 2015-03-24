@@ -68,7 +68,7 @@ public class TestApp
 		connection.setSmartTeachIn(true);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
-		connection.enableTeachIn(40000);
+		connection.enableTeachIn(120000);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
 

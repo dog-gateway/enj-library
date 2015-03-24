@@ -83,11 +83,12 @@ public class UTETeachInTelegram extends EEP26Telegram
 	 * Class constructor, builds an instance of {@link UTETeachInTelegram} given
 	 * the {@link ESP3Packet} containing the telegram as payload.
 	 * 
-	 * @param The {@link ESP3Packet} containing the telegram as payload.
+	 * @param The
+	 *            {@link ESP3Packet} containing the telegram as payload.
 	 */
 	public UTETeachInTelegram(ESP3Packet pkt)
 	{
-		//call the superclass constructor
+		// call the superclass constructor
 		super(EEP26TelegramType.UTETeachIn);
 
 		// by default the packet is not a response
@@ -105,20 +106,22 @@ public class UTETeachInTelegram extends EEP26Telegram
 		byte rawData[] = this.rawPacket.getData();
 
 		// get the actual payload
-		for (int i = 1; i < 8; i++)
+		int startingOffset = 1;
+		for (int i = startingOffset; i < (startingOffset + this.payload.length); i++)
 		{
 			// reverse fill
-			this.payload[this.payload.length - i] = rawData[i];
+			this.payload[(startingOffset + this.payload.length)-(i+1)] = rawData[i];
 		}
 
 		// intialize the packet address
+		startingOffset = 8;
 		this.address = new byte[4];
 
 		// get the actual address
-		for (int i = 8; i < 12; i++)
+		for (int i = startingOffset; i < (startingOffset + this.address.length); i++)
 		{
-			// reverse fill, TODO check if works!
-			this.address[this.address.length - (i - 8)] = rawData[i];
+			// reverse fill
+			this.address[(startingOffset + this.address.length)-(i+1)] = rawData[i];
 		}
 
 		// get the manufacturer id

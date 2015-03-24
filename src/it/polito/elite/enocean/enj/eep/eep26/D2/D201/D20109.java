@@ -21,6 +21,7 @@ import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26DefaultState;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26DimLevel;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26EnergyMeasurement;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ErrorLevel;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26LocalControl;
@@ -36,11 +37,11 @@ import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26UserInterfaceMode;
  * @author Andrea Biasi <biasiandrea04@gmail.com>
  * 
  */
-public class D20108 extends D201
+public class D20109 extends D201
 {
 
 	// the type definition
-	public static final byte type = (byte) 0x08;
+	public static final byte type = (byte) 0x09;
 
 	// the ON state / command
 	public static boolean ON = true;
@@ -64,15 +65,14 @@ public class D20108 extends D201
 	 * Builds a new EEPProfile instance of type D2.01.08 as specified in the
 	 * EEP2.6 specification.
 	 */
-	public D20108()
+	public D20109()
 	{
 		super();
 
 		// add the supported functions
 		this.addChannelAttribute(1, new EEP26Switching());
+		this.addChannelAttribute(1, new EEP26DimLevel());
 		this.addChannelAttribute(1, new EEP26LocalControl());
-		this.addChannelAttribute(1, new EEP26UserInterfaceMode());
-		this.addChannelAttribute(1, new EEP26OverCurrentShutdown());
 		this.addChannelAttribute(1, new EEP26OverCurrentShutdownReset());
 		this.addChannelAttribute(1, new EEP26OverCurrentSwitchOff());
 		this.addChannelAttribute(1, new EEP26EnergyMeasurement());
@@ -88,8 +88,8 @@ public class D20108 extends D201
 		// exec the command by using the D201 general purpose implementation
 		super.actuatorSetOutput(connection, deviceAddress,
 				D201DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
-				D20108.ALL_OUTPUT_CHANNEL, command ? D20108.ON_BYTE
-						: D20108.OFF_BYTE);
+				D20109.ALL_OUTPUT_CHANNEL, command ? D20109.ON_BYTE
+						: D20109.OFF_BYTE);
 	}
 
 	public void actuatorSetOuput(EnJConnection connection,
@@ -102,7 +102,7 @@ public class D20108 extends D201
 			dimValue = 100;
 
 		super.actuatorSetOutput(connection, deviceAddress, dimMode.getCode(),
-				D20108.ALL_OUTPUT_CHANNEL, (byte) dimValue);
+				D20109.ALL_OUTPUT_CHANNEL, (byte) dimValue);
 
 	}
 
@@ -232,6 +232,6 @@ public class D20108 extends D201
 	@Override
 	public EEPIdentifier getEEPIdentifier()
 	{
-		return new EEPIdentifier(D201.rorg, D201.func, D20108.type);
+		return new EEPIdentifier(D201.rorg, D201.func, D20109.type);
 	}
 }

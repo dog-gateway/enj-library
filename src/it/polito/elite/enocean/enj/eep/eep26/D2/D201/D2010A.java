@@ -21,26 +21,23 @@ import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26DefaultState;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26EnergyMeasurement;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ErrorLevel;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26LocalControl;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26OverCurrentShutdown;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26OverCurrentShutdownReset;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26OverCurrentSwitchOff;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerFailure;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerFailureDetection;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26UserInterfaceMode;
 
 /**
- * @author Andrea Biasi <biasiandrea04@gmail.com>
- * 
+ * @author bonino
+ *
  */
-public class D20108 extends D201
+public class D2010A extends D201
 {
-
 	// the type definition
-	public static final byte type = (byte) 0x08;
+	public static final byte type = (byte) 0x0A;
 
 	// the ON state / command
 	public static boolean ON = true;
@@ -64,7 +61,7 @@ public class D20108 extends D201
 	 * Builds a new EEPProfile instance of type D2.01.08 as specified in the
 	 * EEP2.6 specification.
 	 */
-	public D20108()
+	public D2010A()
 	{
 		super();
 
@@ -72,13 +69,10 @@ public class D20108 extends D201
 		this.addChannelAttribute(1, new EEP26Switching());
 		this.addChannelAttribute(1, new EEP26LocalControl());
 		this.addChannelAttribute(1, new EEP26UserInterfaceMode());
-		this.addChannelAttribute(1, new EEP26OverCurrentShutdown());
-		this.addChannelAttribute(1, new EEP26OverCurrentShutdownReset());
-		this.addChannelAttribute(1, new EEP26OverCurrentSwitchOff());
-		this.addChannelAttribute(1, new EEP26EnergyMeasurement());
-		this.addChannelAttribute(1, new EEP26PowerMeasurement());
 		this.addChannelAttribute(1, new EEP26DefaultState());
-		this.addChannelAttribute(1, new EEP26ErrorLevel());
+		this.addChannelAttribute(1, new EEP26PowerFailure());
+		this.addChannelAttribute(1, new EEP26PowerFailureDetection());
+		this.addChannelAttribute(1, new EEP26OverCurrentSwitchOff());
 	}
 
 	// execution commands
@@ -88,8 +82,8 @@ public class D20108 extends D201
 		// exec the command by using the D201 general purpose implementation
 		super.actuatorSetOutput(connection, deviceAddress,
 				D201DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
-				D20108.ALL_OUTPUT_CHANNEL, command ? D20108.ON_BYTE
-						: D20108.OFF_BYTE);
+				D2010A.ALL_OUTPUT_CHANNEL, command ? D2010A.ON_BYTE
+						: D2010A.OFF_BYTE);
 	}
 
 	public void actuatorSetOuput(EnJConnection connection,
@@ -102,7 +96,7 @@ public class D20108 extends D201
 			dimValue = 100;
 
 		super.actuatorSetOutput(connection, deviceAddress, dimMode.getCode(),
-				D20108.ALL_OUTPUT_CHANNEL, (byte) dimValue);
+				D2010A.ALL_OUTPUT_CHANNEL, (byte) dimValue);
 
 	}
 
@@ -169,69 +163,11 @@ public class D20108 extends D201
 				dimTime2, dimTime3);
 	}
 
-	public void actuatorSetMeasurement(EnJConnection connection,
-			byte[] deviceAddress, boolean autoReportMesurement,
-			boolean signalResetMeasurement, boolean powerMode, int channelId,
-			int measurementDeltaToBeReported, D201UnitOfMeasure unitOfMeasure,
-			int maximumTimeBetweenActuatorMessages,
-			int minimumTimeBetweenActuatorMessages)
-	{
-		if ((maximumTimeBetweenActuatorMessages >= 0)
-				&& (minimumTimeBetweenActuatorMessages >= 0))
-		{
-			byte reportMeasurementAsByte = autoReportMesurement ? (byte) 0x01
-					: (byte) 0x00;
-			byte signalResetMeasurementAsByte = signalResetMeasurement ? (byte) 0x01
-					: (byte) 0x00;
-			byte powerModeAsByte = powerMode ? (byte) 0x01 : (byte) 0x00;
-
-			// get the measurement delta LSB, and with all 0 apart from the last
-			// 4 bits
-			byte measurementDeltaLSB = (byte) ((measurementDeltaToBeReported) & (0x000F));
-
-			// get the measurement delta MSB, shift right by 8 bits and set at 0
-			// the 8 leading bits
-			byte measurementDeltaMSB = (byte) ((measurementDeltaToBeReported >> 8) & (0x00FF));
-			byte maximumTimeAsByte = (byte) Math.min(
-					(maximumTimeBetweenActuatorMessages / 10), 255);
-			byte minimumTimeAsByte = (byte) Math.min(
-					minimumTimeBetweenActuatorMessages, 255);
-
-			// call the superclass method
-			super.actuatorSetMeasurement(connection, deviceAddress,
-					reportMeasurementAsByte, signalResetMeasurementAsByte,
-					powerModeAsByte, (byte) channelId, measurementDeltaLSB,
-					unitOfMeasure.getCode(), measurementDeltaMSB,
-					maximumTimeAsByte, minimumTimeAsByte);
-		}
-		else
-			throw new NumberFormatException(
-					"Only positive numbers allowed for time values");
-	}
-
-	/**
-	 * Asks for the current power or energy measurement on a given channel Id of
-	 * a given EnOcean actuator
-	 * 
-	 * @param connection
-	 * @param deviceAddress
-	 * @param powerMode
-	 * @param channelId
-	 */
-	public void actuatorMeasurementQuery(EnJConnection connection,
-			byte[] deviceAddress, boolean powerMode, int channelId)
-	{
-		// get the measurement mode as a byte value
-		byte powerModeAsByte = powerMode ? (byte) 0x01 : (byte) 0x00;
-
-		// call the superclass method
-		super.actuatorMeasurementQuery(connection, deviceAddress,
-				powerModeAsByte, (byte) channelId);
-	}
-
 	@Override
 	public EEPIdentifier getEEPIdentifier()
 	{
-		return new EEPIdentifier(D201.rorg, D201.func, D20108.type);
+		return new EEPIdentifier(D201.rorg, D201.func, D2010A.type);
 	}
+
+
 }
