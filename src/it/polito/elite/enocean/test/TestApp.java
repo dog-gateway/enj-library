@@ -46,49 +46,57 @@ public class TestApp
 		// The EnOcean link layer
 		try
 		{
-		EnJLink linkLayer = new EnJLink("/dev/ttyUSB0");
-		SimpleDeviceListener listener = new SimpleDeviceListener();
-		EnJConnection connection = new EnJConnection(linkLayer, "/home/bonino/Temp/devices.dat", listener);
-		listener.setConnection(connection);
+			EnJLink linkLayer = new EnJLink("/dev/ttyUSB0");
+			SimpleDeviceListener listener = new SimpleDeviceListener();
+			EnJConnection connection = new EnJConnection(linkLayer,
+					"/home/bonino/Temp/devices.dat", listener);
 
-		// connect the link
-		linkLayer.connect();
+			// connect the link
+			linkLayer.connect();
 
-		// the device to learn
-		System.out.println("Enabling explicit teach-in for 018a781f");
-		connection.enableTeachIn("018a781f", "A5-02-05", 10000);
+			// the device to learn
+			System.out.println("Enabling explicit teach-in for 018a781f");
+			connection.enableTeachIn("018a781f", "A5-02-05", 10000);
 
-		Thread.sleep(11000);
-		
-		//0187ae92
-		//System.out.println("Enabling explicit teach-in for 0187ae92");
-		//connection.enableTeachIn("0187ae92", "A5-07-01", 10000);
+			Thread.sleep(11000);
 
-		//Thread.sleep(11000);
+			// 0187ae92
+			// System.out.println("Enabling explicit teach-in for 0187ae92");
+			// connection.enableTeachIn("0187ae92", "A5-07-01", 10000);
 
-		// teach-in for 40s
-		System.out.println("Enabling smart teach-in for 10s");
-		connection.setSmartTeachIn(true);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
-		connection.enableTeachIn(120000);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
+			// Thread.sleep(11000);
 
-		Thread.sleep(10000);
+			// teach-in for 40s
+			System.out.println("Enabling smart teach-in for 10s");
+			connection.setSmartTeachIn(true);
+			System.out.println("SmartTeachIn: "
+					+ connection.isSmartTeachInEnabled());
+			connection.enableTeachIn(120000);
+			System.out.println("SmartTeachIn: "
+					+ connection.isSmartTeachInEnabled());
 
-		connection.setSmartTeachIn(false);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
-		
-		EnOceanDevice device = connection.getDevice(633112321);
-		D20109 eep = (D20109)device.getEEP();
-		eep.actuatorSetOuput(connection, device.getAddress(), true);
+			Thread.sleep(20000);
+
+			connection.setSmartTeachIn(false);
+			System.out.println("SmartTeachIn: "
+					+ connection.isSmartTeachInEnabled());
+			Thread.sleep(1000);
+			
+			for (int i = 0; i < 10; i++)
+			{
+				System.out.println("Sending command");
+				EnOceanDevice device = connection.getDevice(25672741);
+				D20109 eep = (D20109) device.getEEP();
+				eep.actuatorSetOuput(connection, device.getAddress(), ((i/2)==0)?true:false);
+				Thread.sleep(1000);
+			}
 
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			System.err.println("The given port does not exist or no device is plugged in"+e);
+			System.err
+					.println("The given port does not exist or no device is plugged in"
+							+ e);
 		}
 	}
 

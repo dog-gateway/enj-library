@@ -20,6 +20,7 @@ package it.polito.elite.enocean.enj.link;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import it.polito.elite.enocean.enj.util.ByteUtils;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
 import java.io.IOException;
@@ -254,7 +255,8 @@ public class PacketReceiver implements SerialPortEventListener
 		if (pkt.isResponse())
 		{
 			// debug, TODO use a logging system here
-			System.out.println("Received response packet"+pkt.getData());
+			this.logger.info("Received response packet"
+					+ ByteUtils.toHexString(pkt.getData()));
 
 			// free the expected response semaphore
 			this.expectedResponse.release();

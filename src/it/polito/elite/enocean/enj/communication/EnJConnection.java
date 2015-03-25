@@ -39,7 +39,9 @@ import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
+import it.polito.elite.enocean.protocol.serial.v3.network.packet.response.Response;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -404,9 +406,10 @@ public class EnJConnection implements PacketListener
 			this.knownDevices.add(device);
 		}
 	}
-	
+
 	/**
 	 * Returns the EnOcean device having the given UID
+	 * 
 	 * @param deviceUID
 	 * @return
 	 */
@@ -421,6 +424,31 @@ public class EnJConnection implements PacketListener
 	 */
 	public void handlePacket(ESP3Packet pkt)
 	{
+		// check if the packet is an asynchronous information coming from the
+		// network or a response
+		try
+		{
+			if (pkt.isRadio())
+			{
+				this.handleRadioPacket(new Radio(pkt));
+			}
+			else if (pkt.isResponse())
+			{
+				this.handleResponse(new Response(pkt));
+			}
+			else if (pkt.isEvent())
+			{
+				this.handleEvent(new Event(pkt));
+			}
+		}
+		catch (Exception e)
+		{
+			this.logger.warn("Error while handling received packet", e);
+		}
+	}
+
+	private void handleRadioPacket(Radio pkt)
+	{
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
 
 		if (telegram != null)
@@ -433,7 +461,8 @@ public class EnJConnection implements PacketListener
 			}
 			else
 			{
-				// get the sender id, i.e., the address of the device generating
+				// get the sender id, i.e., the address of the device
+				// generating
 				// the
 				// packet
 				byte address[] = telegram.getAddress();
@@ -453,9 +482,11 @@ public class EnJConnection implements PacketListener
 					// check if the packet is an RPS one
 					if (RPSTelegram.isRPSPacket(pkt))
 					{
-						// handle RPS teach-in, can either be done implicitly,
+						// handle RPS teach-in, can either be done
+						// implicitly,
 						// an
-						// F60201 EEP will be used, or explicitly if teachIn is
+						// F60201 EEP will be used, or explicitly if teachIn
+						// is
 						// true
 						// and the device to teach in has been completely
 						// specified.
@@ -468,7 +499,8 @@ public class EnJConnection implements PacketListener
 					}
 					else if (FourBSTelegram.is4BSPacket(pkt))
 					{
-						// handle 3 variations of 4BS teach in: explicit with
+						// handle 3 variations of 4BS teach in: explicit
+						// with
 						// application-specified EEP, explicit with
 						// device-specified
 						// EEP or bi-directional.
@@ -477,7 +509,8 @@ public class EnJConnection implements PacketListener
 
 				}
 				else
-				// the device is already known therefore message handling can be
+				// the device is already known therefore message handling
+				// can be
 				// delegated
 				{
 
@@ -499,6 +532,7 @@ public class EnJConnection implements PacketListener
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -694,6 +728,19 @@ public class EnJConnection implements PacketListener
 		this.deviceUpdateDeliveryExecutor
 				.execute(new EnJDeviceChangeDeliveryTask(device, changeType,
 						this.deviceListeners));
+	}
+
+	private void handleResponse(Response pkt)
+	{
+		// debug
+		this.logger.info("Received response: " + pkt.toString());
+
+	}
+
+	private void handleEvent(Event pkt)
+	{
+		// debug
+		this.logger.info("Received event: " + pkt.toString());
 	}
 
 	private EnOceanDevice explicitTeachIn(EEP26Telegram telegram)

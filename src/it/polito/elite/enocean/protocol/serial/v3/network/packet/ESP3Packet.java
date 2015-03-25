@@ -371,7 +371,7 @@ public class ESP3Packet
 	public boolean requiresResponse()
 	{
 		return this.isEvent()
-				&& ((this.packetType == Event.SA_RECLAIM_NOT_SUCCESFUL)
+				&& ((this.packetType == Event.SA_RECLAIM_NOT_SUCCESSFUL)
 						|| (this.packetType == Event.SA_CONFIRM_LEARN) || (this.packetType == Event.SA_LEARN_ACK));
 	}
 

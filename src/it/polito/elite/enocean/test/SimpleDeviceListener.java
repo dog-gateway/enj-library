@@ -17,11 +17,7 @@
  */
 package it.polito.elite.enocean.test;
 
-import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
-import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.Rorg;
-import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
@@ -29,6 +25,7 @@ import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltageAvaila
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
+import it.polito.elite.enocean.enj.util.ByteUtils;
 
 /**
  * @author bonino
@@ -36,29 +33,10 @@ import it.polito.elite.enocean.enj.model.EnOceanDevice;
  */
 public class SimpleDeviceListener implements EnJDeviceListener
 {
-	private EnJConnection connection;
-
-	/**
-	 * 
-	 */
-	public SimpleDeviceListener(EnJConnection connection)
-	{
-		this.connection = connection;
-	}
 
 	public SimpleDeviceListener()
 	{
 		// do nothing
-	}
-
-	public EnJConnection getConnection()
-	{
-		return connection;
-	}
-
-	public void setConnection(EnJConnection connection)
-	{
-		this.connection = connection;
 	}
 
 	/*
@@ -71,7 +49,7 @@ public class SimpleDeviceListener implements EnJDeviceListener
 	public void addedEnOceanDevice(EnOceanDevice device)
 	{
 		System.out.println("Added device:" + device.getDeviceUID()
-				+ " - low-address: " + device.getAddress());
+				+ " - low-address: " + ByteUtils.toHexString(device.getAddress()));
 
 		SimpleMovementListener movementListener = new SimpleMovementListener();
 
@@ -100,15 +78,6 @@ public class SimpleDeviceListener implements EnJDeviceListener
 				EEP26SupplyVoltageAvailability.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(1,
 					EEP26SupplyVoltageAvailability.NAME, movementListener);
-		else if (device
-				.getEEP()
-				.getEEPIdentifier()
-				.equals(new EEPIdentifier(new Rorg((byte) 0xD2), (byte) 0x01,
-						(byte) 0x09)))
-			if (this.connection != null)
-				((D20109) device.getEEP()).actuatorSetOuput(this.connection,
-						device.getAddress(), true);
-
 	}
 
 	/*

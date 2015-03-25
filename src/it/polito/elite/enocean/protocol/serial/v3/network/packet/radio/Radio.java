@@ -75,6 +75,21 @@ public class Radio extends ESP3Packet
 		this.buildPacket();
 	}
 
+	public Radio(ESP3Packet pkt) throws Exception
+	{
+		super();
+		if (pkt.isRadio())
+		{
+			this.syncByte = pkt.getSyncByte();
+			this.packetType = pkt.getPacketType();
+			this.data = pkt.getData();
+			this.optData = pkt.getOptData();
+			this.buildPacket();
+		}
+		else
+			throw (new Exception("Uncompatible packet type"));
+	}
+
 	/**
 	 * Gets a Radio packet to be sent to the transceiver, and then to the device
 	 * with the given address
@@ -97,9 +112,9 @@ public class Radio extends ESP3Packet
 		// composition 0 (disabled)
 		if (send)
 		{
-			//fill the packet
+			// fill the packet
 			pkt = new Radio(payload, (byte) 0x03, address, (byte) 0xFF,
-			(byte) 0x00);
+					(byte) 0x00);
 
 		}
 		else

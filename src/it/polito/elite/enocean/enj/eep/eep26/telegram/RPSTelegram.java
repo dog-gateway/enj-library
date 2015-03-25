@@ -49,7 +49,7 @@ public class RPSTelegram extends EEP26Telegram
 		int startingOffset = 1 + this.payload.length;
 		for (int i = startingOffset; i < (startingOffset + this.address.length); i++)
 		{
-			// not needed
+			// save the address
 			this.address[i - startingOffset] = rawData[i];
 		}
 

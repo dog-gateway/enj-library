@@ -120,8 +120,8 @@ public class UTETeachInTelegram extends EEP26Telegram
 		// get the actual address
 		for (int i = startingOffset; i < (startingOffset + this.address.length); i++)
 		{
-			// reverse fill
-			this.address[(startingOffset + this.address.length)-(i+1)] = rawData[i];
+			// normal order
+			this.address[i - startingOffset] = rawData[i];
 		}
 
 		// get the manufacturer id
