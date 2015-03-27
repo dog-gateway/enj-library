@@ -39,7 +39,7 @@ public class Radio extends ESP3Packet
 
 		super();
 		this.packetType = RADIO;
-		this.data = new byte[data.length];
+		//this.data = new byte[data.length];
 		this.data = data;
 		this.optData = new byte[7];
 		this.optData[0] = subTelNum;
@@ -53,10 +53,11 @@ public class Radio extends ESP3Packet
 
 		// Indirizzo del dispositivo di destinazione, dal piu significativo al
 		// meno significativo
-		this.optData[1] = destinationId[3];
-		this.optData[2] = destinationId[2];
-		this.optData[3] = destinationId[1];
-		this.optData[4] = destinationId[0];
+		this.optData[1] = destinationId[0];
+		this.optData[2] = destinationId[1];
+		this.optData[3] = destinationId[2];
+		this.optData[4] = destinationId[3];
+		
 		// ----------------------------------------------------------
 
 		this.optData[5] = dBm;

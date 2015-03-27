@@ -18,11 +18,15 @@
 package it.polito.elite.enocean.enj.link;
 
 import gnu.io.SerialPort;
+import it.polito.elite.enocean.enj.util.ByteUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class implementing the transmitter tier of the Java EnOcean Serial Protocol
@@ -62,6 +66,8 @@ public class PacketTransmitter implements Runnable
 
 	// the run enabling flag
 	private boolean runnable;
+	
+	private Logger logger;
 
 	/**
 	 * Creates a {@link PacketTransmitter} runnable connected to the given
@@ -85,6 +91,8 @@ public class PacketTransmitter implements Runnable
 			SerialPort serialPort, Semaphore expectedResponse)
 	{
 		super();
+		
+		this.logger = LoggerFactory.getLogger(PacketTransmitter.class);
 
 		// store a reference to the high priority transmission queue
 		this.highPriorityTxQueue = highPriorityTxQueue;
@@ -148,7 +156,9 @@ public class PacketTransmitter implements Runnable
 					currentMessage = this.highPriorityTxQueue.poll();
 
 					// send the packet
-					serialOut.write(currentMessage.getPkt().getPacketAsBytes());
+					byte packetBytes[] = currentMessage.getPkt().getPacketAsBytes();
+					this.logger.info("Sending: "+ByteUtils.toHexString(packetBytes));
+					serialOut.write(packetBytes);
 
 				}
 				else
@@ -198,8 +208,9 @@ public class PacketTransmitter implements Runnable
 									time = System.currentTimeMillis();
 
 									// transmit the packet
-									serialOut.write(currentMessage.getPkt()
-											.getPacketAsBytes());
+									byte packetBytes[] = currentMessage.getPkt().getPacketAsBytes();
+									this.logger.info("Sending: "+ByteUtils.toHexString(packetBytes));
+									serialOut.write(packetBytes);
 
 									// decrease the retransmission count
 									currentMessage

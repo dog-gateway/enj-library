@@ -333,10 +333,10 @@ public class UTETeachInTelegram extends EEP26Telegram
 		// optional data
 		byte[] opt = new byte[7];
 		opt[0] = (byte) 0x03;
-		opt[1] = (byte) 0x00;
-		opt[2] = (byte) 0x81;
-		opt[3] = (byte) 0x2A;
-		opt[4] = (byte) 0x90;
+		opt[1] = this.address[0];//(byte) 0x00;
+		opt[2] = this.address[1];//(byte) 0x81;
+		opt[3] = this.address[2];//(byte) 0x2A;
+		opt[4] = this.address[3];//(byte) 0x90;
 		opt[5] = (byte) 0xFF;
 		opt[6] = (byte) 0x00;
 

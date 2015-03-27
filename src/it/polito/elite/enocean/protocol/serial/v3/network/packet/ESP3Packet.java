@@ -90,16 +90,16 @@ public class ESP3Packet
 
 	public void buildPacket()
 	{
-		this.dataLenght[0] = (byte) (data.length & 0xff); // Parte bassa dei 2
+		this.dataLenght[1] = (byte) (data.length & 0x00ff); // Parte bassa dei 2
 															// byte
-		this.dataLenght[1] = (byte) ((data.length & 0xff00) >> 8); // Parte alta
+		this.dataLenght[0] = (byte) (((data.length & 0xff00) >> 8)& 0x00ff); // Parte alta
 																	// dei due
 																	// byte
-		this.optLenght = (byte) (optData.length);
+		this.optLenght = (byte) (optData.length & 0x00ff);
 		byte header[] = new byte[4];
-		header[0] = this.dataLenght[1];// ATTENZIONE BIG ENDIAN! devo mandare
+		header[0] = this.dataLenght[0];// ATTENZIONE BIG ENDIAN! devo mandare
 										// prima dataLenght[1] poi dataLenght[0]
-		header[1] = this.dataLenght[0];
+		header[1] = this.dataLenght[1];
 		header[2] = this.optLenght;
 		header[3] = this.packetType;
 
@@ -258,29 +258,27 @@ public class ESP3Packet
 
 	public byte[] getPacketAsBytes()
 	{
+		// byte to unsigned int conversion
+		int optLenght = this.optLenght & 0x00FF;
+
+		// byte array to unsigned int conversion
+		int dataLenght = ((this.dataLenght[0] << 8) & 0xff00)
+				+ ((this.dataLenght[1]) & 0x00ff);
+
 		// 1 syncByte + 2 dataLenght + 1 optLenght + 1 packetType + 1 crcr8h +
 		// 1crc8d + dataLength + optDataLenght
-		int packetLengthInBytes = 5 + this.dataLenght.length + this.data.length
-				+ this.optData.length; // Ci va 5 e non 6 come lunghezza
-										// iniziale
+		int packetLengthInBytes = 7 + dataLenght + optLenght; 
 
 		byte[] packetAsBytes = new byte[packetLengthInBytes];
 
 		// Header
 		packetAsBytes[0] = this.syncByte;
-		packetAsBytes[1] = this.dataLenght[1]; // Attenzione mando prima la
+		packetAsBytes[1] = this.dataLenght[0]; // Attenzione mando prima la
 												// parte alta
-		packetAsBytes[2] = this.dataLenght[0];
+		packetAsBytes[2] = this.dataLenght[1];
 		packetAsBytes[3] = this.optLenght;
 		packetAsBytes[4] = this.packetType;
 		packetAsBytes[5] = this.crc8h;
-
-		// byte array to unsigned int conversion
-		int dataLenght = ((this.dataLenght[1] << 8) & 0xff00)
-				+ ((this.dataLenght[0]) & 0xff);
-
-		// byte to unsigned int conversion
-		int optLenght = this.optLenght & 0xFF;
 
 		for (int i = 0; i < dataLenght; i++)
 		{
@@ -394,7 +392,7 @@ public class ESP3Packet
 
 		// byte to unsigned int conversion
 		int oLenght = optLenght & 0xFF;
-		
-		return (7+dLenght+oLenght);
+
+		return (7 + dLenght + oLenght);
 	}
 }

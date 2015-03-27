@@ -38,6 +38,7 @@ import it.polito.elite.enocean.enj.eep.eep26.telegram.UTETeachInTelegram;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.link.PacketListener;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
+import it.polito.elite.enocean.enj.util.ByteUtils;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
@@ -449,6 +450,8 @@ public class EnJConnection implements PacketListener
 
 	private void handleRadioPacket(Radio pkt)
 	{
+		this.logger.info("Received: "+ByteUtils.toHexString(pkt.getPacketAsBytes()));
+		//this.logger.info("Payload: "+ByteUtils.toHexString(pkt.getDataPayload()));
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
 
 		if (telegram != null)

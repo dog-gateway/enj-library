@@ -56,7 +56,7 @@ public class D20109 extends D201
 	public static byte OFF_BYTE = (byte) 0x00;
 
 	// the byte identifier for all output channels
-	public static byte ALL_OUTPUT_CHANNEL = 0x1E;
+	public static byte ALL_OUTPUT_CHANNEL = 0x1e;
 
 	// the "data" fields accessible through this eep (and updated upon network
 	// data reception)

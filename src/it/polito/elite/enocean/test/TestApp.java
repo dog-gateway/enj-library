@@ -55,10 +55,10 @@ public class TestApp
 			linkLayer.connect();
 
 			// the device to learn
-			System.out.println("Enabling explicit teach-in for 018a781f");
-			connection.enableTeachIn("018a781f", "A5-02-05", 10000);
+			//System.out.println("Enabling explicit teach-in for 018a781f");
+			//connection.enableTeachIn("018a781f", "A5-02-05", 10000);
 
-			Thread.sleep(11000);
+			//Thread.sleep(11000);
 
 			// 0187ae92
 			// System.out.println("Enabling explicit teach-in for 0187ae92");
@@ -71,7 +71,7 @@ public class TestApp
 			connection.setSmartTeachIn(true);
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
-			connection.enableTeachIn(120000);
+			connection.enableTeachIn(20000);
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
 
@@ -81,14 +81,19 @@ public class TestApp
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
 			Thread.sleep(1000);
-			
+
+			byte all[] ={(byte)0xff, (byte)0xff,(byte)0xff,(byte)0xff};
 			for (int i = 0; i < 10; i++)
 			{
 				System.out.println("Sending command");
 				EnOceanDevice device = connection.getDevice(25672741);
-				D20109 eep = (D20109) device.getEEP();
-				eep.actuatorSetOuput(connection, device.getAddress(), ((i/2)==0)?true:false);
-				Thread.sleep(1000);
+				if (device != null)
+				{
+					D20109 eep = (D20109) device.getEEP();
+					eep.actuatorSetOuput(connection, device.getAddress(),
+							((i % 2) == 0) ? true : false);
+					Thread.sleep(1000);
+				}
 			}
 
 		}
