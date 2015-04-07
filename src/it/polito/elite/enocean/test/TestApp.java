@@ -75,12 +75,12 @@ public class TestApp
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
 
-			Thread.sleep(20000);
+			Thread.sleep(2000);
 
 			connection.setSmartTeachIn(false);
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 
 			byte all[] ={(byte)0xff, (byte)0xff,(byte)0xff,(byte)0xff};
 			for (int i = 0; i < 10; i++)

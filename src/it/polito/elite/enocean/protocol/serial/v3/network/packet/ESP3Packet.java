@@ -97,8 +97,7 @@ public class ESP3Packet
 																	// byte
 		this.optLenght = (byte) (optData.length & 0x00ff);
 		byte header[] = new byte[4];
-		header[0] = this.dataLenght[0];// ATTENZIONE BIG ENDIAN! devo mandare
-										// prima dataLenght[1] poi dataLenght[0]
+		header[0] = this.dataLenght[0];
 		header[1] = this.dataLenght[1];
 		header[2] = this.optLenght;
 		header[3] = this.packetType;
@@ -114,7 +113,7 @@ public class ESP3Packet
 		{
 			for (int i = 0; i < optData.length; i++)
 			{
-				vectData[i + data.length] = optData[i];
+				vectData[i+data.length] = optData[i];
 			}
 		}
 		this.crc8d = Crc8.calc(vectData);
