@@ -339,11 +339,36 @@ public class EnJConnection implements PacketListener
 		this.logger.info("Teach-in disabled");
 	}
 
-	// TODO: change this to abstract the link layer packet composition!!
+	/**
+	 * Sends the given payload encapsulated into a Radio message, automatically
+	 * adds sender address and status to the payload, thus completing the actual
+	 * payload being sent. By default the gateway address is fixed at 0x00ffffff
+	 * and the status byte at 0x00.
+	 * 
+	 * @param address
+	 * @param payload
+	 */
 	public void sendRadioCommand(byte[] address, byte[] payload)
 	{
+		// add sender address and status
+		byte actualPayload[] = new byte[payload.length + 5];
+
+		// copy the payload
+		for (int i = 0; i < payload.length; i++)
+			actualPayload[i] = payload[i];
+
+		// sender address
+		// TODO: remove hardcoding if possible!!!
+		actualPayload[payload.length] = (byte) 0x00;
+		actualPayload[payload.length + 1] = (byte) 0xFF;
+		actualPayload[payload.length + 2] = (byte) 0xFF;
+		actualPayload[payload.length + 3] = (byte) 0xFF;
+
+		// status
+		actualPayload[payload.length + 4] = (byte) 0x00;
+
 		// build the link-layer packet
-		Radio enjLinkPacket = Radio.getRadio(address, payload, true);
+		Radio enjLinkPacket = Radio.getRadio(address, actualPayload, true);
 
 		// send the packet
 		this.linkLayer.send(enjLinkPacket);
@@ -409,6 +434,7 @@ public class EnJConnection implements PacketListener
 	}
 
 	/**
+	 * adds sender address and status to the given payload, thus completing the
 	 * Returns the EnOcean device having the given UID
 	 * 
 	 * @param deviceUID
@@ -450,8 +476,9 @@ public class EnJConnection implements PacketListener
 
 	private void handleRadioPacket(Radio pkt)
 	{
-		this.logger.info("Received: "+ByteUtils.toHexString(pkt.getPacketAsBytes()));
-		//this.logger.info("Payload: "+ByteUtils.toHexString(pkt.getDataPayload()));
+		this.logger.info("Received: "
+				+ ByteUtils.toHexString(pkt.getPacketAsBytes()));
+		// this.logger.info("Payload: "+ByteUtils.toHexString(pkt.getDataPayload()));
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
 
 		if (telegram != null)

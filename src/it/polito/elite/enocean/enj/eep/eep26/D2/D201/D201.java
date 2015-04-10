@@ -100,7 +100,7 @@ public abstract class D201 extends EEP
 			byte outputValue)
 	{
 		// prepare the data payload to host "desired" values
-		byte dataByte[] = new byte[9];
+		byte dataByte[] = new byte[4];
 		
 		//add the packet rorg
 		dataByte[0] = D201.rorg.getRorgValue();
@@ -113,16 +113,6 @@ public abstract class D201 extends EEP
 
 		// Output value bit 6 to 0
 		dataByte[3] = outputValue;
-		
-		// sender address
-		// TODO: remove hardcoding if possible!!!
-		dataByte[4] = (byte) 0x00;
-		dataByte[5] = (byte) 0xFF;
-		dataByte[6] = (byte) 0xFF;
-		dataByte[7] = (byte) 0xFF;
-
-		// status
-		dataByte[8] = (byte) 0x00;
 
 		// send the payload for connection-layer encapsulation
 		connection.sendRadioCommand(deviceAddress, dataByte);

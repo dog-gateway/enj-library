@@ -92,7 +92,7 @@ public class TestApp
 					D20109 eep = (D20109) device.getEEP();
 					eep.actuatorSetOuput(connection, device.getAddress(),
 							((i % 2) == 0) ? true : false);
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 				}
 			}
 
