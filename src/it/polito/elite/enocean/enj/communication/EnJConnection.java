@@ -552,12 +552,19 @@ public class EnJConnection implements PacketListener
 					{
 						if (!deviceEEP.handleProfileUpdate(telegram))
 						{
-							// TODO: log the error
+							// log the error
+							this.logger
+									.warn("Profile update for"
+											+ ByteUtils.toHexString(device
+													.getAddress())
+											+ " was not handled successfully");
 						}
 					}
 					else
 					{
-						// TODO: log the error
+						// log the error
+						this.logger
+								.warn("No suitable EEP found for the given device...");
 					}
 				}
 			}

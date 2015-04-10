@@ -46,14 +46,20 @@ public class TestApp
 		// The EnOcean link layer
 		try
 		{
+			//create the lowest link layer
 			EnJLink linkLayer = new EnJLink("/dev/ttyUSB0");
+			
+			//create a device listener for handling device updates
 			SimpleDeviceListener listener = new SimpleDeviceListener();
+			
+			//create the connection layer
 			EnJConnection connection = new EnJConnection(linkLayer,
 					"/home/bonino/Temp/devices.dat", listener);
 
 			// connect the link
 			linkLayer.connect();
 
+			// ---------- Explicit teach-in ---------
 			// the device to learn
 			//System.out.println("Enabling explicit teach-in for 018a781f");
 			//connection.enableTeachIn("018a781f", "A5-02-05", 10000);
@@ -66,12 +72,14 @@ public class TestApp
 
 			// Thread.sleep(11000);
 
-			// teach-in for 40s
-			System.out.println("Enabling smart teach-in for 10s");
+			// ---------- Smart teach-in -------------
+			
+			// teach-in for 2s
+			System.out.println("Enabling smart teach-in for 2s");
 			connection.setSmartTeachIn(true);
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
-			connection.enableTeachIn(20000);
+			connection.enableTeachIn(2000);
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
 
@@ -80,18 +88,27 @@ public class TestApp
 			connection.setSmartTeachIn(false);
 			System.out.println("SmartTeachIn: "
 					+ connection.isSmartTeachInEnabled());
+			
 			Thread.sleep(2000);
 
-			byte all[] ={(byte)0xff, (byte)0xff,(byte)0xff,(byte)0xff};
+			// ----------- actuation test ------------
 			for (int i = 0; i < 10; i++)
 			{
 				System.out.println("Sending command");
+				
+				//get the device by high-level uid
 				EnOceanDevice device = connection.getDevice(25672741);
+				
+				//if the device is not null, toggle its status
 				if (device != null)
 				{
+					//get the device eep
 					D20109 eep = (D20109) device.getEEP();
+					
+					//toggle the status
 					eep.actuatorSetOuput(connection, device.getAddress(),
 							((i % 2) == 0) ? true : false);
+					
 					Thread.sleep(3000);
 				}
 			}
