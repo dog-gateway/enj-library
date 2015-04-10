@@ -39,7 +39,7 @@ public class A50230 extends A502
 
 		// add attributes A50230 has operative range between -40.0 and 62.3
 		// Celsius
-		this.addChannelAttribute(1, new EEP26TemperatureLinear(-40.0, 62.3));
+		this.addChannelAttribute(0, new EEP26TemperatureLinear(-40.0, 62.3));
 	}
 
 	/*

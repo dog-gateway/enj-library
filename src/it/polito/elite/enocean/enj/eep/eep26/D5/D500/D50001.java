@@ -44,7 +44,7 @@ public class D50001 extends D500
 		super();
 
 		// add attributes, basically a switching one
-		this.addChannelAttribute(1, new EEP26Switching(false));
+		this.addChannelAttribute(0, new EEP26Switching(false));
 	}
 
 	/*

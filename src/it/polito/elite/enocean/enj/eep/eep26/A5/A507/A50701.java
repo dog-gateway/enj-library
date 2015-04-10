@@ -48,9 +48,9 @@ public class A50701 extends A507
 		super();
 
 		// add attributes,
-		this.addChannelAttribute(1, new EEP26SupplyVoltage(0.0, 5.0));
-		this.addChannelAttribute(1, new EEP26SupplyVoltageAvailability());
-		this.addChannelAttribute(1, new EEP26PIRStatus());
+		this.addChannelAttribute(0, new EEP26SupplyVoltage(0.0, 5.0));
+		this.addChannelAttribute(0, new EEP26SupplyVoltageAvailability());
+		this.addChannelAttribute(0, new EEP26PIRStatus());
 	}
 
 	/*

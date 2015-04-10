@@ -101,12 +101,12 @@ public abstract class D201 extends EEP
 	{
 		// prepare the data payload to host "desired" values
 		byte dataByte[] = new byte[4];
-		
-		//add the packet rorg
+
+		// add the packet rorg
 		dataByte[0] = D201.rorg.getRorgValue();
-		
+
 		// CMD code (0x01), the first 4 bits are not used
-		dataByte[1] = (byte)0x01;
+		dataByte[1] = (byte) 0x01;
 
 		// Dim value: bit 7 to 5 - IO channel: bit 4 to 0
 		dataByte[2] = (byte) ((dimValue << 5) + ioChannel);
@@ -166,13 +166,16 @@ public abstract class D201 extends EEP
 			D201DimTime dimTime1, D201DimTime dimTime2, D201DimTime dimTime3)
 	{
 		// prepare the data payload to host received configuration values
-		byte dataByte[] = new byte[4];
+		byte dataByte[] = new byte[5];
+
+		// add the packet rorg
+		dataByte[0] = D201.rorg.getRorgValue();
 
 		// CMD code (0x02), the first bit relates to taught-in devices, not
 		// handled at the moment, the other 3 bits are not used, in binary
 		// notation this means 10000002 (1 enable taught-in devices, 000 not
 		// used, 0002 command code
-		dataByte[0] = (byte) ((0x08 << 4) + 0x02); // byte is signed therefore
+		dataByte[1] = (byte) ((0x08 << 4) + 0x02); // byte is signed therefore
 													// 0x82 would require a
 													// cast)
 
@@ -180,17 +183,17 @@ public abstract class D201 extends EEP
 		// bit 6 -> over current shutdown reset
 		// bit 5 -> local control
 		// bit 4 to 0 -> channelId
-		dataByte[1] = (byte) ((overCurrentShutDown << 7)
+		dataByte[2] = (byte) ((overCurrentShutDown << 7)
 				+ (resetOverCurrentShutDown << 6) + (localControl << 5) + channelId);
 
 		// first 4 bits, dim timer 2, remaining 4 bits, dim timer 3
-		dataByte[2] = (byte) ((dimTime2.getCode() << 4) + dimTime3.getCode());
+		dataByte[3] = (byte) ((dimTime2.getCode() << 4) + dimTime3.getCode());
 
 		// bit 7 -> user interface mode
 		// bit 6 -> power failure
 		// bit 4-5 -> default state
 		// bit 0-4 -> dim timer 1
-		dataByte[3] = (byte) ((userInterfaceIndication << 7)
+		dataByte[4] = (byte) ((userInterfaceIndication << 7)
 				+ (powerFailure << 6) + (defaultState << 4) + dimTime1
 				.getCode());
 
@@ -223,15 +226,18 @@ public abstract class D201 extends EEP
 	public void actuatorStatusQuery(EnJConnection connection,
 			byte[] deviceAddress, byte channelId)
 	{
-		byte dataByte[] = new byte[2];
+		byte dataByte[] = new byte[3];
+
+		// add the packet rorg
+		dataByte[0] = D201.rorg.getRorgValue();
 
 		// first byte
 		// bit 0-3 -> command id
-		dataByte[0] = 0x03;
+		dataByte[1] = 0x03;
 
 		// second byte
 		// bit 0-4 -> channel id
-		dataByte[1] = channelId;
+		dataByte[2] = channelId;
 
 		// send the command
 		connection.sendRadioCommand(deviceAddress, dataByte);
@@ -276,36 +282,39 @@ public abstract class D201 extends EEP
 			byte mat, byte mit)
 	{
 		// the array of bytes containing the data payload
-		byte dataByte[] = new byte[6];
+		byte dataByte[] = new byte[7];
+
+		// add the packet rorg
+		dataByte[0] = D201.rorg.getRorgValue();
 
 		// first byte -> lower 4 bits for the command code
-		dataByte[0] = 0x05;
+		dataByte[1] = 0x05;
 
 		// second byte:
 		// first bit -> report measurement
 		// second bit -> reset measurement
 		// third bit -> measurement mode
 		// last 5 bits -> channel id
-		dataByte[1] = (byte) ((reportMeasurement << 7)
+		dataByte[2] = (byte) ((reportMeasurement << 7)
 				+ (resetMeasurement << 6) + (measurementMode << 5) + channelId);
 
 		// third byte
 		// first 4 bits -> measurementDeltaLSB
 		// 5th bit -> not used
 		// last 3 bits -> unit of measure
-		dataByte[2] = (byte) ((measurementDeltaLSB << 4) + (0x00 << 3) + (unit));
+		dataByte[3] = (byte) ((measurementDeltaLSB << 4) + (0x00 << 3) + (unit));
 
 		// fourth byte
 		// 8 bit of measurementDeltaMSB
-		dataByte[3] = measurementDeltaMSB;
+		dataByte[4] = measurementDeltaMSB;
 
 		// fifth byte
 		// maximum time between subsequent actuator messages
-		dataByte[4] = mat;
+		dataByte[5] = mat;
 
 		// sixth byte
 		// minimum time between subsequent actuator messages
-		dataByte[5] = mit;
+		dataByte[6] = mit;
 
 		// send the radio packet
 		connection.sendRadioCommand(deviceAddress, dataByte);
@@ -331,16 +340,19 @@ public abstract class D201 extends EEP
 			byte deviceAddress[], byte queryType, byte channelId)
 	{
 		// the array of bytes containing the data payload
-		byte dataByte[] = new byte[2];
+		byte dataByte[] = new byte[3];
+
+		// add the packet rorg
+		dataByte[0] = D201.rorg.getRorgValue();
 
 		// first byte -> lower 4 bits for the command code
-		dataByte[0] = 0x06;
+		dataByte[1] = 0x06;
 
 		// second byte
 		// first 2 bits are not used;
 		// third bit -> query mode (0b0 pEnergy, 0b1 Power)
 		// last 5 bits -> channelId
-		dataByte[1] = (byte) (((0x01 & queryType) << 5) + channelId);
+		dataByte[2] = (byte) (((0x01 & queryType) << 5) + channelId);
 
 		// send the radio packet
 		connection.sendRadioCommand(deviceAddress, dataByte);

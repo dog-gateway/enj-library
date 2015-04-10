@@ -19,6 +19,7 @@ package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltageAvailability;
@@ -54,30 +55,34 @@ public class SimpleDeviceListener implements EnJDeviceListener
 		SimpleMovementListener movementListener = new SimpleMovementListener();
 
 		// handle device types
-		if (device.getEEP().getChannelAttribute(1,
+		if (device.getEEP().getChannelAttribute(0,
 				EEP26RockerSwitch2RockerAction.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(1,
+			device.getEEP().addEEP26AttributeListener(0,
 					EEP26RockerSwitch2RockerAction.NAME,
 					new SimpleRockerSwitchListener());
-		else if (device.getEEP().getChannelAttribute(1,
+		if (device.getEEP().getChannelAttribute(0,
 				EEP26TemperatureLinear.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(1,
+			device.getEEP().addEEP26AttributeListener(0,
 					EEP26TemperatureLinear.NAME,
 					new SimpleTemperatureListener());
-		else if (device.getEEP().getChannelAttribute(1, EEP26Switching.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(1, EEP26Switching.NAME,
+		if (device.getEEP().getChannelAttribute(0, EEP26Switching.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26Switching.NAME,
 					new SimpleContactSwitchListener());
-		else if (device.getEEP().getChannelAttribute(1, EEP26PIRStatus.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(1, EEP26PIRStatus.NAME,
+		if (device.getEEP().getChannelAttribute(0, EEP26PIRStatus.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26PIRStatus.NAME,
 					movementListener);
-		else if (device.getEEP()
-				.getChannelAttribute(1, EEP26SupplyVoltage.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(1,
+		if (device.getEEP()
+				.getChannelAttribute(0, EEP26SupplyVoltage.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0,
 					EEP26SupplyVoltage.NAME, movementListener);
-		else if (device.getEEP().getChannelAttribute(1,
+		if (device.getEEP().getChannelAttribute(0,
 				EEP26SupplyVoltageAvailability.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(1,
+			device.getEEP().addEEP26AttributeListener(0,
 					EEP26SupplyVoltageAvailability.NAME, movementListener);
+		if (device.getEEP().getChannelAttribute(0,
+				EEP26PowerMeasurement.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0,
+					EEP26PowerMeasurement.NAME, new SimplePowerListener());
 	}
 
 	/*

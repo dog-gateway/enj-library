@@ -19,6 +19,7 @@ package it.polito.elite.enocean.test;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
+import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D201UnitOfMeasure;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 
@@ -92,19 +93,25 @@ public class TestApp
 			Thread.sleep(2000);
 
 			// ----------- actuation test ------------
+			
+			//get the device by high-level uid
+			EnOceanDevice device = connection.getDevice(25672741);
+			
+			//get the device eep
+			D20109 eep = (D20109) device.getEEP();
+			
+			eep.actuatorSetMeasurement(connection, device.getAddress(), true, true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
+			
 			for (int i = 0; i < 10; i++)
 			{
 				System.out.println("Sending command");
 				
-				//get the device by high-level uid
-				EnOceanDevice device = connection.getDevice(25672741);
+				
 				
 				//if the device is not null, toggle its status
 				if (device != null)
 				{
-					//get the device eep
-					D20109 eep = (D20109) device.getEEP();
-					
+								
 					//toggle the status
 					eep.actuatorSetOuput(connection, device.getAddress(),
 							((i % 2) == 0) ? true : false);

@@ -38,7 +38,7 @@ public class A5020B extends A502
 		super();
 
 		// add attributes A5020B has operative range between 60 and 100 Celsius
-		this.addChannelAttribute(1, new EEP26TemperatureLinear(60.0, 100.0));
+		this.addChannelAttribute(0, new EEP26TemperatureLinear(60.0, 100.0));
 	}
 
 	/*

@@ -38,7 +38,7 @@ public class A50205 extends A502
 		super();
 
 		// add attributes A50205 has operative range between 0 and 40 Celsius
-		this.addChannelAttribute(1, new EEP26TemperatureLinear(0.0, 40.0));
+		this.addChannelAttribute(0, new EEP26TemperatureLinear(0.0, 40.0));
 	}
 
 	/*

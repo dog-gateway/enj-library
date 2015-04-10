@@ -39,7 +39,7 @@ public class A5021A extends A502
 
 		// add attributes A5021A has operative range between 40.0 and 120.0
 		// Celsius
-		this.addChannelAttribute(1, new EEP26TemperatureLinear(40.0, 120.0));
+		this.addChannelAttribute(0, new EEP26TemperatureLinear(40.0, 120.0));
 	}
 
 	/*

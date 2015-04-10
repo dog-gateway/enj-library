@@ -70,15 +70,15 @@ public class D20109 extends D201
 		super();
 
 		// add the supported functions
-		this.addChannelAttribute(1, new EEP26Switching());
-		this.addChannelAttribute(1, new EEP26DimLevel());
-		this.addChannelAttribute(1, new EEP26LocalControl());
-		this.addChannelAttribute(1, new EEP26OverCurrentShutdownReset());
-		this.addChannelAttribute(1, new EEP26OverCurrentSwitchOff());
-		this.addChannelAttribute(1, new EEP26EnergyMeasurement());
-		this.addChannelAttribute(1, new EEP26PowerMeasurement());
-		this.addChannelAttribute(1, new EEP26DefaultState());
-		this.addChannelAttribute(1, new EEP26ErrorLevel());
+		this.addChannelAttribute(0, new EEP26Switching());
+		this.addChannelAttribute(0, new EEP26DimLevel());
+		this.addChannelAttribute(0, new EEP26LocalControl());
+		this.addChannelAttribute(0, new EEP26OverCurrentShutdownReset());
+		this.addChannelAttribute(0, new EEP26OverCurrentSwitchOff());
+		this.addChannelAttribute(0, new EEP26EnergyMeasurement());
+		this.addChannelAttribute(0, new EEP26PowerMeasurement());
+		this.addChannelAttribute(0, new EEP26DefaultState());
+		this.addChannelAttribute(0, new EEP26ErrorLevel());
 	}
 
 	// execution commands

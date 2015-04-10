@@ -114,7 +114,7 @@ public class D201ActuatorMeasurementResponse
 	{
 		ByteBuffer buffer = ByteBuffer.wrap(measure);
 
-		return buffer.getDouble();
+		return (double)buffer.getInt();
 	}
 
 	/**
