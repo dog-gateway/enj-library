@@ -1,5 +1,7 @@
 package it.polito.elite.enocean.enj.eep;
 
+import it.polito.elite.enocean.enj.util.ByteUtils;
+
 import java.io.Serializable;
 
 public class EEPIdentifier implements Serializable
@@ -84,6 +86,17 @@ public class EEPIdentifier implements Serializable
 		this.type = type;
 	}
 
+	/**
+	 * Returns the EEPIdentifier in for of an EEP identifier string with the dash notation
+	 * @return
+	 */
+	public String asEEPString()
+	{
+		return ByteUtils.toHexString(this.rorg.getRorgValue()).substring(2) + "-"
+				+ ByteUtils.toHexString(this.function).substring(2) + "-"
+				+ ByteUtils.toHexString(this.type).substring(2);
+	}
+
 	public static EEPIdentifier parse(String eepIdentifierAsString)
 	{
 		EEPIdentifier identifier = null;
@@ -94,7 +107,7 @@ public class EEPIdentifier implements Serializable
 
 		// trim leading and trailing spaces
 		eepIdentifierAsString = eepIdentifierAsString.trim();
-		
+
 		// check the right lenght
 		if ((eepIdentifierAsString.length() == 6)
 				|| (eepIdentifierAsString.length() == 4))
