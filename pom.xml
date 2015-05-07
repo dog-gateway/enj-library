@@ -39,7 +39,8 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Import-Package>!org.junit.*, !org.reflections.*,!it.polito.elite.enocean.*,*</Import-Package>
+						<Import-Package>!org.junit.*,
+							!org.reflections.*,!it.polito.elite.enocean.*,*</Import-Package>
 						<Export-Package>it.polito.elite.enocean.enj.*,
 							it.polito.elite.enocean.protocol.*</Export-Package>
 						<Private-Package>it.polito.elite.enocean.test</Private-Package>
@@ -61,7 +62,33 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>copy-dependencies-jar</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>it.polito.elite.enocean.test.TestApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
