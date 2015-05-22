@@ -158,11 +158,11 @@ public class TestApp
 		connection.setSmartTeachIn(true);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
-		connection.enableTeachIn(2000);
+		connection.enableTeachIn(12000);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
 
-		Thread.sleep(2000);
+		Thread.sleep(12000);
 
 		connection.setSmartTeachIn(false);
 		System.out.println("SmartTeachIn: "
@@ -173,7 +173,7 @@ public class TestApp
 		// ----------- actuation test ------------
 
 		// get the device by high-level uid
-		EnOceanDevice device = connection.getDevice(25672741);
+		EnOceanDevice device = connection.getDevice(25673502);
 
 		// check not null
 		if (device != null)

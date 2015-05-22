@@ -35,6 +35,9 @@ public class F60201 extends F602
 
 	// the type definition
 	public static final byte type = (byte) 0x01;
+	
+	public static final int CHANNEL_1 = 0;
+	public static final int CHANNEL_2 = 1;
 
 	/**
 	 * 
@@ -44,10 +47,10 @@ public class F60201 extends F602
 		super();
 
 		// add attributes
+		this.addChannelAttribute(0, new EEP26RockerSwitch2RockerAction());
 		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerAction());
-		this.addChannelAttribute(2, new EEP26RockerSwitch2RockerAction());
-		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerButtonCount());
-		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerEnergyBow());
+		this.addChannelAttribute(0, new EEP26RockerSwitch2RockerButtonCount());
+		this.addChannelAttribute(0, new EEP26RockerSwitch2RockerEnergyBow());
 	}
 
 	@Override
@@ -78,13 +81,13 @@ public class F60201 extends F602
 				if (message.isActionMessage())
 				{
 					// update the rocker switch attribute
-					// shortcut used here: channel1 = action1, channel2 =
+					// shortcut used here: channel0 = action1, channel1 =
 					// action2
 					EEP26RockerSwitch2RockerAction rockerSwitchAttribute1 = (EEP26RockerSwitch2RockerAction) this
-							.getChannelAttribute(1,
+							.getChannelAttribute(F60201.CHANNEL_1,
 									EEP26RockerSwitch2RockerAction.NAME);
 					EEP26RockerSwitch2RockerAction rockerSwitchAttribute2 = (EEP26RockerSwitch2RockerAction) this
-							.getChannelAttribute(1,
+							.getChannelAttribute(F60201.CHANNEL_2,
 									EEP26RockerSwitch2RockerAction.NAME);
 
 					// if not null update in any case
@@ -106,7 +109,7 @@ public class F60201 extends F602
 
 						// build the dispatching task
 						EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-								rockerSwitchAttribute1, 1);
+								rockerSwitchAttribute1, F60201.CHANNEL_1);
 
 						// submit the task for execution
 						this.attributeNotificationWorker.submit(dispatcherTask);
@@ -132,7 +135,7 @@ public class F60201 extends F602
 
 						// build the dispatching task
 						EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-								rockerSwitchAttribute2, 2);
+								rockerSwitchAttribute2, F60201.CHANNEL_2);
 
 						// submit the task for execution
 						this.attributeNotificationWorker.submit(dispatcherTask);
@@ -143,7 +146,7 @@ public class F60201 extends F602
 				{
 					// get the number of buttons attribute
 					EEP26RockerSwitch2RockerButtonCount btnCountAttribute = (EEP26RockerSwitch2RockerButtonCount) this
-							.getChannelAttribute(1,
+							.getChannelAttribute(F60201.CHANNEL_1,
 									EEP26RockerSwitch2RockerButtonCount.NAME);
 
 					// check not null
@@ -155,7 +158,7 @@ public class F60201 extends F602
 
 						// build the dispatching task
 						EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-								btnCountAttribute, 1);
+								btnCountAttribute, F60201.CHANNEL_1);
 
 						// submit the task for execution
 						this.attributeNotificationWorker.submit(dispatcherTask);
@@ -164,7 +167,7 @@ public class F60201 extends F602
 
 				// handle energy bow (common to all messages)
 				EEP26RockerSwitch2RockerEnergyBow energyBowAttribute = (EEP26RockerSwitch2RockerEnergyBow) this
-						.getChannelAttribute(1,
+						.getChannelAttribute(F60201.CHANNEL_1,
 								EEP26RockerSwitch2RockerEnergyBow.NAME);
 
 				// check not null
@@ -175,7 +178,7 @@ public class F60201 extends F602
 
 					// build the dispatching task
 					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-							energyBowAttribute, 1);
+							energyBowAttribute, F60201.CHANNEL_1);
 
 					// submit the task for execution
 					this.attributeNotificationWorker.submit(dispatcherTask);

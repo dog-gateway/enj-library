@@ -132,7 +132,7 @@ public class EnJPersistentDeviceSet implements Serializable
 				{
 					// write on a temporary file and then replace the existing
 					// one
-					fileToWrite = File.createTempFile(filename, "tmp");
+					fileToWrite = File.createTempFile("device_set", "tmp", persistentSet.getParentFile());
 					replace = true;
 				}
 
