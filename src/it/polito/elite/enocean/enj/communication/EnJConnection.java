@@ -45,6 +45,7 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.response.Response;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
@@ -407,6 +408,17 @@ public class EnJConnection implements PacketListener
 		{
 			this.addNewDevice(deviceAddress, null, eepId);
 		}
+	}
+	
+	
+
+	/**
+	 * Returns the set of currently known devices
+	 * @return the knownDevices
+	 */
+	public Collection<EnOceanDevice> getKnownDevices()
+	{
+		return knownDevices.listAll();
 	}
 
 	/**
