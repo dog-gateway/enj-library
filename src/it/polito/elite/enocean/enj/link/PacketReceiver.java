@@ -198,7 +198,7 @@ public class PacketReceiver implements SerialPortEventListener
 						this.packetLenght = -1;
 					}
 
-					// debug, TODO use a logging system here
+					// debug
 					this.logger.debug(""
 							+ String.format("%02x", readedByteValue));
 
@@ -207,8 +207,8 @@ public class PacketReceiver implements SerialPortEventListener
 		}
 		catch (IOException e)
 		{
-			// TODO use a logging system here
-			e.printStackTrace();
+			//log the error
+			this.logger.error("Unable to decode the received serial data. ",e);
 		}
 	}
 

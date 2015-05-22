@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.test;
+package it.polito.elite.enocean.examples;
 
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;

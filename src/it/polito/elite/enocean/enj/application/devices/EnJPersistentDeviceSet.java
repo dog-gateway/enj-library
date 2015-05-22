@@ -30,6 +30,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Set of EnOcean devices, backed on an {@link Hashtable}. It provides
  * additional fast access to entries by high-level and low-level ids and
@@ -43,6 +46,8 @@ import java.util.Hashtable;
  */
 public class EnJPersistentDeviceSet implements Serializable
 {
+	// the class logger
+	private Logger logger;
 
 	/**
 	 * The serial version identifier for handling serialization /
@@ -62,6 +67,9 @@ public class EnJPersistentDeviceSet implements Serializable
 	 */
 	public EnJPersistentDeviceSet()
 	{
+		//initialize the logger
+		this.logger = LoggerFactory.getLogger(EnJPersistentDeviceSet.class);
+		
 		// builds the backing hash table
 		this.theSet = new Hashtable<>();
 
@@ -121,12 +129,12 @@ public class EnJPersistentDeviceSet implements Serializable
 				{
 					// write on a temporary file and then replace the existing
 					// one
-					fileToWrite = File.createTempFile(filename, null);
+					fileToWrite = File.createTempFile(filename, "tmp");
 					replace = true;
 				}
 
 				// build a File output stream on the file to write, be it a
-				// temporary file ore the final one.
+				// temporary file or the final one.
 				FileOutputStream fileOut = new FileOutputStream(fileToWrite);
 
 				// build an object output stream to serialize this object on
@@ -148,9 +156,9 @@ public class EnJPersistentDeviceSet implements Serializable
 					persistentSet.delete();
 					fileToWrite.renameTo(persistentSet);
 				}
+
 				// log debug
-				// TODO add logging system here
-				System.out.println("Saved persisten device set");
+				this.logger.info("Saved persisten device set");
 			}
 			catch (IOException i)
 			{
@@ -196,7 +204,8 @@ public class EnJPersistentDeviceSet implements Serializable
 			}
 			catch (ClassNotFoundException | IOException e)
 			{
-				e.printStackTrace();
+				//log the error
+				this.logger.error("Unable to restore the device persistent set.",e);
 			}
 		}
 	}
@@ -329,7 +338,7 @@ public class EnJPersistentDeviceSet implements Serializable
 
 		return removedItems;
 	}
-	
+
 	/**
 	 * Provides a collection of all devices currently stored in the set.
 	 * 

@@ -15,29 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.test;
+package it.polito.elite.enocean.examples;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 
 /**
  * @author bonino
  *
  */
-public class SimpleRockerSwitchListener implements EEPAttributeChangeListener
+public class SimpleContactSwitchListener implements EEPAttributeChangeListener
 {
 	private Logger logger;
 
 	/**
 	 * 
 	 */
-	public SimpleRockerSwitchListener()
+	public SimpleContactSwitchListener()
 	{
-		this.logger = LoggerFactory.getLogger(SimpleRockerSwitchListener.class);
+		this.logger = LoggerFactory.getLogger(SimpleContactSwitchListener.class);
 	}
 
 	/* (non-Javadoc)
@@ -46,16 +46,10 @@ public class SimpleRockerSwitchListener implements EEPAttributeChangeListener
 	@Override
 	public void handleAttributeChange(int channelId, EEPAttribute<?> attribute)
 	{
-		//cast
-		if(attribute instanceof EEP26RockerSwitch2RockerAction)
+		//check attribute type
+		if(attribute instanceof EEP26Switching)
 		{
-			EEP26RockerSwitch2RockerAction action = (EEP26RockerSwitch2RockerAction)attribute;
-			boolean a1 = action.getButtonValue(EEP26RockerSwitch2RockerAction.AI);
-			boolean a0 = action.getButtonValue(EEP26RockerSwitch2RockerAction.AO);
-			boolean b1 = action.getButtonValue(EEP26RockerSwitch2RockerAction.BI);
-			boolean b0 = action.getButtonValue(EEP26RockerSwitch2RockerAction.BO);
-			
-			this.logger.info("A0: "+a0+" A1: "+a1+" B0: "+b0+" B1: "+b1);
+			this.logger.info("Received contact detection, value:"+attribute.getValue());
 		}
 
 	}
