@@ -63,8 +63,8 @@ public class TestApp
 						"The file on which persisting devices", "-m mode",
 						"the testmode, either [interactive,demo], default is demo" },
 				"java TestApp", args);
-		
-		//create an instance of TestApp
+
+		// create an instance of TestApp
 		TestApp app = new TestApp();
 
 		// check mandatory args
@@ -102,21 +102,22 @@ public class TestApp
 					if (optMode.equalsIgnoreCase(TestApp.INTERACTIVE_MODE))
 						mode = TestApp.INTERACTIVE_MODE;
 
-				//handle plain old demo mode
-				//TODO: generalize the demo mode to work in generic usage scenarios
+				// handle plain old demo mode
+				// TODO: generalize the demo mode to work in generic usage
+				// scenarios
 				if (mode.equals(TestApp.DEMO_MODE))
 				{
 					app.performDemo(connection);
 				}
 				else if (mode.equals(TestApp.INTERACTIVE_MODE))
 				{
-					//handle the interactive mode
+					// handle the interactive mode
 					app.interactiveDemo(connection);
-					
-					//disconnect from the adapter
+
+					// disconnect from the adapter
 					linkLayer.disconnect();
-			
-					//stop the application
+
+					// stop the application
 					System.exit(0);
 				}
 
@@ -133,8 +134,9 @@ public class TestApp
 			opt.usage(System.out, "TestApp");
 		}
 	}
-	
-	public void performDemo(EnJConnection connection) throws InterruptedException
+
+	public void performDemo(EnJConnection connection)
+			throws InterruptedException
 	{
 		// ---------- Explicit teach-in ---------
 		// the device to learn
@@ -173,74 +175,83 @@ public class TestApp
 		// get the device by high-level uid
 		EnOceanDevice device = connection.getDevice(25672741);
 
-		// get the device eep
-		D20109 eep = (D20109) device.getEEP();
-
-		eep.actuatorSetMeasurement(connection, device.getAddress(),
-				true, true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
-
-		for (int i = 0; i < 10; i++)
+		// check not null
+		if (device != null)
 		{
-			System.out.println("Sending command");
 
-			// if the device is not null, toggle its status
-			if (device != null)
+			// get the device eep
+			D20109 eep = (D20109) device.getEEP();
+
+			eep.actuatorSetMeasurement(connection, device.getAddress(), true,
+					true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
+
+			for (int i = 0; i < 10; i++)
 			{
+				System.out.println("Sending command");
 
-				// toggle the status
-				eep.actuatorSetOuput(connection, device
-						.getAddress(), ((i % 2) == 0) ? true
-						: false);
+				// if the device is not null, toggle its status
+				if (device != null)
+				{
 
-				Thread.sleep(3000);
+					// toggle the status
+					eep.actuatorSetOuput(connection, device.getAddress(),
+							((i % 2) == 0) ? true : false);
+
+					Thread.sleep(3000);
+				}
 			}
 		}
 	}
-	
-	public void interactiveDemo(EnJConnection connection) throws IOException, InterruptedException
+
+	public void interactiveDemo(EnJConnection connection) throws IOException,
+			InterruptedException
 	{
-		//handle interactive mode
-		
-		//prompt:
+		// handle interactive mode
+
+		// prompt:
 		String prompt = "enj-interactive cmd > ";
-		
-		//the string holding the command line
+
+		// the string holding the command line
 		String cmdLine = "";
-		
-		//prepare the input reader
-		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
-		
-		//the commaand cycle
-		while(!(cmdLine.equalsIgnoreCase("exit")))
+
+		// prepare the input reader
+		BufferedReader bfr = new BufferedReader(
+				new InputStreamReader(System.in));
+
+		// the commaand cycle
+		while (!(cmdLine.equalsIgnoreCase("exit")))
 		{
-			//print the first prompt
+			// print the first prompt
 			System.out.print(prompt);
-			
-			//read the line
+
+			// read the line
 			cmdLine = bfr.readLine();
-			
-			//switch commands
-			switch(cmdLine)
+
+			// switch commands
+			switch (cmdLine)
 			{
 				case TestApp.HELP:
 				{
-					//print the command help
-					System.out.println(TestApp.class.getSimpleName()+" command help:");
-					
-					//help command
-					System.out.println("help - provides information about available commands");
-					
-					//demo
-					System.out.println("demo - execute the hardcoded demo mode, for internal usage only");
-					
+					// print the command help
+					System.out.println(TestApp.class.getSimpleName()
+							+ " command help:");
+
+					// help command
+					System.out
+							.println("help - provides information about available commands");
+
+					// demo
+					System.out
+							.println("demo - execute the hardcoded demo mode, for internal usage only");
+
 					break;
 				}
-				
+
 				case TestApp.DEMO:
 				{
-					//perform the demo
+					// perform the demo
 					this.performDemo(connection);
-					
+
 					break;
 				}
 			}

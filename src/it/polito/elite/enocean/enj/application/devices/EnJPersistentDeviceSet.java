@@ -67,9 +67,9 @@ public class EnJPersistentDeviceSet implements Serializable
 	 */
 	public EnJPersistentDeviceSet()
 	{
-		//initialize the logger
+		// initialize the logger
 		this.logger = LoggerFactory.getLogger(EnJPersistentDeviceSet.class);
-		
+
 		// builds the backing hash table
 		this.theSet = new Hashtable<>();
 
@@ -79,6 +79,9 @@ public class EnJPersistentDeviceSet implements Serializable
 
 	public EnJPersistentDeviceSet(String filename, boolean autoSave)
 	{
+		// initialize the logger
+		this.logger = LoggerFactory.getLogger(EnJPersistentDeviceSet.class);
+		
 		// builds the backing hash table
 		this.theSet = new Hashtable<>();
 
@@ -204,8 +207,9 @@ public class EnJPersistentDeviceSet implements Serializable
 			}
 			catch (ClassNotFoundException | IOException e)
 			{
-				//log the error
-				this.logger.error("Unable to restore the device persistent set.",e);
+				// log the error
+				this.logger.error(
+						"Unable to restore the device persistent set.", e);
 			}
 		}
 	}

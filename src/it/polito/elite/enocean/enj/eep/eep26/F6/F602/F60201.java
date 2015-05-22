@@ -181,6 +181,9 @@ public class F60201 extends F602
 					this.attributeNotificationWorker.submit(dispatcherTask);
 
 				}
+				
+				//if comes here everything is fine
+				success = true;
 			}
 
 		}
