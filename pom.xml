@@ -1,8 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>EnOceanSP3Library</groupId>
-	<artifactId>EnOceanSP3Library</artifactId>
+	<artifactId>enocean.library</artifactId>
 	<packaging>bundle</packaging>
 	<name>EnJ-Library</name>
 	<build>
@@ -40,11 +39,11 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<Import-Package>!org.junit.*,
-							!org.reflections.*,!it.polito.elite.enocean.*,*</Import-Package>
+							!org.reflections.*,!it.polito.elite.enocean.*,*,com.google.common.base;version="14.0", com.google.common.collect;version="14.0"</Import-Package>
 						<Export-Package>it.polito.elite.enocean.enj.*,
 							it.polito.elite.enocean.protocol.*</Export-Package>
 						<Private-Package>it.polito.elite.enocean.test</Private-Package>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
 						<Embed-Dependency>org.reflections.*;scope=compile|runtime;inline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
@@ -115,4 +114,5 @@
 		</dependency>
 	</dependencies>
 	<version>0.9.0</version>
+	<groupId>it.polito.elite</groupId>
 </project>

@@ -6,13 +6,13 @@ Export-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  enocean.protocol.serial.v3.network.packet",it.polito.elite.enocean.pr
  otocol.serial.v3.network.packet.radiosubtel;uses:="it.polito.elite.en
  ocean.protocol.serial.v3.network.packet",it.polito.elite.enocean.enj.
- communication;uses:="it.polito.elite.enocean.protocol.serial.v3.netwo
- rk.packet.response,it.polito.elite.enocean.protocol.serial.v3.network
- .packet,it.polito.elite.enocean.enj.model,it.polito.elite.enocean.pro
+ communication;uses:="it.polito.elite.enocean.enj.model,it.polito.elit
+ e.enocean.protocol.serial.v3.network.packet,it.polito.elite.enocean.p
+ rotocol.serial.v3.network.packet.response,it.polito.elite.enocean.pro
  tocol.serial.v3.network.packet.radio,it.polito.elite.enocean.enj.link
- ,it.polito.elite.enocean.enj.application.devices,org.slf4j,it.polito.
- elite.enocean.enj.eep.eep26.D5.D500,it.polito.elite.enocean.enj.eep.e
- ep26.telegram,it.polito.elite.enocean.enj.eep,it.polito.elite.enocean
+ ,org.slf4j,it.polito.elite.enocean.enj.application.devices,it.polito.
+ elite.enocean.enj.eep.eep26.D5.D500,it.polito.elite.enocean.enj.eep,i
+ t.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.elite.enocean
  .enj.eep.eep26.F6.F602,it.polito.elite.enocean.enj.communication.timi
  ng.tasks,it.polito.elite.enocean.enj.util,it.polito.elite.enocean.pro
  tocol.serial.v3.network.packet.event",it.polito.elite.enocean.protoco
@@ -45,13 +45,13 @@ Export-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  .enocean.enj.eep.eep26.D2.D201",it.polito.elite.enocean.enj.eep.eep26
  .D2.D201;uses:="it.polito.elite.enocean.enj.communication,it.polito.e
  lite.enocean.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep
- .eep26.telegram,it.polito.elite.enocean.enj.eep",it.polito.elite.enoc
+ ,it.polito.elite.enocean.enj.eep.eep26.telegram",it.polito.elite.enoc
  ean.enj.link.serial;uses:="gnu.io,org.slf4j",it.polito.elite.enocean.
  protocol.serial.v3.network.packet.remotemancommand;uses:="it.polito.e
  lite.enocean.protocol.serial.v3.network.packet",it.polito.elite.enoce
  an.enj.eep.eep26.A5.A502;uses:="it.polito.elite.enocean.enj.eep.eep26
- .attributes,it.polito.elite.enocean.enj.eep,it.polito.elite.enocean.e
- nj.eep.eep26.telegram",it.polito.elite.enocean.enj.application,it.pol
+ .attributes,it.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.
+ elite.enocean.enj.eep",it.polito.elite.enocean.enj.application,it.pol
  ito.elite.enocean.enj.eep.eep26.F6.F602;uses:="it.polito.elite.enocea
  n.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep.eep26.tele
  gram,it.polito.elite.enocean.enj.eep",it.polito.elite.enocean.protoco
@@ -100,11 +100,12 @@ Created-By: Apache Maven Bundle Plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Build-Jdk: 1.7.0_79
 Bundle-Version: 0.9.0
-Bnd-LastModified: 1434000372490
+Bnd-LastModified: 1434003748773
 Bundle-ManifestVersion: 2
 Embed-StripGroup: true
-Import-Package: gnu.io,org.slf4j;version="1.7"
+Import-Package: com.google.common.base;version="14.0",com.google.commo
+ n.collect;version="14.0",gnu.io,org.slf4j;version="1.7"
 Embed-Dependency: org.reflections.*;scope=compile|runtime;inline=false
-Bundle-SymbolicName: EnOceanSP3Library
+Bundle-SymbolicName: it.polito.elite.enocean.library
 Main-Class: it.polito.elite.enocean.examples.TestApp
 
