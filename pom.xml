@@ -85,7 +85,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>it.polito.elite.enocean.test.TestApp</mainClass>
+							<mainClass>it.polito.elite.enocean.examples.TestApp</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
