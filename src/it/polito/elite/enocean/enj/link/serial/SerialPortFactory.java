@@ -17,8 +17,7 @@
  */
 package it.polito.elite.enocean.enj.link.serial;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -57,7 +56,7 @@ public class SerialPortFactory
 		// the serial port reference, initially null
 		SerialPort serialPort = null;
 
-		Logger logger = LoggerFactory.getLogger(SerialPortFactory.class);
+		Logger logger = Logger.getLogger(SerialPortFactory.class.getName());
 		
 		try
 		{
@@ -72,7 +71,7 @@ public class SerialPortFactory
 			// check that the port exists and is free
 			if (portIdentifier.isCurrentlyOwned())
 			{
-				logger.error("Error: Port is currently in use");
+				logger.severe("Error: Port is currently in use");
 			}
 			else
 			{
@@ -99,14 +98,14 @@ public class SerialPortFactory
 				}
 				else
 				{
-					logger.error("Error while opening and setting up the serial port.");
+					logger.severe("Error while opening and setting up the serial port.");
 				}
 			}
 		}
 		catch (UnsupportedCommOperationException | NoSuchPortException
 				| PortInUseException e)
 		{
-			logger.error("Exception while opening the serial port for communication:\n ",e);
+			logger.severe("Exception while opening the serial port for communication:\n "+e);
 			//rethrow
 			throw e;
 		}

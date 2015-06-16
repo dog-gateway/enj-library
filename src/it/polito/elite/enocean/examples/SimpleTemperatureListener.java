@@ -17,8 +17,8 @@
  */
 package it.polito.elite.enocean.examples;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.logging.Logger;
 
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
@@ -37,7 +37,7 @@ public class SimpleTemperatureListener implements EEPAttributeChangeListener
 	 */
 	public SimpleTemperatureListener()
 	{
-		this.logger = LoggerFactory.getLogger(SimpleTemperatureListener.class);
+		this.logger = Logger.getLogger(SimpleTemperatureListener.class.getName());
 	}
 
 	/*

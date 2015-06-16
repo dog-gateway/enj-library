@@ -28,9 +28,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * A class implementing the receiver tier of the Java EnOcean Serial Protocol
@@ -94,7 +94,7 @@ public class PacketReceiver implements SerialPortEventListener
 		super();
 
 		// initialize the logger
-		this.logger = LoggerFactory.getLogger(PacketReceiver.class);
+		this.logger = Logger.getLogger(PacketReceiver.class.getName());
 
 		// store the serial port
 		this.serialPort = serialPort;
@@ -152,7 +152,7 @@ public class PacketReceiver implements SerialPortEventListener
 					{
 
 						// parsed packet
-						this.logger.debug("Detected new packet");
+						this.logger.fine("Detected new packet");
 
 						// clear the buffer
 						this.buffer.clear();
@@ -199,7 +199,7 @@ public class PacketReceiver implements SerialPortEventListener
 					}
 
 					// debug
-					this.logger.debug(""
+					this.logger.fine(""
 							+ String.format("%02x", readedByteValue));
 
 				}
@@ -208,7 +208,7 @@ public class PacketReceiver implements SerialPortEventListener
 		catch (IOException e)
 		{
 			//log the error
-			this.logger.error("Unable to decode the received serial data. ",e);
+			this.logger.warning("Unable to decode the received serial data. "+e);
 		}
 	}
 

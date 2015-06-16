@@ -24,9 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * A class implementing the transmitter tier of the Java EnOcean Serial Protocol
@@ -92,7 +90,7 @@ public class PacketTransmitter implements Runnable
 	{
 		super();
 		
-		this.logger = LoggerFactory.getLogger(PacketTransmitter.class);
+		this.logger = Logger.getLogger(PacketTransmitter.class.getName());
 
 		// store a reference to the high priority transmission queue
 		this.highPriorityTxQueue = highPriorityTxQueue;

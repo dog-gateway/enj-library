@@ -17,8 +17,8 @@
  */
 package it.polito.elite.enocean.examples;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.logging.Logger;
 
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
@@ -40,7 +40,7 @@ public class SimpleMovementListener implements EEPAttributeChangeListener
 	 */
 	public SimpleMovementListener()
 	{
-		this.logger = LoggerFactory.getLogger(SimpleMovementListener.class);
+		this.logger = Logger.getLogger(SimpleMovementListener.class.getName());
 	}
 
 	/* (non-Javadoc)

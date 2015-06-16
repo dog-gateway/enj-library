@@ -17,12 +17,11 @@
  */
 package it.polito.elite.enocean.examples;
 
+import java.util.logging.Logger;
+
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author bonino
@@ -37,7 +36,7 @@ public class SimplePowerListener implements EEPAttributeChangeListener
 	 */
 	public SimplePowerListener()
 	{
-		this.logger = LoggerFactory.getLogger(SimplePowerListener.class);
+		this.logger = Logger.getLogger(SimplePowerListener.class.getName());
 	}
 
 	/*

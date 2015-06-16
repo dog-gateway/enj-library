@@ -51,9 +51,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * The EnOcean for Java (EnJ) connection layer. It decouples link-level
@@ -156,7 +154,7 @@ public class EnJConnection implements PacketListener
 			String peristentDeviceStorageFilename, EnJDeviceListener listener)
 	{
 		// initialize the logger
-		this.logger = LoggerFactory.getLogger(EnJConnection.class);
+		this.logger = Logger.getLogger(EnJConnection.class.getName());
 
 		// initialize the set of device listeners
 		this.deviceListeners = new HashSet<>();
@@ -482,7 +480,7 @@ public class EnJConnection implements PacketListener
 		}
 		catch (Exception e)
 		{
-			this.logger.warn("Error while handling received packet", e);
+			this.logger.warning("Error while handling received packet"+ e);
 		}
 	}
 
@@ -566,7 +564,7 @@ public class EnJConnection implements PacketListener
 						{
 							// log the error
 							this.logger
-									.warn("Profile update for"
+									.warning("Profile update for"
 											+ ByteUtils.toHexString(device
 													.getAddress())
 											+ " was not handled successfully");
@@ -576,7 +574,7 @@ public class EnJConnection implements PacketListener
 					{
 						// log the error
 						this.logger
-								.warn("No suitable EEP found for the given device...");
+								.warning("No suitable EEP found for the given device...");
 					}
 				}
 			}
@@ -753,7 +751,7 @@ public class EnJConnection implements PacketListener
 				{
 					// log not supported
 					this.logger
-							.warn("Neither implicit or explicit learn succeeded; bi-directional teach-in currently not supported for 4BS telegrams.");
+							.warning("Neither implicit or explicit learn succeeded; bi-directional teach-in currently not supported for 4BS telegrams.");
 
 					// log the address
 					String msg = "";
@@ -813,7 +811,7 @@ public class EnJConnection implements PacketListener
 			msg = msg + String.format("%02x", telegram.getAddress()[i]);
 
 		// write the debug information in the log
-		this.logger.debug(msg);
+		this.logger.fine(msg);
 
 		// check if the address of the device and the address
 		// of the telegram match

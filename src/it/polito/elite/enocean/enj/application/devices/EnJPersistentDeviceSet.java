@@ -29,9 +29,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * Set of EnOcean devices, backed on an {@link Hashtable}. It provides
@@ -47,7 +45,7 @@ import org.slf4j.LoggerFactory;
 public class EnJPersistentDeviceSet implements Serializable
 {
 	// the class logger
-	private Logger logger;
+	private volatile Logger logger;
 
 	/**
 	 * The serial version identifier for handling serialization /
@@ -68,7 +66,7 @@ public class EnJPersistentDeviceSet implements Serializable
 	public EnJPersistentDeviceSet()
 	{
 		// initialize the logger
-		this.logger = LoggerFactory.getLogger(EnJPersistentDeviceSet.class);
+		this.logger = Logger.getLogger(EnJPersistentDeviceSet.class.getName());
 
 		// builds the backing hash table
 		this.theSet = new Hashtable<>();
@@ -80,7 +78,7 @@ public class EnJPersistentDeviceSet implements Serializable
 	public EnJPersistentDeviceSet(String filename, boolean autoSave)
 	{
 		// initialize the logger
-		this.logger = LoggerFactory.getLogger(EnJPersistentDeviceSet.class);
+		this.logger = Logger.getLogger(EnJPersistentDeviceSet.class.getName());
 		
 		// builds the backing hash table
 		this.theSet = new Hashtable<>();
@@ -197,8 +195,8 @@ public class EnJPersistentDeviceSet implements Serializable
 
 					// restores in this object
 					this.theSet.clear();
-					this.theSet.putAll(((EnJPersistentDeviceSet) in
-							.readObject()).theSet);
+
+					this.theSet.putAll(((EnJPersistentDeviceSet) in.readObject()).theSet);
 
 					// close the input streams
 					in.close();
@@ -208,8 +206,8 @@ public class EnJPersistentDeviceSet implements Serializable
 			catch (ClassNotFoundException | IOException e)
 			{
 				// log the error
-				this.logger.error(
-						"Unable to restore the device persistent set.", e);
+				this.logger.severe(
+						"Unable to restore the device persistent set.");
 			}
 		}
 	}
