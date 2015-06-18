@@ -83,6 +83,8 @@ public class EnJConnection implements PacketListener
 
 	// the set of device listeners to keep updated about device events
 	private Set<EnJDeviceListener> deviceListeners;
+	
+	private Set<EnJTeachInListener> teachInListeners;
 
 	// the executor service to run device update tasks
 	private ExecutorService deviceUpdateDeliveryExecutor;
@@ -158,6 +160,9 @@ public class EnJConnection implements PacketListener
 
 		// initialize the set of device listeners
 		this.deviceListeners = new HashSet<>();
+		
+		//initialize the set of teach-in listeners
+		this.teachInListeners = new HashSet<>();
 
 		// initialize the update delivery executor
 		this.deviceUpdateDeliveryExecutor = Executors.newCachedThreadPool();
@@ -227,6 +232,32 @@ public class EnJConnection implements PacketListener
 	public boolean removeEnJDeviceListener(EnJDeviceListener listener)
 	{
 		return this.deviceListeners.remove(listener);
+	}
+	
+	/**
+	 * Adds a teach in listener to the set of listeners to be notified about
+	 * teach-in status
+	 * 
+	 * @param listener
+	 *            filename * The {@link EnJDeviceListener} to notify to.
+	 */
+	public void addEnJTeachInListener(EnJTeachInListener listener)
+	{
+		// store the listener in the set of currently active listeners
+		this.teachInListeners.add(listener);
+	}
+
+	/**
+	 * Removes a teach-in listener from the set of listeners to be notified about
+	 * teach-in events.
+	 * 
+	 * @param listener
+	 *            The {@link EnJDeviceListener} to remove.
+	 * @return true if removal was successful, false, otherwise.
+	 */
+	public boolean removeEnJDeviceListener(EnJTeachInListener listener)
+	{
+		return this.teachInListeners.remove(listener);
 	}
 
 	/**
@@ -306,6 +337,10 @@ public class EnJConnection implements PacketListener
 
 			// TODO place logger here
 			this.logger.info("Teach-in enabled");
+			
+			//notify listeners
+			for(EnJTeachInListener listener : this.teachInListeners)
+				listener.teachInEnabled(isSmartTeachInEnabled());
 		}
 	}
 
@@ -336,6 +371,10 @@ public class EnJConnection implements PacketListener
 
 		// TODO place logger here
 		this.logger.info("Teach-in disabled");
+		
+		//notify listeners
+		for(EnJTeachInListener listener : this.teachInListeners)
+			listener.teachInDisabled();
 	}
 
 	/**
