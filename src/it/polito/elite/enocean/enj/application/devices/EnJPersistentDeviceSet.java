@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 public class EnJPersistentDeviceSet implements Serializable
 {
 	// the class logger
-	private volatile Logger logger;
+	private transient volatile Logger logger;
 
 	/**
 	 * The serial version identifier for handling serialization /
