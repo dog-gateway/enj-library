@@ -91,7 +91,7 @@ public abstract class A502 extends EEP
 			A502TemperatureMessage msg = new A502TemperatureMessage(payload);
 			
 			//update the value of the attribute
-			EEP26TemperatureLinear tLinear = (EEP26TemperatureLinear) this.getChannelAttribute(1, EEP26TemperatureLinear.NAME);
+			EEP26TemperatureLinear tLinear = (EEP26TemperatureLinear) this.getChannelAttribute(0, EEP26TemperatureLinear.NAME);
 			
 			//check not null
 			if(tLinear!=null)
@@ -110,6 +110,9 @@ public abstract class A502 extends EEP
 
 					// submit the task for execution
 					this.attributeNotificationWorker.submit(dispatcherTask);
+					
+					//update the success flag
+					success = true;
 				}
 			}
 			
