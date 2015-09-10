@@ -35,6 +35,7 @@ public class D50001 extends D500
 
 	// the type definition
 	public static final byte type = (byte) 0x01;
+	public static int CHANNEL = 0;
 
 	/**
 	 * @param version
@@ -44,7 +45,7 @@ public class D50001 extends D500
 		super();
 
 		// add attributes, basically a switching one
-		this.addChannelAttribute(0, new EEP26Switching(false));
+		this.addChannelAttribute(D50001.CHANNEL, new EEP26Switching(false));
 	}
 
 	/*
@@ -88,14 +89,14 @@ public class D50001 extends D500
 			{
 				// get the attribute
 				EEP26Switching switchingAttribute = (EEP26Switching) this
-						.getChannelAttribute(1, EEP26Switching.NAME);
+						.getChannelAttribute(D50001.CHANNEL, EEP26Switching.NAME);
 
 				// update the attribute value
 				switchingAttribute.setValue(message.isContactClosed());
 
 				// build the dispatching task
 				EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-						switchingAttribute, 1);
+						switchingAttribute, D50001.CHANNEL);
 
 				// submit the task for execution
 				this.attributeNotificationWorker.submit(dispatcherTask);

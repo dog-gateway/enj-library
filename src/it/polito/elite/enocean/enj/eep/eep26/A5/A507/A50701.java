@@ -38,6 +38,7 @@ public class A50701 extends A507
 
 	// the type definition
 	public static final byte type = (byte) 0x01;
+	public static int CHANNEL = 0;
 
 	/**
 	 * @param version
@@ -48,9 +49,9 @@ public class A50701 extends A507
 		super();
 
 		// add attributes,
-		this.addChannelAttribute(0, new EEP26SupplyVoltage(0.0, 5.0));
-		this.addChannelAttribute(0, new EEP26SupplyVoltageAvailability());
-		this.addChannelAttribute(0, new EEP26PIRStatus());
+		this.addChannelAttribute(A50701.CHANNEL, new EEP26SupplyVoltage(0.0, 5.0));
+		this.addChannelAttribute(A50701.CHANNEL, new EEP26SupplyVoltageAvailability());
+		this.addChannelAttribute(A50701.CHANNEL, new EEP26PIRStatus());
 	}
 
 	/*
@@ -98,16 +99,16 @@ public class A50701 extends A507
 
 				// supply voltage
 				EEP26SupplyVoltage supplyVoltage = (EEP26SupplyVoltage) this
-						.getChannelAttribute(1, EEP26SupplyVoltage.NAME);
+						.getChannelAttribute(A50701.CHANNEL, EEP26SupplyVoltage.NAME);
 
 				// supply voltage availability
 				EEP26SupplyVoltageAvailability supplyVoltageAvailability = (EEP26SupplyVoltageAvailability) this
-						.getChannelAttribute(1,
+						.getChannelAttribute(A50701.CHANNEL,
 								EEP26SupplyVoltageAvailability.NAME);
 
 				// occupancy status
 				EEP26PIRStatus pirStatus = (EEP26PIRStatus) this
-						.getChannelAttribute(1, EEP26PIRStatus.NAME);
+						.getChannelAttribute(A50701.CHANNEL, EEP26PIRStatus.NAME);
 
 				// set the attribute values
 				if (supplyVoltageAvailability != null)
@@ -148,7 +149,7 @@ public class A50701 extends A507
 				{
 					// build the dispatching task
 					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-							changedAttributes, 1);
+							changedAttributes, A50701.CHANNEL);
 
 					// submit the task for execution
 					this.attributeNotificationWorker.submit(dispatcherTask);
