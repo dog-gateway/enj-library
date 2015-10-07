@@ -50,7 +50,7 @@ public class EEP26PowerMeasurement extends EEPAttribute<Double>
 
 		// default value is 0
 		this.value = new Double(0);
-		this.unit = "Wh";
+		this.unit = EEP26PowerMeasurement.W;
 	}
 
 	/**
@@ -74,14 +74,14 @@ public class EEP26PowerMeasurement extends EEPAttribute<Double>
 		// set the given unit if not null and not empty
 		if ((unit != null)
 				&& (!unit.isEmpty())
-				&& ((unit.equalsIgnoreCase("W")) || (unit
-						.equalsIgnoreCase("kW"))))
+				&& ((unit.equalsIgnoreCase(EEP26PowerMeasurement.W)) || (unit
+						.equalsIgnoreCase(EEP26PowerMeasurement.KW))))
 		{
 			this.unit = unit;
 		}
 		else
 		{
-			this.unit = "Wh";
+			this.unit = EEP26PowerMeasurement.W;
 		}
 	}
 
@@ -116,8 +116,8 @@ public class EEP26PowerMeasurement extends EEPAttribute<Double>
 		// set the given unit if not null and not empty
 		if ((unit != null)
 				&& (!unit.isEmpty())
-				&& ((unit.equalsIgnoreCase("W")) || (unit
-						.equalsIgnoreCase("kW"))))
+				&& ((unit.equalsIgnoreCase(EEP26PowerMeasurement.W)) || (unit
+						.equalsIgnoreCase(EEP26PowerMeasurement.KW))))
 		{
 			this.unit = unit;
 
