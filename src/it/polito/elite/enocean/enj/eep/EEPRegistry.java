@@ -4,11 +4,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-
 public class EEPRegistry
 {
 	private static EEPRegistry theInstance;
@@ -22,18 +17,8 @@ public class EEPRegistry
 		// build the profiles hashtable
 		this.supportedProfiles = new Hashtable<>();
 
-		// load all the EEP class specifications
-		Reflections reflections = new Reflections(new ConfigurationBuilder()
-				.setUrls(
-						ClasspathHelper
-								.forPackage("it.polito.elite.enocean.enj.eep"))
-				.setScanners(new SubTypesScanner()));
 
-		Set<Class<? extends EEP>> allEEPs =reflections.getSubTypesOf(it.polito.elite.enocean.enj.eep.EEP.class);
-		
-		//if no EEPs have been found, add them statically (less updated, probably)
-		if(allEEPs.size() == 0)
-			allEEPs.addAll(this.getStaticEEPs());
+		Set<Class<? extends EEP>> allEEPs = this.getStaticEEPs();
 		
 		for(Class<? extends EEP> eep: allEEPs)
 			try
@@ -114,6 +99,7 @@ public class EEPRegistry
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A5021B.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50220.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50230.class);
+		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A504.A50401.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A507.A50701.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20108.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109.class);

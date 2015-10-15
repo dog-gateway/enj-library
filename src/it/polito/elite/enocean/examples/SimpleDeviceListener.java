@@ -18,6 +18,8 @@
 package it.polito.elite.enocean.examples;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
+import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HumidityLinear;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
@@ -25,6 +27,7 @@ import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltageAvailability;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.enj.util.ByteUtils;
 
@@ -50,7 +53,8 @@ public class SimpleDeviceListener implements EnJDeviceListener
 	public void addedEnOceanDevice(EnOceanDevice device)
 	{
 		System.out.println("Added device:" + device.getDeviceUID()
-				+ " - low-address: " + ByteUtils.toHexString(device.getAddress()));
+				+ " - low-address: "
+				+ ByteUtils.toHexString(device.getAddress()));
 
 		SimpleMovementListener movementListener = new SimpleMovementListener();
 
@@ -71,18 +75,27 @@ public class SimpleDeviceListener implements EnJDeviceListener
 		if (device.getEEP().getChannelAttribute(0, EEP26PIRStatus.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0, EEP26PIRStatus.NAME,
 					movementListener);
-		if (device.getEEP()
-				.getChannelAttribute(0, EEP26SupplyVoltage.NAME) != null)
+		if (device.getEEP().getChannelAttribute(0, EEP26SupplyVoltage.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0,
 					EEP26SupplyVoltage.NAME, movementListener);
 		if (device.getEEP().getChannelAttribute(0,
 				EEP26SupplyVoltageAvailability.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0,
 					EEP26SupplyVoltageAvailability.NAME, movementListener);
-		if (device.getEEP().getChannelAttribute(0,
-				EEP26PowerMeasurement.NAME) != null)
+		if (device.getEEP().getChannelAttribute(0, EEP26PowerMeasurement.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0,
 					EEP26PowerMeasurement.NAME, new SimplePowerListener());
+		if ((device.getEEP()
+				.getChannelAttribute(0, EEP26TemperatureLinear.NAME) != null)
+				&& (device.getEEP().getChannelAttribute(0,
+						EEP26HumidityLinear.NAME) != null))
+		{
+			EEPAttributeChangeListener listener = new SimpleTemperatureAndHumidityListener();
+			device.getEEP().addEEP26AttributeListener(0,
+					EEP26TemperatureLinear.NAME, listener);
+			device.getEEP().addEEP26AttributeListener(0,
+					EEP26HumidityLinear.NAME, listener);
+		}
 	}
 
 	/*

@@ -38,10 +38,8 @@
 				<configuration>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Import-Package>!org.junit.*,
-							!org.reflections.*,!it.polito.elite.enocean.*,*,com.google.common.base;version="14.0", com.google.common.collect;version="14.0"</Import-Package>
-						<Export-Package>it.polito.elite.enocean.enj.*,
-							it.polito.elite.enocean.protocol.*</Export-Package>
+						<Import-Package>!it.polito.elite.enocean.*,*,com.google.common.base;version="14.0", com.google.common.collect;version="14.0"</Import-Package>
+						<Export-Package>it.polito.elite.enocean.enj.*,it.polito.elite.enocean.protocol.*</Export-Package>
 						<Private-Package>it.polito.elite.enocean.test</Private-Package>
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
@@ -96,21 +94,6 @@
 			<groupId>org.rxtx</groupId>
 			<artifactId>rxtx</artifactId>
 			<version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.9.9-RC2</version>
-		</dependency>
-		<!-- <dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.10</version>
-		</dependency> -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
 		</dependency>
 	</dependencies>
 	<version>0.9.0</version>

@@ -1,70 +1,65 @@
 Manifest-Version: 1.0
-Export-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
- ket.response;uses:="it.polito.elite.enocean.protocol.serial.v3.networ
- k.packet,it.polito.elite.enocean.enj.util",it.polito.elite.enocean.pr
- otocol.serial.v3.network.packet.radioadvanced;uses:="it.polito.elite.
- enocean.protocol.serial.v3.network.packet",it.polito.elite.enocean.pr
- otocol.serial.v3.network.packet.radiosubtel;uses:="it.polito.elite.en
- ocean.protocol.serial.v3.network.packet",it.polito.elite.enocean.enj.
- communication;uses:="it.polito.elite.enocean.protocol.serial.v3.netwo
- rk.packet.response,it.polito.elite.enocean.protocol.serial.v3.network
- .packet,it.polito.elite.enocean.enj.model,it.polito.elite.enocean.pro
- tocol.serial.v3.network.packet.radio,it.polito.elite.enocean.enj.link
- ,it.polito.elite.enocean.enj.application.devices,it.polito.elite.enoc
- ean.enj.eep.eep26.D5.D500,it.polito.elite.enocean.enj.eep.eep26.F6.F6
- 02,it.polito.elite.enocean.enj.eep,it.polito.elite.enocean.enj.eep.ee
- p26.telegram,it.polito.elite.enocean.enj.communication.timing.tasks,i
- t.polito.elite.enocean.enj.util,it.polito.elite.enocean.protocol.seri
- al.v3.network.packet.event",it.polito.elite.enocean.protocol.serial.v
- 3.network.packet.radio;uses:="it.polito.elite.enocean.protocol.serial
- .v3.network.packet",it.polito.elite.enocean.enj.link;uses:="it.polito
- .elite.enocean.protocol.serial.v3.network.packet,it.polito.elite.enoc
- ean.enj.link.serial,it.polito.elite.enocean.enj.util,gnu.io",it.polit
- o.elite.enocean.protocol.serial.v3.network.packet.commoncommand;uses:
- ="it.polito.elite.enocean.protocol.serial.v3.network.packet",it.polit
- o.elite.enocean.enj.application.devices;uses:="it.polito.elite.enocea
- n.enj.model",it.polito.elite.enocean.enj.eep.eep26.D5.D500;uses:="it.
- polito.elite.enocean.enj.eep.eep26.attributes,it.polito.elite.enocean
- .enj.eep.eep26.telegram,it.polito.elite.enocean.enj.eep",it.polito.el
- ite.enocean.enj.eep.eep26.telegram;uses:="it.polito.elite.enocean.pro
- tocol.serial.v3.network.packet,it.polito.elite.enocean.enj.eep",it.po
- lito.elite.enocean.enj.eep;uses:="it.polito.elite.enocean.enj.eep.eep
- 26.D2.D201,it.polito.elite.enocean.enj.eep.eep26.A5.A502,it.polito.el
- ite.enocean.enj.eep.eep26.D5.D500,it.polito.elite.enocean.enj.eep.eep
- 26.telegram,it.polito.elite.enocean.enj.eep.eep26.F6.F602,it.polito.e
- lite.enocean.enj.eep.eep26.A5.A507,it.polito.elite.enocean.enj.util",
- it.polito.elite.enocean.enj.util,it.polito.elite.enocean.protocol.ser
- ial.v3.network.junittest;uses:="it.polito.elite.enocean.protocol.seri
- al.v3.network.crc8",it.polito.elite.enocean.protocol.serial.v3.networ
- k.packet.radiomessage;uses:="it.polito.elite.enocean.protocol.serial.
- v3.network.packet",it.polito.elite.enocean.protocol.serial.v3.network
- .packet.event;uses:="it.polito.elite.enocean.protocol.serial.v3.netwo
- rk.packet,it.polito.elite.enocean.enj.util",it.polito.elite.enocean.p
- rotocol.serial.v3.network.packet;uses:="it.polito.elite.enocean.proto
- col.serial.v3.network.packet.event,it.polito.elite.enocean.protocol.s
- erial.v3.network.crc8",it.polito.elite.enocean.enj.model;uses:="it.po
- lito.elite.enocean.enj.eep",it.polito.elite.enocean.enj.eep.eep26.att
- ributes;uses:="it.polito.elite.enocean.enj.eep,it.polito.elite.enocea
- n.enj.eep.eep26.D2.D201",it.polito.elite.enocean.enj.eep.eep26.D2.D20
- 1;uses:="it.polito.elite.enocean.enj.communication,it.polito.elite.en
- ocean.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep.eep26.
- telegram,it.polito.elite.enocean.enj.eep",it.polito.elite.enocean.enj
- .link.serial;uses:="gnu.io",it.polito.elite.enocean.protocol.serial.v
- 3.network.packet.remotemancommand;uses:="it.polito.elite.enocean.prot
- ocol.serial.v3.network.packet",it.polito.elite.enocean.enj.eep.eep26.
- A5.A502;uses:="it.polito.elite.enocean.enj.eep.eep26.attributes,it.po
- lito.elite.enocean.enj.eep,it.polito.elite.enocean.enj.eep.eep26.tele
- gram",it.polito.elite.enocean.enj.application,it.polito.elite.enocean
- .enj.eep.eep26.F6.F602;uses:="it.polito.elite.enocean.enj.eep.eep26.a
- ttributes,it.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.el
- ite.enocean.enj.eep",it.polito.elite.enocean.protocol.serial.v3.netwo
- rk.packet.smartackcommand;uses:="it.polito.elite.enocean.protocol.ser
- ial.v3.network.packet",it.polito.elite.enocean.enj.communication.timi
- ng.tasks;uses:="it.polito.elite.enocean.enj.model,it.polito.elite.eno
- cean.enj.communication",it.polito.elite.enocean.enj.eep.eep26.A5.A507
- ;uses:="it.polito.elite.enocean.enj.eep.eep26.attributes,it.polito.el
- ite.enocean.enj.eep.eep26.telegram,it.polito.elite.enocean.enj.eep",i
- t.polito.elite.enocean.protocol.serial.v3.network.crc8
+Export-Package: it.polito.elite.enocean.enj.application,
+ it.polito.elite.enocean.enj.application.devices;uses:="it.polito.elite.enocean.enj.model",
+ it.polito.elite.enocean.enj.communication;
+  uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet.response,
+   it.polito.elite.enocean.protocol.serial.v3.network.packet,
+   it.polito.elite.enocean.enj.model,
+   it.polito.elite.enocean.protocol.serial.v3.network.packet.radio,
+   it.polito.elite.enocean.enj.link,
+   it.polito.elite.enocean.enj.application.devices,
+   it.polito.elite.enocean.enj.eep.eep26.D5.D500,
+   it.polito.elite.enocean.enj.eep.eep26.F6.F602,
+   it.polito.elite.enocean.enj.eep,
+   it.polito.elite.enocean.enj.eep.eep26.telegram,
+   it.polito.elite.enocean.enj.communication.timing.tasks,
+   it.polito.elite.enocean.enj.util,
+   it.polito.elite.enocean.protocol.serial.v3.network.packet.event",
+ it.polito.elite.enocean.enj.communication.timing.tasks;uses:="it.polito.elite.enocean.enj.model,it.polito.elite.enocean.enj.communication",
+ it.polito.elite.enocean.enj.eep;
+  uses:="it.polito.elite.enocean.enj.eep.eep26.D2.D201,
+   it.polito.elite.enocean.enj.eep.eep26.A5.A502,
+   it.polito.elite.enocean.enj.eep.eep26.D5.D500,
+   it.polito.elite.enocean.enj.eep.eep26.telegram,
+   it.polito.elite.enocean.enj.eep.eep26.F6.F602,
+   it.polito.elite.enocean.enj.eep.eep26.A5.A504,
+   it.polito.elite.enocean.enj.eep.eep26.A5.A507,
+   it.polito.elite.enocean.enj.util",
+ it.polito.elite.enocean.enj.eep.eep26.A5.A502;uses:="it.polito.elite.enocean.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep,it.polito.elite.enocean.enj.eep.eep26.telegram",
+ it.polito.elite.enocean.enj.eep.eep26.A5.A504;
+  uses:="it.polito.elite.enocean.enj.eep.eep26.A5.A502,
+   it.polito.elite.enocean.enj.eep.eep26.attributes,
+   it.polito.elite.enocean.enj.eep,
+   it.polito.elite.enocean.enj.eep.eep26.telegram",
+ it.polito.elite.enocean.enj.eep.eep26.A5.A507;uses:="it.polito.elite.enocean.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.elite.enocean.enj.eep",
+ it.polito.elite.enocean.enj.eep.eep26.D2.D201;
+  uses:="it.polito.elite.enocean.enj.communication,
+   it.polito.elite.enocean.enj.eep.eep26.attributes,
+   it.polito.elite.enocean.enj.eep.eep26.telegram,
+   it.polito.elite.enocean.enj.eep",
+ it.polito.elite.enocean.enj.eep.eep26.D5.D500;uses:="it.polito.elite.enocean.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.elite.enocean.enj.eep",
+ it.polito.elite.enocean.enj.eep.eep26.F6.F602;uses:="it.polito.elite.enocean.enj.eep.eep26.attributes,it.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.elite.enocean.enj.eep",
+ it.polito.elite.enocean.enj.eep.eep26.attributes;uses:="it.polito.elite.enocean.enj.eep,it.polito.elite.enocean.enj.eep.eep26.D2.D201",
+ it.polito.elite.enocean.enj.eep.eep26.telegram;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet,it.polito.elite.enocean.enj.eep",
+ it.polito.elite.enocean.enj.link;
+  uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet,
+   it.polito.elite.enocean.enj.link.serial,
+   it.polito.elite.enocean.enj.util,
+   gnu.io",
+ it.polito.elite.enocean.enj.link.serial;uses:="gnu.io",
+ it.polito.elite.enocean.enj.model;uses:="it.polito.elite.enocean.enj.eep",
+ it.polito.elite.enocean.enj.util,
+ it.polito.elite.enocean.protocol.serial.v3.network.crc8,
+ it.polito.elite.enocean.protocol.serial.v3.network.packet;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet.event,it.polito.elite.enocean.protocol.serial.v3.network.crc8",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.commoncommand;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.event;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet,it.polito.elite.enocean.enj.util",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.radio;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.radioadvanced;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.radiomessage;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.radiosubtel;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.remotemancommand;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.response;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet,it.polito.elite.enocean.enj.util",
+ it.polito.elite.enocean.protocol.serial.v3.network.packet.smartackcommand;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet"
 Embed-Directory: target/dependency
 Private-Package: it.polito.elite.enocean.test
 Ignore-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
@@ -75,8 +70,8 @@ Ignore-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  .enocean.enj.link,it.polito.elite.enocean.protocol.serial.v3.network.
  packet.commoncommand,it.polito.elite.enocean.enj.application.devices,
  it.polito.elite.enocean.enj.eep.eep26.D5.D500,org.reflections.util,it
- .polito.elite.enocean.enj.eep,it.polito.elite.enocean.enj.eep.eep26.t
- elegram,it.polito.elite.enocean.enj.util,it.polito.elite.enocean.prot
+ .polito.elite.enocean.enj.eep.eep26.telegram,it.polito.elite.enocean.
+ enj.eep,it.polito.elite.enocean.enj.util,it.polito.elite.enocean.prot
  ocol.serial.v3.network.junittest,it.polito.elite.enocean.protocol.ser
  ial.v3.network.packet.radiomessage,org.reflections.scanners,it.polito
  .elite.enocean.protocol.serial.v3.network.packet.event,it.polito.elit
@@ -86,10 +81,11 @@ Ignore-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  erial,org.reflections,it.polito.elite.enocean.protocol.serial.v3.netw
  ork.packet.remotemancommand,org.junit,it.polito.elite.enocean.enj.eep
  .eep26.A5.A502,it.polito.elite.enocean.enj.application,it.polito.elit
- e.enocean.enj.eep.eep26.F6.F602,it.polito.elite.enocean.protocol.seri
- al.v3.network.packet.smartackcommand,it.polito.elite.enocean.enj.comm
- unication.timing.tasks,it.polito.elite.enocean.enj.eep.eep26.A5.A507,
- it.polito.elite.enocean.protocol.serial.v3.network.crc8
+ e.enocean.enj.eep.eep26.F6.F602,it.polito.elite.enocean.enj.eep.eep26
+ .A5.A504,it.polito.elite.enocean.protocol.serial.v3.network.packet.sm
+ artackcommand,it.polito.elite.enocean.enj.communication.timing.tasks,
+ it.polito.elite.enocean.enj.eep.eep26.A5.A507,it.polito.elite.enocean
+ .protocol.serial.v3.network.crc8
 Built-By: bonino
 Class-Path: lib/rxtx-2.1.7.jar lib/reflections-0.9.9-RC2.jar lib/guava
  -15.0.jar lib/javassist-3.18.2-GA.jar lib/annotations-2.0.1.jar lib/d
@@ -99,14 +95,15 @@ Tool: Bnd-0.0.238
 Bundle-Name: EnJ-Library
 Created-By: Apache Maven Bundle Plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Build-Jdk: 1.7.0_79
+Build-Jdk: 1.7.0_85
 Bundle-Version: 0.9.0
-Bnd-LastModified: 1434469270075
+Bnd-LastModified: 1444897194887
 Bundle-ManifestVersion: 2
 Embed-StripGroup: true
 Import-Package: com.google.common.base;version="14.0",com.google.commo
  n.collect;version="14.0",gnu.io
 Embed-Dependency: org.reflections.*;scope=compile|runtime;inline=false
-Bundle-SymbolicName: it.polito.elite.enocean.library
+Bundle-SymbolicName: enocean.library;singleton:=true
 Main-Class: it.polito.elite.enocean.examples.TestApp
-
+Bundle-ClassPath: .,
+ rxtx-2.1.7.jar

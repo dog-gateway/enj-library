@@ -81,7 +81,7 @@ public class EEP26HumidityLinear extends EEPAttribute<Double>
 
 		// default value= -273 °C
 		this.value = 0.0;
-		this.unit = "Celsius";
+		this.unit = "%";
 		this.minH = minH;
 		this.maxH = maxH;
 	}

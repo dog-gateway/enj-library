@@ -18,8 +18,6 @@
 package it.polito.elite.enocean.enj.eep.eep26.A5.A504;
 
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502;
-import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50201;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HumidityLinear;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 
@@ -43,10 +41,10 @@ public class A50401 extends A504
 		super();
 
 		// add attributes A50204 has operative range between 0.0 and 40 Celsius
-		this.addChannelAttribute(A50201.CHANNEL, new EEP26TemperatureLinear(
+		this.addChannelAttribute(A50401.CHANNEL, new EEP26TemperatureLinear(
 				0.0, 40.0));
 		// and between 0 and 100% humidity
-		this.addChannelAttribute(A50201.CHANNEL, new EEP26HumidityLinear(0.0,
+		this.addChannelAttribute(A50401.CHANNEL, new EEP26HumidityLinear(0.0,
 				100.0));
 	}
 
@@ -59,7 +57,7 @@ public class A50401 extends A504
 	public EEPIdentifier getEEPIdentifier()
 	{
 		// return the EEPIdentifier for this profile
-		return new EEPIdentifier(A502.rorg, A502.func, A50201.type);
+		return new EEPIdentifier(A504.rorg, A504.func, A50401.type);
 	}
 
 }

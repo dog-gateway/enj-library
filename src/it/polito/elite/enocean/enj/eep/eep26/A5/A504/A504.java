@@ -132,13 +132,13 @@ public abstract class A504 extends EEP
 			// check not null
 			if (hLinear != null)
 			{
-				int rawT = msg.getHumidity();
+				int rawH = msg.getHumidity();
 
 				// check range
-				if ((rawT >= 0) && (rawT <= EEP26HumidityLinear.MAX_VALID_RAW))
+				if ((rawH >= 0) && (rawH <= EEP26HumidityLinear.MAX_VALID_RAW))
 				{
 					// update the attribute value
-					tLinear.setRawValue(rawT);
+					hLinear.setRawValue(rawH);
 
 					// build the dispatching task
 					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
