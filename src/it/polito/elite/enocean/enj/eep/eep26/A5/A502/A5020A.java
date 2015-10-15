@@ -18,7 +18,7 @@
 package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
 
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
 
 /**
  * @author bonino
@@ -29,6 +29,8 @@ public class A5020A extends A502
 
 	// the type definition
 	public static final byte type = (byte) 0x0a;
+	// the used channel
+	public static int CHANNEL = 0;
 
 	/**
 	 * @param version
@@ -39,7 +41,8 @@ public class A5020A extends A502
 
 		// add attributes A5020A has operative range between 50.0 and 90.0
 		// Celsius
-		this.addChannelAttribute(0, new EEP26TemperatureLinear(50.0, 90.0));
+		this.addChannelAttribute(A5020A.CHANNEL,
+				new EEP26TemperatureInverseLinear(50.0, 90.0));
 	}
 
 	/*

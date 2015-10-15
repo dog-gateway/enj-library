@@ -17,47 +17,44 @@
  */
 package it.polito.elite.enocean.enj.eep.eep26.attributes;
 
-import it.polito.elite.enocean.enj.eep.EEPAttribute;
-
 import java.nio.ByteBuffer;
 
+import it.polito.elite.enocean.enj.eep.EEPAttribute;
+
 /**
- * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
+ * @author bonino
  *
  */
-public class EEP26TemperatureLinear extends EEPAttribute<Double>
+public class EEP26HumidityLinear extends EEPAttribute<Double>
 {
 	// the EEPFunction name
-	public static final String NAME = "Temperature";
+	public static final String NAME = "RelativeHumidity";
 	public static final double MAX_VALID_RAW = 250.0;
+
 	// the allowed range
-	private double minT;
-	private double maxT;
+	private double minH;
+	private double maxH;
 
 	/**
 	 * @param name
 	 */
-	public EEP26TemperatureLinear()
+	public EEP26HumidityLinear()
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26HumidityLinear.NAME);
 
 		// default value= -273 °C
-		this.value = -273.0;
-		this.unit = "Celsius";
-		this.minT = -273.0;
-		this.maxT = Double.MAX_VALUE;
+		this.value = 0.0;
+		this.unit = "%";
+		this.minH = 0.0;
+		this.maxH = Double.MAX_VALUE;
 	}
 
-	public EEP26TemperatureLinear(Double value, String unit)
+	public EEP26HumidityLinear(Double value, String unit)
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26HumidityLinear.NAME);
 
-		if ((unit != null)
-				&& (value != null)
-				&& (!unit.isEmpty())
-				&& ((unit.equalsIgnoreCase("Celsius")
-						|| unit.equalsIgnoreCase("°C") || unit
-							.equalsIgnoreCase("C"))))
+		if ((unit != null) && (value != null) && (!unit.isEmpty())
+				&& (unit.equalsIgnoreCase("%")))
 		{
 			// store the value
 			this.value = value;
@@ -66,61 +63,61 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 			this.unit = unit;
 
 			// set the maximum range
-			this.minT = -273.0;
-			this.maxT = Double.MAX_VALUE;
+			this.minH = 0.0;
+			this.maxH = Double.MAX_VALUE;
 		}
 
 		else
 		{
 			throw new NumberFormatException(
-					"Wrong unit or null value for temperature in Celsius degrees");
+					"Wrong unit or null value for relative humidity expressed in %");
 		}
 
 	}
 
-	public EEP26TemperatureLinear(Double minT, Double maxT)
+	public EEP26HumidityLinear(Double minH, Double maxH)
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26HumidityLinear.NAME);
 
 		// default value= -273 °C
-		this.value = -273.0;
+		this.value = 0.0;
 		this.unit = "Celsius";
-		this.minT = minT;
-		this.maxT = maxT;
+		this.minH = minH;
+		this.maxH = maxH;
 	}
 
 	/**
-	 * @return the minT
+	 * @return the minH
 	 */
-	public double getMinT()
+	public double getMinH()
 	{
-		return minT;
+		return minH;
 	}
 
 	/**
-	 * @param minT
-	 *            the minT to set
+	 * @param minH
+	 *            the minH to set
 	 */
-	public void setMinT(double minT)
+	public void setMinH(double minH)
 	{
-		this.minT = minT;
+		this.minH = minH;
 	}
 
 	/**
-	 * @return the maxT
+	 * @return the maxH
 	 */
-	public double getMaxT()
+	public double getMaxH()
 	{
-		return maxT;
+		return maxH;
 	}
 
 	/**
-	 * @param maxT
-	 *            the maxT to set
+	 * @param maxH
+	 *            the maxH to set
 	 */
-	public void setMaxT(double maxT)
+	public void setMaxH(double maxH)
 	{
-		this.maxT = maxT;
+		this.maxH = maxH;
 	}
 
 	/*
@@ -147,8 +144,8 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 	{
 		// perform the scaling
 		// TODO check conversion
-		this.value = ((this.maxT - this.minT) * ((double) (value)))
-				/ EEP26TemperatureLinear.MAX_VALID_RAW + this.minT;
+		this.value = ((this.maxH - this.minH) * ((double) (value)))
+				/ EEP26HumidityLinear.MAX_VALID_RAW + this.minH;
 	}
 
 	/*
@@ -161,10 +158,7 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 
 		if ((unit != null)
 
-				&& (!unit.isEmpty())
-				&& ((unit.equalsIgnoreCase("Celsius")
-						|| unit.equalsIgnoreCase("°C") || unit
-							.equalsIgnoreCase("C"))))
+		&& (!unit.isEmpty()) && (unit.equalsIgnoreCase("%")))
 		{
 
 			// store the unit
@@ -207,7 +201,7 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 	 */
 	public boolean isValid()
 	{
-		return ((this.value >= this.minT) && (this.value <= this.maxT));
+		return ((this.value >= this.minH) && (this.value <= this.maxH));
 	}
 
 }

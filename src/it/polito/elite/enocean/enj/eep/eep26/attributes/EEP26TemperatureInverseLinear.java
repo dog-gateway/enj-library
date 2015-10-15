@@ -25,11 +25,12 @@ import java.nio.ByteBuffer;
  * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
-public class EEP26TemperatureLinear extends EEPAttribute<Double>
+public class EEP26TemperatureInverseLinear extends EEPAttribute<Double>
 {
 	// the EEPFunction name
 	public static final String NAME = "Temperature";
-	public static final double MAX_VALID_RAW = 250.0;
+	public static final double MAX_VALID_RAW = 255.0;
+
 	// the allowed range
 	private double minT;
 	private double maxT;
@@ -37,9 +38,9 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 	/**
 	 * @param name
 	 */
-	public EEP26TemperatureLinear()
+	public EEP26TemperatureInverseLinear()
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26TemperatureInverseLinear.NAME);
 
 		// default value= -273 °C
 		this.value = -273.0;
@@ -48,9 +49,9 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 		this.maxT = Double.MAX_VALUE;
 	}
 
-	public EEP26TemperatureLinear(Double value, String unit)
+	public EEP26TemperatureInverseLinear(Double value, String unit)
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26TemperatureInverseLinear.NAME);
 
 		if ((unit != null)
 				&& (value != null)
@@ -78,9 +79,9 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 
 	}
 
-	public EEP26TemperatureLinear(Double minT, Double maxT)
+	public EEP26TemperatureInverseLinear(Double minT, Double maxT)
 	{
-		super(EEP26TemperatureLinear.NAME);
+		super(EEP26TemperatureInverseLinear.NAME);
 
 		// default value= -273 °C
 		this.value = -273.0;
@@ -147,8 +148,8 @@ public class EEP26TemperatureLinear extends EEPAttribute<Double>
 	{
 		// perform the scaling
 		// TODO check conversion
-		this.value = ((this.maxT - this.minT) * ((double) (value)))
-				/ EEP26TemperatureLinear.MAX_VALID_RAW + this.minT;
+		this.value = ((this.maxT - this.minT) * ((double) (EEP26TemperatureInverseLinear.MAX_VALID_RAW - value)))
+				/ EEP26TemperatureInverseLinear.MAX_VALID_RAW + this.minT;
 	}
 
 	/*

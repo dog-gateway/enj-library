@@ -47,10 +47,10 @@ public class F60201 extends F602
 		super();
 
 		// add attributes
-		this.addChannelAttribute(0, new EEP26RockerSwitch2RockerAction());
-		this.addChannelAttribute(1, new EEP26RockerSwitch2RockerAction());
-		this.addChannelAttribute(0, new EEP26RockerSwitch2RockerButtonCount());
-		this.addChannelAttribute(0, new EEP26RockerSwitch2RockerEnergyBow());
+		this.addChannelAttribute(F60201.CHANNEL_1, new EEP26RockerSwitch2RockerAction());
+		this.addChannelAttribute(F60201.CHANNEL_2, new EEP26RockerSwitch2RockerAction());
+		this.addChannelAttribute(F60201.CHANNEL_1, new EEP26RockerSwitch2RockerButtonCount());
+		this.addChannelAttribute(F60201.CHANNEL_1, new EEP26RockerSwitch2RockerEnergyBow());
 	}
 
 	@Override

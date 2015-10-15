@@ -57,6 +57,9 @@ public class D20108 extends D201
 	// the byte identifier for all output channels
 	public static byte ALL_OUTPUT_CHANNEL = 0x1E;
 
+	// the used channel
+	public static int CHANNEL = 0;
+
 	// the "data" fields accessible through this eep (and updated upon network
 	// data reception)
 
@@ -69,16 +72,16 @@ public class D20108 extends D201
 		super();
 
 		// add the supported functions
-		this.addChannelAttribute(0, new EEP26Switching());
-		this.addChannelAttribute(0, new EEP26LocalControl());
-		this.addChannelAttribute(0, new EEP26UserInterfaceMode());
-		this.addChannelAttribute(0, new EEP26OverCurrentShutdown());
-		this.addChannelAttribute(0, new EEP26OverCurrentShutdownReset());
-		this.addChannelAttribute(0, new EEP26OverCurrentSwitchOff());
-		this.addChannelAttribute(0, new EEP26EnergyMeasurement());
-		this.addChannelAttribute(0, new EEP26PowerMeasurement());
-		this.addChannelAttribute(0, new EEP26DefaultState());
-		this.addChannelAttribute(0, new EEP26ErrorLevel());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26Switching());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26LocalControl());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26UserInterfaceMode());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26OverCurrentShutdown());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26OverCurrentShutdownReset());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26OverCurrentSwitchOff());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26EnergyMeasurement());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26PowerMeasurement());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26DefaultState());
+		this.addChannelAttribute(D20108.CHANNEL, new EEP26ErrorLevel());
 	}
 
 	// execution commands

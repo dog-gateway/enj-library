@@ -15,34 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
+package it.polito.elite.enocean.enj.eep.eep26.A5.A504;
 
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
+import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A502;
+import it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50201;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HumidityLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 
 /**
  * @author bonino
  *
  */
-public class A5021B extends A502
+public class A50401 extends A504
 {
-
 	// the type definition
-	public static final byte type = (byte) 0x1B;
+	public static final byte type = (byte) 0x01;
+
 	// the used channel
 	public static int CHANNEL = 0;
 
 	/**
-	 * @param version
+	 * 
 	 */
-	public A5021B()
+	public A50401()
 	{
 		super();
 
-		// add attributes A5021B has operative range between 50.0 and 130.0
-		// Celsius
-		this.addChannelAttribute(A5021B.CHANNEL,
-				new EEP26TemperatureInverseLinear(50.0, 130.0));
+		// add attributes A50204 has operative range between 0.0 and 40 Celsius
+		this.addChannelAttribute(A50201.CHANNEL, new EEP26TemperatureLinear(
+				0.0, 40.0));
+		// and between 0 and 100% humidity
+		this.addChannelAttribute(A50201.CHANNEL, new EEP26HumidityLinear(0.0,
+				100.0));
 	}
 
 	/*
@@ -54,7 +59,7 @@ public class A5021B extends A502
 	public EEPIdentifier getEEPIdentifier()
 	{
 		// return the EEPIdentifier for this profile
-		return new EEPIdentifier(A502.rorg, A502.func, A5021B.type);
-
+		return new EEPIdentifier(A502.rorg, A502.func, A50201.type);
 	}
+
 }

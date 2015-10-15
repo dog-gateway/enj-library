@@ -24,7 +24,7 @@ import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2Rocker
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltageAvailability;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.enj.util.ByteUtils;
 
@@ -61,9 +61,9 @@ public class SimpleDeviceListener implements EnJDeviceListener
 					EEP26RockerSwitch2RockerAction.NAME,
 					new SimpleRockerSwitchListener());
 		if (device.getEEP().getChannelAttribute(0,
-				EEP26TemperatureLinear.NAME) != null)
+				EEP26TemperatureInverseLinear.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0,
-					EEP26TemperatureLinear.NAME,
+					EEP26TemperatureInverseLinear.NAME,
 					new SimpleTemperatureListener());
 		if (device.getEEP().getChannelAttribute(0, EEP26Switching.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0, EEP26Switching.NAME,

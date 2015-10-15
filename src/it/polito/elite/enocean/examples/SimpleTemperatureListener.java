@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 import it.polito.elite.enocean.enj.eep.EEPAttribute;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
 
 /**
  * @author bonino
@@ -49,11 +49,11 @@ public class SimpleTemperatureListener implements EEPAttributeChangeListener
 	@Override
 	public void handleAttributeChange(int channelId, EEPAttribute<?> attribute)
 	{
-		if (attribute instanceof EEP26TemperatureLinear)
+		if (attribute instanceof EEP26TemperatureInverseLinear)
 		{
 			this.logger.info("Received temperature: "
-					+ ((EEP26TemperatureLinear) attribute).getValue() + " "
-					+ ((EEP26TemperatureLinear) attribute).getUnit());
+					+ ((EEP26TemperatureInverseLinear) attribute).getValue() + " "
+					+ ((EEP26TemperatureInverseLinear) attribute).getUnit());
 		}
 
 	}

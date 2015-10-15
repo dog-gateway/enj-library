@@ -54,6 +54,9 @@ public class D2010A extends D201
 	// the byte identifier for all output channels
 	public static byte ALL_OUTPUT_CHANNEL = 0x1E;
 
+	// the used channel
+	public static int CHANNEL = 0; 
+				
 	// the "data" fields accessible through this eep (and updated upon network
 	// data reception)
 
@@ -66,13 +69,13 @@ public class D2010A extends D201
 		super();
 
 		// add the supported functions
-		this.addChannelAttribute(1, new EEP26Switching());
-		this.addChannelAttribute(1, new EEP26LocalControl());
-		this.addChannelAttribute(1, new EEP26UserInterfaceMode());
-		this.addChannelAttribute(1, new EEP26DefaultState());
-		this.addChannelAttribute(1, new EEP26PowerFailure());
-		this.addChannelAttribute(1, new EEP26PowerFailureDetection());
-		this.addChannelAttribute(1, new EEP26OverCurrentSwitchOff());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26Switching());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26LocalControl());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26UserInterfaceMode());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26DefaultState());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26PowerFailure());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26PowerFailureDetection());
+		this.addChannelAttribute(D2010A.CHANNEL, new EEP26OverCurrentSwitchOff());
 	}
 
 	// execution commands

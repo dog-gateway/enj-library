@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
+package it.polito.elite.enocean.enj.eep.eep26.A5.A504;
 
 import it.polito.elite.enocean.enj.eep.EEP;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeDispatcher;
 import it.polito.elite.enocean.enj.eep.Rorg;
-import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HumidityLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
 import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTelegram;
@@ -29,17 +30,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * A class representing the A5-02 family of EnOcean Equipment Profiles
- * (Temperature sensors).
+ * A class representing the A5-04 family of EnOcean Equipment Profiles
+ * (Temperature and Humidity sensors).
  * 
  * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
  *
  */
-public abstract class A502 extends EEP
+public abstract class A504 extends EEP
 {
 	// the EEP26 definition, according to the EEP26 specification
 	public static final Rorg rorg = new Rorg((byte) 0xa5);
-	public static final byte func = (byte) 0x02;
+	public static final byte func = (byte) 0x04;
 
 	// func must be defined by extending classes
 
@@ -52,12 +53,12 @@ public abstract class A502 extends EEP
 	// activity.
 	// --------------------------------------------------
 
-	// --------------------------------------------------
+	// -------------------------------------------------
 
 	/**
-	 *The class constructor
+	 * The class constructor
 	 */
-	public A502()
+	public A504()
 	{
 		// call the superclass constructor
 		super("2.6");
@@ -65,7 +66,7 @@ public abstract class A502 extends EEP
 		// build the attribute dispatching worker
 		this.attributeNotificationWorker = Executors.newFixedThreadPool(1);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -76,7 +77,9 @@ public abstract class A502 extends EEP
 	@Override
 	public boolean handleProfileUpdate(EEP26Telegram telegram)
 	{
+		// success flag, initially false
 		boolean success = false;
+
 		// handle the telegram, as first cast it at the right type (or fail)
 		if (telegram.getTelegramType() == EEP26TelegramType.FourBS)
 		{
@@ -85,39 +88,72 @@ public abstract class A502 extends EEP
 
 			// get the packet payload
 			byte[] payload = profileUpdate.getPayload();
-			
-			
-			//wrap the payload as a temperature message
-			A502TemperatureMessage msg = new A502TemperatureMessage(payload);
-			
-			//update the value of the attribute
-			EEP26TemperatureInverseLinear tLinear = (EEP26TemperatureInverseLinear) this.getChannelAttribute(0, EEP26TemperatureInverseLinear.NAME);
-			
-			//check not null
-			if(tLinear!=null)
+
+			// wrap the payload as a temperature and humidity message
+			A504TemperatureAndHumidityMessage msg = new A504TemperatureAndHumidityMessage(
+					payload);
+
+			// ----- handle temperature values
+
+			// update the value of the attribute
+			EEP26TemperatureLinear tLinear = (EEP26TemperatureLinear) this
+					.getChannelAttribute(0, EEP26TemperatureLinear.NAME);
+
+			// check not null
+			if (tLinear != null)
 			{
 				int rawT = msg.getTemperature();
-				
-				//check range
-				if((rawT >= 0)&&(rawT<=255))
+
+				// check range
+				if ((rawT >= 0)
+						&& (rawT <= EEP26TemperatureLinear.MAX_VALID_RAW))
 				{
-					//update the attribute value
+					// update the attribute value
 					tLinear.setRawValue(rawT);
-					
+
 					// build the dispatching task
 					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
 							tLinear, 1);
 
 					// submit the task for execution
 					this.attributeNotificationWorker.submit(dispatcherTask);
-					
-					//update the success flag
+
+					// update the success flag
 					success = true;
 				}
 			}
-			
+
+			// ----- handle temperature values
+
+			// update the value of the attribute
+			EEP26HumidityLinear hLinear = (EEP26HumidityLinear) this
+					.getChannelAttribute(0, EEP26HumidityLinear.NAME);
+
+			// check not null
+			if (hLinear != null)
+			{
+				int rawT = msg.getHumidity();
+
+				// check range
+				if ((rawT >= 0) && (rawT <= EEP26HumidityLinear.MAX_VALID_RAW))
+				{
+					// update the attribute value
+					tLinear.setRawValue(rawT);
+
+					// build the dispatching task
+					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
+							hLinear, 1);
+
+					// submit the task for execution
+					this.attributeNotificationWorker.submit(dispatcherTask);
+
+					// update the success flag
+					success = true;
+				}
+			}
+
 		}
-		
+
 		return success;
 	}
 
