@@ -15,31 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License
  */
-package it.polito.elite.enocean.enj.eep.eep26.F6.F602;
+package it.polito.elite.enocean.enj.eep.eep26.F6.F610;
 
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 
 /**
- * A class representing devices belonging to the F6-02-02 profile, it is exactly
- * the same as the {@link F60201} class except for the type which changes from
- * 01 to 02.
+ * A class representing devices belonging to the F6-10-01 profile, it is exactly
+ * the same as the {@link F61000} class except for the type which changes from
+ * 00 to 01.
  * 
  * @author <a href="mailto:dario.bonino@gmail.com">Dario Bonino</a>
- *
- */
-public class F60202 extends F60201
+ * */
+public class F61001 extends F61000
 {
+
 	// the type definition
-	public static final byte type = (byte) 0x02;
+	public static final byte type = (byte) 0x01;
 
-	// register the type in the EEPProfile even if no instance of this class is
-	// created.
-	/*
-	 * static { EEPRegistry.getInstance().addProfile( new
-	 * EEPIdentifier(F602.rorg, F602.func, F60202.type), F60202.class); }
-	 */
-
-	public F60202()
+	public F61001()
 	{
 		super();
 	}
@@ -53,7 +46,6 @@ public class F60202 extends F60201
 	@Override
 	public EEPIdentifier getEEPIdentifier()
 	{
-		return new EEPIdentifier(F602.rorg, F602.func, F60202.type);
+		return new EEPIdentifier(F610.rorg, F610.func, F61001.type);
 	}
-
 }

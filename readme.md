@@ -42,6 +42,9 @@ Dependencies of the library are managed through Maven, the corresponding project
 
 ```mvn clean package```
 
+To use the library as an eclipse plugin project after the above command, run
+```mvn eclipse:eclipse -Declipse.pde```
+
 #### Extending supported profiles ####
 Supported profiles can be easily extended by developing the proper classes in the ```it.polito.elite.enocean.enj.eep.eep26``` tree. An abstract skeleton is already provided for EEPs and for attributes (values) defined in each EEP. Each specific profile should inherit from a family abstract class, e.g., A507 for devices belonging to the A5-07-XX EEPs. As an example the A507 superclass is defined as follows:
 

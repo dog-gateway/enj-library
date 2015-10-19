@@ -19,6 +19,7 @@ package it.polito.elite.enocean.examples;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HandleRotation;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HumidityLinear;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
@@ -96,6 +97,9 @@ public class SimpleDeviceListener implements EnJDeviceListener
 			device.getEEP().addEEP26AttributeListener(0,
 					EEP26HumidityLinear.NAME, listener);
 		}
+		if (device.getEEP().getChannelAttribute(0,
+				EEP26HandleRotation.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26HandleRotation.NAME, new SimpleWindowHandleListener());
 	}
 
 	/*
