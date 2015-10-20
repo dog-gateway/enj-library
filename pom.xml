@@ -43,9 +43,9 @@
 						<Private-Package>it.polito.elite.enocean.test</Private-Package>
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
-						<Embed-Dependency>org.reflections.*;scope=compile|runtime;inline=false</Embed-Dependency>
+						<!-- <Embed-Dependency>org.reflections.*;scope=compile|runtime;inline=false</Embed-Dependency>
 						<Embed-Directory>target/dependency</Embed-Directory>
-						<Embed-StripGroup>true</Embed-StripGroup>
+						<Embed-StripGroup>true</Embed-StripGroup>-->
 					</instructions>
 				</configuration>
 			</plugin>
