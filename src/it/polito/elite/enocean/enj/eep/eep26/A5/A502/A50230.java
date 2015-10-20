@@ -17,14 +17,15 @@
  */
 package it.polito.elite.enocean.enj.eep.eep26.A5.A502;
 
+import it.polito.elite.enocean.enj.eep.EEPAttributeChangeDispatcher;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26Telegram;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.EEP26TelegramType;
+import it.polito.elite.enocean.enj.eep.eep26.telegram.FourBSTelegram;
 
 /**
  * @author bonino
- * 
- *         FIXME: This EEP needs different interpretation of the temperature
- *         message which starts at bit 14 instead of 16
  *
  */
 public class A50230 extends A502
@@ -61,5 +62,61 @@ public class A50230 extends A502
 		return new EEPIdentifier(A502.rorg, A502.func, A50230.type);
 
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.polito.elite.enocean.enj.eep.EEP#handleProfileUpdate(it.polito.elite
+	 * .enocean.enj.eep.eep26.telegram.EEP26Telegram)
+	 */
+	@Override
+	public boolean handleProfileUpdate(EEP26Telegram telegram)
+	{
+		boolean success = false;
+		// handle the telegram, as first cast it at the right type (or fail)
+		if (telegram.getTelegramType() == EEP26TelegramType.FourBS)
+		{
+			// cast the telegram to handle to its real type
+			FourBSTelegram profileUpdate = (FourBSTelegram) telegram;
+
+			// get the packet payload
+			byte[] payload = profileUpdate.getPayload();
+			
+			
+			//wrap the payload as a temperature message
+			A502ExtendedTemperatureMessage msg = new A502ExtendedTemperatureMessage(payload);
+			
+			//update the value of the attribute
+			EEP26TemperatureInverseLinear tLinear = (EEP26TemperatureInverseLinear) this.getChannelAttribute(0, EEP26TemperatureInverseLinear.NAME);
+			
+			//check not null
+			if(tLinear!=null)
+			{
+				int rawT = msg.getTemperature();
+				
+				//check range
+				if((rawT >= 0)&&(rawT<=255))
+				{
+					//update the attribute value
+					tLinear.setRawValue(rawT);
+					
+					// build the dispatching task
+					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
+							tLinear, 1);
+
+					// submit the task for execution
+					this.attributeNotificationWorker.submit(dispatcherTask);
+					
+					//update the success flag
+					success = true;
+				}
+			}
+			
+		}
+		
+		return success;
+	}
+
 
 }
