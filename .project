@@ -16,8 +16,12 @@
     <buildCommand>
       <name>org.eclipse.pde.SchemaBuilder</name>
     </buildCommand>
+    <buildCommand>
+      <name>org.eclipse.m2e.core.maven2Builder</name>
+    </buildCommand>
   </buildSpec>
   <natures>
+    <nature>org.eclipse.m2e.core.maven2Nature</nature>
     <nature>org.eclipse.jdt.core.javanature</nature>
     <nature>org.eclipse.pde.PluginNature</nature>
     <nature>org.python.pydev.pythonNature</nature>

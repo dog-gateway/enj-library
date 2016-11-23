@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: it.polito.elite.enocean.library
 Built-By: bonino
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1475739074206
+Bnd-LastModified: 1479882801998
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.google.common.base;version="14.0",com.google.commo
  n.collect;version="14.0",gnu.io
