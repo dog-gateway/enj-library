@@ -1,5 +1,7 @@
 package it.polito.elite.enocean.protocol.serial.v3.network.packet;
 
+import java.util.Arrays;
+
 import it.polito.elite.enocean.protocol.serial.v3.network.crc8.Crc8;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 
@@ -300,15 +302,17 @@ public class ESP3Packet
 
 	public byte[] getDataPayload()
 	{
-		byte[] dataPayload = new byte[this.data.length + this.optData.length];
-		System.arraycopy(data, 0, dataPayload, 0, data.length);
-		if (optData.length > 0)
+		//copy the data array leaving space for optData, if needed
+		byte[] dataPayload = Arrays.copyOf(this.data, this.data.length + this.optData.length);
+		
+		if (this.optData.length > 0)
 		{
-			for (int i = 0; i < optData.length; i++)
+			for (int i = 0; i < this.optData.length; i++)
 			{
-				dataPayload[i + data.length] = optData[i];
+				dataPayload[i + this.data.length] = this.optData[i];
 			}
 		}
+		
 		return dataPayload;
 	}
 
