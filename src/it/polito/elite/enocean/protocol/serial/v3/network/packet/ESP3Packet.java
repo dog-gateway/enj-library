@@ -301,7 +301,7 @@ public class ESP3Packet
 	public byte[] getDataPayload()
 	{
 		byte[] dataPayload = new byte[this.data.length + this.optData.length];
-		dataPayload = data;
+		System.arraycopy(data, 0, dataPayload, 0, data.length);
 		if (optData.length > 0)
 		{
 			for (int i = 0; i < optData.length; i++)
