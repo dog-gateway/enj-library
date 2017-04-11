@@ -17,7 +17,7 @@
  */
 package it.polito.elite.enocean.enj.link;
 
-import gnu.io.SerialPort;
+import com.fazecast.jSerialComm.SerialPort;
 import it.polito.elite.enocean.enj.util.ByteUtils;
 
 import java.io.IOException;
