@@ -154,16 +154,16 @@ public class F6020102RockerSwitchMessage
 		switch (action)
 		{
 			case 0:
-				actions[EEP26RockerSwitch2RockerAction.AO] = true;
-				break;
-			case 1:
 				actions[EEP26RockerSwitch2RockerAction.AI] = true;
 				break;
+			case 1:
+				actions[EEP26RockerSwitch2RockerAction.AO] = true;
+				break;
 			case 2:
-				actions[EEP26RockerSwitch2RockerAction.BO] = true;
+				actions[EEP26RockerSwitch2RockerAction.BI] = true;
 				break;
 			case 3:
-				actions[EEP26RockerSwitch2RockerAction.BI] = true;
+				actions[EEP26RockerSwitch2RockerAction.BO] = true;
 				break;
 		}
 
