@@ -7,6 +7,7 @@ The library currently supports a subset of profiles defined in the EEP2.6 specif
 * A5-07-01 (Occupancy Sensor)
 * all D5-00-XX profiles (Single Contact Switch)
 * D2-01-08 (Metering Plug)
+* D2-01-06 (Metering Plug) - thanks to @rdruilhe
 * F6-02-01 and F6-02-02 (Rocker Switches)
 
 Profiles are included in the library after a test process involving real devices. For example, we exploited temperature sensors by [NodOn](http://www.nodon.fr/en/#Produits), who kindly donated a full set of EnOcean devices, or Occupancy sensors by [PEHA](http://www.peha.de/cms/front_content.php?client=1&lang=1&idcatart=1234&Page=3&ProductsPage=12&keyword=&catID=44&prodID=26284).
