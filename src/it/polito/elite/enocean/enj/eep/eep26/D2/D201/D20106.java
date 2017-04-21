@@ -4,6 +4,11 @@ import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.*;
 
+/**
+ * This profile was tested using the W1R16FP device from General Electric
+ *
+ * @author Rémi Druilhe <remi.druilhe@gmail.com>
+ */
 public class D20106 extends D201 {
 
     // the type definition
@@ -87,8 +92,12 @@ public class D20106 extends D201 {
      * a given EnOcean actuator
      *
      * @param connection
+     *            The {@link EnJConnection} object enabling physical layer
+     *            communication
      * @param deviceAddress
+     *            The physical layer address of the device
      * @param channelId
+     *            The id of the channel to be configured.
      */
     public void actuatorMeasurementQuery(EnJConnection connection, byte[] deviceAddress, int channelId)
     {
