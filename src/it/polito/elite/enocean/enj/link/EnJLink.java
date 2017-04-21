@@ -17,11 +17,10 @@
  */
 package it.polito.elite.enocean.enj.link;
 
-import gnu.io.SerialPort;
+import com.fazecast.jSerialComm.SerialPort;
 import it.polito.elite.enocean.enj.link.serial.SerialPortFactory;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
-import java.util.TooManyListenersException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -113,6 +112,11 @@ public class EnJLink
 	{
 		if ((this.transmitter != null) && (this.receiver != null))
 		{
+			// Open the serial port if it exists
+			if (serialPort != null) {
+				serialPort.openPort();
+			}
+
 			// --------------- TX ------------------
 
 			// create the TX thread
@@ -125,18 +129,7 @@ public class EnJLink
 			transmitterThread.start();
 
 			// add the receiver as a listener
-			try
-			{
-				this.serialPort.addEventListener(this.receiver);
-			}
-			catch (TooManyListenersException e)
-			{
-				// TODO: handle exception, add a logging system here
-				e.printStackTrace();
-			}
-
-			// enable asynchronous data handling on the serial port
-			this.serialPort.notifyOnDataAvailable(true);
+			this.serialPort.addDataListener(this.receiver);
 
 			// create the packet delivery process thread
 			Thread packetDeliveryThread = new Thread(this.pktDeliveryProcess);
@@ -157,14 +150,16 @@ public class EnJLink
 	{
 		if ((this.transmitter != null) && (this.receiver != null))
 		{
-			// disable notification
-			this.serialPort.notifyOnDataAvailable(false);
-
 			// remove the event listener
-			this.serialPort.removeEventListener();
+			this.serialPort.removeDataListener();
 
 			// stop the transmission thread
 			this.transmitter.setRunnable(false);
+		}
+
+		// Close the serial port if it exists and is open
+		if (serialPort != null && serialPort.isOpen()) {
+			serialPort.closePort();
 		}
 	}
 

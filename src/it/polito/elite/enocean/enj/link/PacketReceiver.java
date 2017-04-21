@@ -17,9 +17,9 @@
  */
 package it.polito.elite.enocean.enj.link;
 
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 import it.polito.elite.enocean.enj.util.ByteUtils;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  * @authr <a href="mailto:biasiandrea04@gmail.com">Andrea Biasi </a>
  * 
  */
-public class PacketReceiver implements SerialPortEventListener
+public class PacketReceiver implements SerialPortDataListener
 {
 	// the class logger
 	private Logger logger;
@@ -115,8 +115,13 @@ public class PacketReceiver implements SerialPortEventListener
 		this.packetLenght = -1;
 	}
 
+	@Override
+	public int getListeningEvents() {
+		return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+	}
+
 	/**
-	 * @see {@link SerialPortEventListener}
+	 * @see {@link SerialPortDataListener}
 	 * 
 	 *      Listens for events on the attached serial port and handles incoming
 	 *      data, parsing ESP3 packets and putting them in the right message
@@ -131,7 +136,7 @@ public class PacketReceiver implements SerialPortEventListener
 			InputStream serialInputStream = this.serialPort.getInputStream();
 
 			// check if data is available
-			if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE)
+			if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
 			{
 				// read the incoming packet if data is available
 
