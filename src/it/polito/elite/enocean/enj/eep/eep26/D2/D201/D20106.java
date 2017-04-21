@@ -5,7 +5,9 @@ import it.polito.elite.enocean.enj.eep.EEPIdentifier;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.*;
 
 /**
- * This profile was tested using the W1R16FP device from General Electric
+ * This profile was tested using the W1R16FP device from General Electric.
+ * Because the technical documentation was not found, the "trial and error" method
+ * was used to discover the channels of the device.
  *
  * @author Rémi Druilhe <remi.druilhe@gmail.com>
  */
@@ -26,8 +28,14 @@ public class D20106 extends D201 {
     // the OFF command byte
     public static byte OFF_BYTE = (byte) 0x00;
 
-    // the byte identifier for all output channels
-    public static byte ALL_OUTPUT_CHANNEL = 0x00;
+    // the byte identifier for output channel
+    public static byte OUTPUT_CHANNEL = 0x00;
+
+    // the switching channel (discovered using "trial and error" method)
+    public static int SWITCHING_CHANNEL = 0;
+
+    // the energy measurement channel (discovered using "trial and error" method)
+    public static int ENERGY_MEASUREMENT_CHANNEL = 31;
 
     /**
      * Builds a new EEPProfile instance of type D2.01.06 as specified in the
@@ -37,8 +45,8 @@ public class D20106 extends D201 {
         super();
 
         // add the supported functions
-        this.addChannelAttribute(0, new EEP26Switching());
-        this.addChannelAttribute(31, new EEP26EnergyMeasurement());
+        this.addChannelAttribute(D20106.SWITCHING_CHANNEL, new EEP26Switching());
+        this.addChannelAttribute(D20106.ENERGY_MEASUREMENT_CHANNEL, new EEP26EnergyMeasurement());
     }
 
     public void actuatorSetOuput(EnJConnection connection, byte[] deviceAddress, boolean command)
@@ -47,7 +55,7 @@ public class D20106 extends D201 {
         super.actuatorSetOutput(connection,
                 deviceAddress,
                 D201DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
-                D20106.ALL_OUTPUT_CHANNEL,
+                D20106.OUTPUT_CHANNEL,
                 command ? D20106.ON_BYTE : D20106.OFF_BYTE);
     }
 
