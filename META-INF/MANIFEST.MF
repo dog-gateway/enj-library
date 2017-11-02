@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: it.polito.elite.enocean.library
 Built-By: bonino
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1479882801998
+Bnd-LastModified: 1509617860985
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.google.common.base;version="14.0",com.google.commo
  n.collect;version="14.0",gnu.io
@@ -33,11 +33,11 @@ Export-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  n.timing.tasks;uses:="it.polito.elite.enocean.enj.model,it.polito.eli
  te.enocean.enj.communication",it.polito.elite.enocean.enj.communicati
  on;uses:="it.polito.elite.enocean.protocol.serial.v3.network.packet.r
- esponse,it.polito.elite.enocean.enj.model,it.polito.elite.enocean.enj
- .eep.eep26.telegram,it.polito.elite.enocean.protocol.serial.v3.networ
+ esponse,it.polito.elite.enocean.enj.eep.eep26.telegram,it.polito.elit
+ e.enocean.enj.model,it.polito.elite.enocean.protocol.serial.v3.networ
  k.packet.event,it.polito.elite.enocean.enj.link,it.polito.elite.enoce
- an.enj.eep.eep26.F6.F602,it.polito.elite.enocean.protocol.serial.v3.n
- etwork.packet,it.polito.elite.enocean.enj.eep.eep26.D5.D500,it.polito
+ an.protocol.serial.v3.network.packet,it.polito.elite.enocean.enj.eep.
+ eep26.F6.F602,it.polito.elite.enocean.enj.eep.eep26.D5.D500,it.polito
  .elite.enocean.enj.communication.timing.tasks,it.polito.elite.enocean
  .enj.eep,it.polito.elite.enocean.enj.util,it.polito.elite.enocean.enj
  .application.devices,it.polito.elite.enocean.protocol.serial.v3.netwo
@@ -106,5 +106,5 @@ Ignore-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  .radioadvanced
 Private-Package: it.polito.elite.enocean.test
 Created-By: Apache Maven Bundle Plugin
-Build-Jdk: 1.8.0_101
+Build-Jdk: 1.8.0_144
 
