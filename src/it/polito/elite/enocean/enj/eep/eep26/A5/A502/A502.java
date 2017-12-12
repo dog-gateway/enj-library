@@ -40,6 +40,9 @@ public abstract class A502 extends EEP
 	// the EEP26 definition, according to the EEP26 specification
 	public static final Rorg rorg = new Rorg((byte) 0xa5);
 	public static final byte func = (byte) 0x02;
+	
+	// the default channel
+	public static int CHANNEL = 0;
 
 	// func must be defined by extending classes
 
@@ -91,7 +94,7 @@ public abstract class A502 extends EEP
 			A502TemperatureMessage msg = new A502TemperatureMessage(payload);
 			
 			//update the value of the attribute
-			EEP26TemperatureInverseLinear tLinear = (EEP26TemperatureInverseLinear) this.getChannelAttribute(0, EEP26TemperatureInverseLinear.NAME);
+			EEP26TemperatureInverseLinear tLinear = (EEP26TemperatureInverseLinear) this.getChannelAttribute(A502.CHANNEL, EEP26TemperatureInverseLinear.NAME);
 			
 			//check not null
 			if(tLinear!=null)
@@ -106,7 +109,7 @@ public abstract class A502 extends EEP
 					
 					// build the dispatching task
 					EEPAttributeChangeDispatcher dispatcherTask = new EEPAttributeChangeDispatcher(
-							tLinear, 1);
+							tLinear, A502.CHANNEL);
 
 					// submit the task for execution
 					this.attributeNotificationWorker.submit(dispatcherTask);

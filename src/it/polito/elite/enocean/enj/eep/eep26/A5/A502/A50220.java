@@ -34,8 +34,7 @@ public class A50220 extends A502
 
 	// the type definition
 	public static final byte type = (byte) 0x20;
-	// the used channel
-	public static int CHANNEL = 0;
+
 
 	/**
 	 * @param version
@@ -46,7 +45,7 @@ public class A50220 extends A502
 
 		// add attributes A50220 has operative range between -10.0 and 41.2
 		// Celsius
-		this.addChannelAttribute(A50220.CHANNEL,
+		this.addChannelAttribute(A502.CHANNEL,
 				new EEP26TemperatureInverseLinear(-10.0, 41.2));
 	}
 
