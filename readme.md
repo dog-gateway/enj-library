@@ -12,6 +12,14 @@ The library currently supports a subset of profiles defined in the EEP2.6 specif
 
 Profiles are included in the library after a test process involving real devices. For example, we exploited temperature sensors by [NodOn](http://www.nodon.fr/en/#Produits), who kindly donated a full set of EnOcean devices, or Occupancy sensors by [PEHA](http://www.peha.de/cms/front_content.php?client=1&lang=1&idcatart=1234&Page=3&ProductsPage=12&keyword=&catID=44&prodID=26284).
 
+When used on RaspberryPI, or in case for some reasons the library cannot find the EnOcean transceiver serial port, please start the program exploiting EnJ with the property ```gnu.io.rxtx.SerialPorts" and specify the  serial port identifier to use.
+
+For example,
+
+```
+-Dgnu.io.rxtx.SerialPorts=/dev/ttyAMA0:/dev/ttyUSB0
+```
+
 EnJ aims at providing easy access to EnOcean networks from Java, with a clear and syntethic approach. Protocol peculiarities are hidden in the library classes and the process of connecting to and controlling EnOcean devices is kept as simple as possible. The typical code needed to instantiate the library and connect to a given gateway is as follows:
 
 ```

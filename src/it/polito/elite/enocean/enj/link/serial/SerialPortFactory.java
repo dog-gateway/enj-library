@@ -62,7 +62,7 @@ public class SerialPortFactory
 		{
 
 			// sets the port name (TODO: check if needed)
-			System.setProperty("gnu.io.rxtx.SerialPorts", portName);
+			//System.setProperty("gnu.io.rxtx.SerialPorts", "");
 
 			// build a port identifier given the port id as a string
 			CommPortIdentifier portIdentifier = CommPortIdentifier
