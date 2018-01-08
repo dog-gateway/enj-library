@@ -30,7 +30,7 @@ import it.polito.elite.enocean.enj.eep.EEPAttribute;
 public class EEP26TemperatureSensorFailure extends EEPAttribute<Boolean>
 {
 	// the EEPFunction name
-	public static final String NAME = "BatteryCapacity";
+	public static final String NAME = "TemperatureSensorFailure";
 
 	// the possible values
 	public static final boolean FAILURE = true;
