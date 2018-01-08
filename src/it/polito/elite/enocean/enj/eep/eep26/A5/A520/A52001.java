@@ -140,6 +140,111 @@ public class A52001 extends A520
 					changedAttributes.add(serviceOn);
 				}
 
+				// Energy Input Enabled
+				EEP26EnergyInputEnabled energyInputEnabled = (EEP26EnergyInputEnabled) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26EnergyInputEnabled.NAME);
+
+				if (energyInputEnabled != null)
+				{
+					// set the valve position value
+					energyInputEnabled.setValue(message.isEnergyInputEnabled());
+
+					// update the list of changed attributes
+					changedAttributes.add(energyInputEnabled);
+				}
+
+				// Energy Storage
+				EEP26EnergyStorage energyStorage = (EEP26EnergyStorage) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26EnergyStorage.NAME);
+
+				if (energyStorage != null)
+				{
+					// set the valve position value
+					energyStorage.setValue(message.isEnergyStorage());
+
+					// update the list of changed attributes
+					changedAttributes.add(energyStorage);
+				}
+
+				// Battery Capacity
+				EEP26BatteryCapacity batteryCapacity = (EEP26BatteryCapacity) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26BatteryCapacity.NAME);
+
+				if (batteryCapacity != null)
+				{
+					// set the valve position value
+					batteryCapacity.setValue(message.isBatteryCapacity());
+
+					// update the list of changed attributes
+					changedAttributes.add(batteryCapacity);
+				}
+
+				// Cover Open
+				EEP26CoverOpen coverOpen = (EEP26CoverOpen) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26CoverOpen.NAME);
+
+				if (coverOpen != null)
+				{
+					// set the valve position value
+					coverOpen.setValue(message.isCoverOpen());
+
+					// update the list of changed attributes
+					changedAttributes.add(coverOpen);
+				}
+
+				// Temperature Sensor Failure
+				EEP26TemperatureSensorFailure temperatureSensorFailure = (EEP26TemperatureSensorFailure) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL,
+				                EEP26TemperatureSensorFailure.NAME);
+
+				if (temperatureSensorFailure != null)
+				{
+					// set the valve position value
+					temperatureSensorFailure.setValue(message.isTemperatureSensorFailure());
+
+					// update the list of changed attributes
+					changedAttributes.add(temperatureSensorFailure);
+				}
+
+				// Window Open
+				EEP26WindowOpen windowOpen = (EEP26WindowOpen) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26WindowOpen.NAME);
+
+				if (windowOpen != null)
+				{
+					// set the valve position value
+					windowOpen.setValue(message.isWindowOpen());
+
+					// update the list of changed attributes
+					changedAttributes.add(windowOpen);
+				}
+
+				// Actuator Obstructed
+				EEP26ActuatorObstructed actuatorObstructed = (EEP26ActuatorObstructed) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26ActuatorObstructed.NAME);
+
+				if (actuatorObstructed != null)
+				{
+					// set the valve position value
+					actuatorObstructed.setValue(message.isActuatorObstructed());
+
+					// update the list of changed attributes
+					changedAttributes.add(actuatorObstructed);
+				}
+
+				// Temperature
+				EEP26TemperatureLinear temperatureLinear = (EEP26TemperatureLinear) this
+				        .getChannelAttribute(A52001.INPUT_CHANNEL, EEP26TemperatureLinear.NAME);
+
+				if (temperatureLinear != null)
+				{
+					// set the valve position value
+					temperatureLinear.setRawValue(message.getTemperature());
+
+					// update the list of changed attributes
+					changedAttributes.add(temperatureLinear);
+				}
+
 				// if some attribute changed, notify it to listeners
 				if (!changedAttributes.isEmpty())
 				{
