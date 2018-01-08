@@ -19,16 +19,25 @@ package it.polito.elite.enocean.examples;
 
 import it.polito.elite.enocean.enj.communication.EnJDeviceListener;
 import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ActuatorObstructed;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26BatteryCapacity;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26CoverOpen;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26EnergyInputEnabled;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26EnergyStorage;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HandleRotation;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26HumidityLinear;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PIRStatus;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26PowerMeasurement;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ServiceOn;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltage;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26SupplyVoltageAvailability;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureInverseLinear;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureSensorFailure;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ValvePosition;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26WindowOpen;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.enj.util.ByteUtils;
 
@@ -53,53 +62,77 @@ public class SimpleDeviceListener implements EnJDeviceListener
 	@Override
 	public void addedEnOceanDevice(EnOceanDevice device)
 	{
-		System.out.println("Added device:" + device.getDeviceUID()
-				+ " - low-address: "
-				+ ByteUtils.toHexString(device.getAddress()));
+		System.out.println("Added device:" + device.getDeviceUID() + " - low-address: "
+		        + ByteUtils.toHexString(device.getAddress()));
 
 		SimpleMovementListener movementListener = new SimpleMovementListener();
+		SimpleValveListener valveListener = new SimpleValveListener();
 
 		// handle device types
-		if (device.getEEP().getChannelAttribute(0,
-				EEP26RockerSwitch2RockerAction.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26RockerSwitch2RockerAction.NAME,
-					new SimpleRockerSwitchListener());
-		if (device.getEEP().getChannelAttribute(0,
-				EEP26TemperatureInverseLinear.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26TemperatureInverseLinear.NAME,
-					new SimpleTemperatureListener());
+		if (device.getEEP().getChannelAttribute(0, EEP26RockerSwitch2RockerAction.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26RockerSwitch2RockerAction.NAME,
+			        new SimpleRockerSwitchListener());
+		if (device.getEEP().getChannelAttribute(0, EEP26TemperatureInverseLinear.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26TemperatureInverseLinear.NAME,
+			        new SimpleTemperatureListener());
 		if (device.getEEP().getChannelAttribute(0, EEP26Switching.NAME) != null)
 			device.getEEP().addEEP26AttributeListener(0, EEP26Switching.NAME,
-					new SimpleContactSwitchListener());
+			        new SimpleContactSwitchListener());
 		if (device.getEEP().getChannelAttribute(0, EEP26PIRStatus.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0, EEP26PIRStatus.NAME,
-					movementListener);
+			device.getEEP().addEEP26AttributeListener(0, EEP26PIRStatus.NAME, movementListener);
 		if (device.getEEP().getChannelAttribute(0, EEP26SupplyVoltage.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26SupplyVoltage.NAME, movementListener);
-		if (device.getEEP().getChannelAttribute(0,
-				EEP26SupplyVoltageAvailability.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26SupplyVoltageAvailability.NAME, movementListener);
+			device.getEEP().addEEP26AttributeListener(0, EEP26SupplyVoltage.NAME, movementListener);
+		if (device.getEEP().getChannelAttribute(0, EEP26SupplyVoltageAvailability.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26SupplyVoltageAvailability.NAME,
+			        movementListener);
 		if (device.getEEP().getChannelAttribute(0, EEP26PowerMeasurement.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26PowerMeasurement.NAME, new SimplePowerListener());
-		if ((device.getEEP()
-				.getChannelAttribute(0, EEP26TemperatureLinear.NAME) != null)
-				&& (device.getEEP().getChannelAttribute(0,
-						EEP26HumidityLinear.NAME) != null))
+			device.getEEP().addEEP26AttributeListener(0, EEP26PowerMeasurement.NAME,
+			        new SimplePowerListener());
+		if ((device.getEEP().getChannelAttribute(0, EEP26TemperatureLinear.NAME) != null)
+		        && (device.getEEP().getChannelAttribute(0, EEP26HumidityLinear.NAME) != null))
 		{
 			EEPAttributeChangeListener listener = new SimpleTemperatureAndHumidityListener();
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26TemperatureLinear.NAME, listener);
-			device.getEEP().addEEP26AttributeListener(0,
-					EEP26HumidityLinear.NAME, listener);
+			device.getEEP().addEEP26AttributeListener(0, EEP26TemperatureLinear.NAME, listener);
+			device.getEEP().addEEP26AttributeListener(0, EEP26HumidityLinear.NAME, listener);
 		}
-		if (device.getEEP().getChannelAttribute(0,
-				EEP26HandleRotation.NAME) != null)
-			device.getEEP().addEEP26AttributeListener(0, EEP26HandleRotation.NAME, new SimpleWindowHandleListener());
+		if (device.getEEP().getChannelAttribute(0, EEP26HandleRotation.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26HandleRotation.NAME,
+			        new SimpleWindowHandleListener());
+
+		if (device.getEEP().getChannelAttribute(0, EEP26ValvePosition.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26ValvePosition.NAME, valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26ServiceOn.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26ServiceOn.NAME, valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26EnergyInputEnabled.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26EnergyInputEnabled.NAME,
+			        valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26EnergyStorage.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26EnergyStorage.NAME, valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26BatteryCapacity.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26BatteryCapacity.NAME, valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26CoverOpen.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26CoverOpen.NAME, valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26TemperatureSensorFailure.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26TemperatureSensorFailure.NAME,
+			        valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26WindowOpen.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26WindowOpen.NAME, valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26ActuatorObstructed.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26ActuatorObstructed.NAME,
+			        valveListener);
+
+		if (device.getEEP().getChannelAttribute(0, EEP26TemperatureLinear.NAME) != null)
+			device.getEEP().addEEP26AttributeListener(0, EEP26TemperatureLinear.NAME,
+			        valveListener);
+
 	}
 
 	/*
@@ -111,8 +144,8 @@ public class SimpleDeviceListener implements EnJDeviceListener
 	@Override
 	public void modifiedEnOceanDevice(EnOceanDevice device)
 	{
-		System.out.println("Modified device:" + device.getDeviceUID()
-				+ " - low-address: " + device.getAddress());
+		System.out.println("Modified device:" + device.getDeviceUID() + " - low-address: "
+		        + device.getAddress());
 
 	}
 
@@ -125,8 +158,8 @@ public class SimpleDeviceListener implements EnJDeviceListener
 	@Override
 	public void removedEnOceanDevice(EnOceanDevice device)
 	{
-		System.out.println("Removed device:" + device.getDeviceUID()
-				+ " - low-address: " + device.getAddress());
+		System.out.println("Removed device:" + device.getDeviceUID() + " - low-address: "
+		        + device.getAddress());
 	}
 
 }
