@@ -17,18 +17,16 @@ public class EEPRegistry
 		// build the profiles hashtable
 		this.supportedProfiles = new Hashtable<>();
 
-
 		Set<Class<? extends EEP>> allEEPs = this.getStaticEEPs();
-		
-		for(Class<? extends EEP> eep: allEEPs)
+
+		for (Class<? extends EEP> eep : allEEPs)
 			try
 			{
-				this.supportedProfiles.put(eep.newInstance().getEEPIdentifier(),eep);
-			}
-			catch (InstantiationException | IllegalAccessException e)
+				this.supportedProfiles.put(eep.newInstance().getEEPIdentifier(), eep);
+			} catch (InstantiationException | IllegalAccessException e)
 			{
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
 	}
 
@@ -64,11 +62,13 @@ public class EEPRegistry
 	{
 		return this.supportedProfiles.get(eepId);
 	}
-	
+
 	/**
 	 * This should not be used, unless in OSGi where reflections does not work.
-	 * TODO: either apply the reflections fix at http://w3facility.org/question/reflections-library-not-working-when-used-in-an-eclipse-plug-in/ or
-	 * define a better way for registering eeps
+	 * TODO: either apply the reflections fix at
+	 * http://w3facility.org/question/reflections-library-not-working-when-used-in-an-eclipse-plug-in/
+	 * or define a better way for registering eeps
+	 * 
 	 * @return
 	 */
 	private Set<Class<? extends EEP>> getStaticEEPs()
@@ -99,6 +99,7 @@ public class EEPRegistry
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A5021B.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50220.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50230.class);
+		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A520.A52001.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A504.A50401.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A507.A50701.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20106.class);
@@ -108,7 +109,7 @@ public class EEPRegistry
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D5.D500.D50001.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60202.class);
-		
+
 		return eeps;
 	}
 }
