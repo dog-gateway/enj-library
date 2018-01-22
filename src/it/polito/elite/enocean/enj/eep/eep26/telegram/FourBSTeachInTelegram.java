@@ -159,7 +159,7 @@ public class FourBSTeachInTelegram extends FourBSTelegram
 
 	public FourBSTelegram buildResponse(byte response)
 	{
-		byte[] payloadResp = new byte[13];
+		byte[] payloadResp = new byte[10];
 
 		// Rorg 4BS
 		payloadResp[0] = (byte) 0xA5;
