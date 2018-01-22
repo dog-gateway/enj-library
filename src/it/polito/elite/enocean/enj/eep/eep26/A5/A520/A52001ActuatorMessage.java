@@ -97,7 +97,8 @@ public class A52001ActuatorMessage
 			byte coverOpenAsByte = (byte) (data[1] & (byte) 0x08);
 			coverOpen = (coverOpenAsByte > 0);
 
-			byte temperatureSensorFailureAsByte = (byte) (data[1] & (byte) 0x04);
+			byte temperatureSensorFailureAsByte = (byte) (data[1]
+					& (byte) 0x04);
 			temperatureSensorFailure = (temperatureSensorFailureAsByte > 0);
 
 			byte windowOpenAsByte = (byte) (data[1] & (byte) 0x02);
@@ -106,7 +107,7 @@ public class A52001ActuatorMessage
 			byte actuatorObstructedAsByte = (byte) (data[1] & (byte) 0x01);
 			actuatorObstructed = (actuatorObstructedAsByte > 0);
 
-			byte temperature = data[3];
+			byte temperature = data[2];
 			// transform into a positive integer
 			this.temperature = 0x00FF & temperature;
 
