@@ -277,7 +277,11 @@ public class A52001 extends A520
 
 		// add the packet rorg
 		dataByte[0] = A520.rorg.getRorgValue();
-		System.arraycopy(payload, 0, dataByte, 1, 4);
+		dataByte[1] = payload[3];
+		dataByte[2] = payload[2];
+		dataByte[3] = payload[1];
+		dataByte[4] = payload[0];
+		// System.arraycopy(payload, 0, dataByte, 1, 4);
 
 		// data payload is now ready, send the data
 		connection.sendRadioCommand(deviceAddress, dataByte);

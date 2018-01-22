@@ -28,51 +28,51 @@ public class A52001ActuatorInputMessage
 	{
 		byte[] data = { 0, 0, 0, 0 };
 
-		data[0] = (byte) valvePosition;
-		data[1] = (byte) temperatureFromRcu;
+		data[3] = (byte) valvePosition;
+		data[2] = (byte) temperatureFromRcu;
 
 		if (runInitSequence)
 		{
-			data[2] |= 0x80;
+			data[1] |= 0x80;
 		}
 
 		if (liftSet)
 		{
-			data[2] |= 0x40;
+			data[1] |= 0x40;
 		}
 
 		if (valveOpen)
 		{
-			data[2] |= 0x20;
+			data[1] |= 0x20;
 		}
 
 		if (valveClosed)
 		{
-			data[2] |= 0x10;
+			data[1] |= 0x10;
 		}
 
 		if (summerMode)
 		{
-			data[2] |= 0x08;
+			data[1] |= 0x08;
 		}
 
 		if (SetPointSelectionModeMode.TEMPERATURE.equals(setPointSelectionMode))
 		{
-			data[2] |= 0x04;
+			data[1] |= 0x04;
 		}
 
 		if (setpointInverse)
 		{
-			data[2] |= 0x02;
+			data[1] |= 0x02;
 		}
 
 		if (FunctionMode.SERVICE_ON.equals(selectFunction))
 		{
-			data[2] |= 0x01;
+			data[1] |= 0x01;
 		}
 
 		// Data Telegram
-		data[3] |= 0x08;
+		data[0] = 0x08;
 
 		return data;
 	}
@@ -112,7 +112,8 @@ public class A52001ActuatorInputMessage
 		this.summerMode = summerMode;
 	}
 
-	public void setSetPointSelectionMode(SetPointSelectionModeMode setPointSelectionMode)
+	public void setSetPointSelectionMode(
+			SetPointSelectionModeMode setPointSelectionMode)
 	{
 		this.setPointSelectionMode = setPointSelectionMode;
 	}
@@ -131,11 +132,13 @@ public class A52001ActuatorInputMessage
 	public String toString()
 	{
 		return "A52001ActuatorInputMessage [valvePosition=" + valvePosition
-		        + ", temperatureFromRcu=" + temperatureFromRcu + ", runInitSequence="
-		        + runInitSequence + ", liftSet=" + liftSet + ", valveOpen=" + valveOpen
-		        + ", valveClosed=" + valveClosed + ", summerMode=" + summerMode
-		        + ", setPointSelectionMode=" + setPointSelectionMode + ", setpointInverse="
-		        + setpointInverse + ", selectFunction=" + selectFunction + "]";
+				+ ", temperatureFromRcu=" + temperatureFromRcu
+				+ ", runInitSequence=" + runInitSequence + ", liftSet="
+				+ liftSet + ", valveOpen=" + valveOpen + ", valveClosed="
+				+ valveClosed + ", summerMode=" + summerMode
+				+ ", setPointSelectionMode=" + setPointSelectionMode
+				+ ", setpointInverse=" + setpointInverse + ", selectFunction="
+				+ selectFunction + "]";
 	}
 
 }
