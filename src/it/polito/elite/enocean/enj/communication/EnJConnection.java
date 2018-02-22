@@ -17,6 +17,15 @@
  */
 package it.polito.elite.enocean.enj.communication;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Timer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+
 import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDeliveryTask;
@@ -43,15 +52,6 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.response.Response;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Timer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * The EnOcean for Java (EnJ) connection layer. It decouples link-level
@@ -515,7 +515,8 @@ public class EnJConnection implements PacketListener
 			{
 				this.handleEvent(new Event(pkt));
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			this.logger.warning("Error while handling received packet" + e);
 		}
@@ -523,8 +524,8 @@ public class EnJConnection implements PacketListener
 
 	private void handleRadioPacket(Radio pkt)
 	{
-		this.logger.info(
-				"Received: " + ByteUtils.toHexString(pkt.getPacketAsBytes()));
+		this.logger.info("Received: "
+				+ ByteUtils.toHexString(pkt.getPacketAsBytes(), true));
 		// this.logger.info("Payload:
 		// "+ByteUtils.toHexString(pkt.getDataPayload()));
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
@@ -774,17 +775,18 @@ public class EnJConnection implements PacketListener
 				// --------- Teach-in variation 2/3 ------
 				if (bs4TeachInTelegram.isWithEEP())
 				{
-					EEPIdentifier eep = new EEPIdentifier(bs4TeachInTelegram.getRorg(),
+					EEPIdentifier eep = new EEPIdentifier(
+							bs4TeachInTelegram.getRorg(),
 							bs4TeachInTelegram.getEEPFunc(),
 							bs4TeachInTelegram.getEEPType());
-					
+
 					// check the eep
 					if (this.registry.isEEPSupported(eep))
 					{
 						// build a new 4BS device,
 						this.addNewDevice(bs4TeachInTelegram.getAddress(),
-								bs4TeachInTelegram.getManId(),eep);
-						
+								bs4TeachInTelegram.getManId(), eep);
+
 						// build the response packet
 						response = bs4TeachInTelegram.buildResponse(
 								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
@@ -795,21 +797,23 @@ public class EnJConnection implements PacketListener
 						response = bs4TeachInTelegram.buildResponse(
 								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
 					}
-					
+
 					// send a response if the teachIn packet was a query
-					// actually according to the EEP26 profile specification there is almost no means
-					// to distinguish between a Variation 2 and a Variation 3 4BS teach-in
-					if(bs4TeachInTelegram.isQuery())
+					// actually according to the EEP26 profile specification
+					// there is almost no means
+					// to distinguish between a Variation 2 and a Variation 3
+					// 4BS teach-in
+					if (bs4TeachInTelegram.isQuery())
 						// send the packet back to the transceiver, with high
 						// priority as a maximum 500ms latency is allowed.
 						this.linkLayer.send(response.getRawPacket(), true);
 				}
 				else if (this.deviceToTeachIn != null)
 				{
-					//---- Teach-in variation 1/3 ----
+					// ---- Teach-in variation 1/3 ----
 					device = this.explicitTeachIn(bs4TeachInTelegram);
-					
-					if (device!=null)
+
+					if (device != null)
 					{
 						// build the response packet
 						response = bs4TeachInTelegram.buildResponse(
@@ -821,11 +825,13 @@ public class EnJConnection implements PacketListener
 						response = bs4TeachInTelegram.buildResponse(
 								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
 					}
-					
+
 					// send a response if the teachIn packet was a query
-					// actually according to the EEP26 profile specification there is almost no means
-					// to distinguish between a Variation 1 and a Variation 3 4BS teach-in
-					if(bs4TeachInTelegram.isQuery())
+					// actually according to the EEP26 profile specification
+					// there is almost no means
+					// to distinguish between a Variation 1 and a Variation 3
+					// 4BS teach-in
+					if (bs4TeachInTelegram.isQuery())
 						// send the packet back to the transceiver, with high
 						// priority as a maximum 500ms latency is allowed.
 						this.linkLayer.send(response.getRawPacket(), true);
