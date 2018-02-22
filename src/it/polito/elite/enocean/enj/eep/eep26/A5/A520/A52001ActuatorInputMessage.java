@@ -15,13 +15,13 @@ public class A52001ActuatorInputMessage
 
 	private int valvePosition;
 	private int temperatureFromRcu;
-	private boolean runInitSequence;
-	private boolean liftSet;
-	private boolean valveOpen;
-	private boolean valveClosed;
-	private boolean summerMode;
+	private boolean runInitSequence = false;
+	private boolean liftSet = false;
+	private boolean valveOpen = false;
+	private boolean valveClosed = false;
+	private boolean summerMode = false;
 	private SetPointSelectionModeMode setPointSelectionMode = SetPointSelectionModeMode.VALVE_POSITION;
-	private boolean setpointInverse;
+	private boolean setpointInverse = false;
 	private FunctionMode selectFunction = FunctionMode.RCU;
 
 	public byte[] getMessageBytes()
