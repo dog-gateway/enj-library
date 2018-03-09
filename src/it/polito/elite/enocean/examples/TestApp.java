@@ -23,7 +23,9 @@ import java.io.InputStreamReader;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
+import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D2010A;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D201UnitOfMeasure;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.examples.util.Options;
@@ -173,17 +175,18 @@ public class TestApp
 		// ----------- actuation test ------------
 
 		// get the device by high-level uid
-		EnOceanDevice device = connection.getDevice(25673502);
+		EnOceanDevice device = connection.getDevice(25896966);
 
 		// check not null
 		if (device != null)
 		{
 
 			// get the device eep
-			D20109 eep = (D20109) device.getEEP();
+			D2010A eep = (D2010A) device.getEEP();
+			eep.addEEP26AttributeListener(D2010A.CHANNEL, EEP26Switching.NAME, new SimpleContactSwitchListener());
 
-			eep.actuatorSetMeasurement(connection, device.getAddress(), true,
-					true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
+			/*eep.actuatorSetMeasurement(connection, device.getAddress(), true,
+					true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);*/
 
 			for (int i = 0; i < 10; i++)
 			{

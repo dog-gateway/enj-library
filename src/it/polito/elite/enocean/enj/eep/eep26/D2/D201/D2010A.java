@@ -52,10 +52,13 @@ public class D2010A extends D201
 	public static byte OFF_BYTE = (byte) 0x00;
 
 	// the byte identifier for all output channels
-	public static byte ALL_OUTPUT_CHANNEL = 0x1E;
+	public static byte ALL_OUTPUT_CHANNEL = 0x1e;
 
 	// the used channel
-	public static int CHANNEL = 0; 
+	// on Nodon ASP-2-1-00/ASP-2-1-10 the only enabled channel is channel 1
+	// in case other devices use by default the channel 0
+	// this part has to be reviewed / checked
+	public static int CHANNEL = 1; 
 				
 	// the "data" fields accessible through this eep (and updated upon network
 	// data reception)
@@ -85,7 +88,14 @@ public class D2010A extends D201
 		// exec the command by using the D201 general purpose implementation
 		super.actuatorSetOutput(connection, deviceAddress,
 				D201DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
-				D2010A.ALL_OUTPUT_CHANNEL, command ? D2010A.ON_BYTE
+				(byte)D2010A.ALL_OUTPUT_CHANNEL, command ? D2010A.ON_BYTE
+						: D2010A.OFF_BYTE);
+		
+		// patch in case a device, e.g., Nodon ASP-2-1-100, 
+		// does not support the all channels  wild card value
+		super.actuatorSetOutput(connection, deviceAddress,
+				D201DimMode.SWITCH_TO_NEW_OUTPUT_VALUE.getCode(),
+				(byte)D2010A.CHANNEL, command ? D2010A.ON_BYTE
 						: D2010A.OFF_BYTE);
 	}
 
@@ -165,6 +175,8 @@ public class D2010A extends D201
 				userInterfaceIndication, powerFailure, defaultState, dimTime1,
 				dimTime2, dimTime3);
 	}
+	
+	
 
 	@Override
 	public EEPIdentifier getEEPIdentifier()
