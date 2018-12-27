@@ -22,10 +22,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
+import it.polito.elite.enocean.enj.eep.eep26.A5.A520.A52001;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D2010A;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D201UnitOfMeasure;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.examples.util.Options;
@@ -142,8 +144,11 @@ public class TestApp
 	{
 		// ---------- Explicit teach-in ---------
 		// the device to learn
-		// System.out.println("Enabling explicit teach-in for 018a781f");
-		// connection.enableTeachIn("018a781f", "A5-02-05", 10000);
+		//System.out.println("Enabling explicit teach-in for 018ea450");
+		connection.enableTeachIn("018ea450", "A5-04-01", 10000);
+		
+		//System.out.println("Enabling explicit teach-in for 018ea450");
+		//connection.enableTeachIn("018ea450", "A5-20-01", 60000);
 
 		// Thread.sleep(11000);
 
@@ -156,7 +161,7 @@ public class TestApp
 		// ---------- Smart teach-in -------------
 
 		// teach-in for 2s
-		System.out.println("Enabling smart teach-in for 2s");
+		/*System.out.println("Enabling smart teach-in for 2s");
 		connection.setSmartTeachIn(true);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
@@ -168,12 +173,33 @@ public class TestApp
 
 		connection.setSmartTeachIn(false);
 		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
+				+ connection.isSmartTeachInEnabled());*/
 
-		Thread.sleep(2000);
+		//Thread.sleep(10000);
+		
+		// ----------- valve test
+		EnOceanDevice device = connection.getDevice(26125392);
+		if (device != null)
+		{
+			//A52001 eep = (A52001)device.getEEP();
+			
+			//test set point
+			System.out.println("Test set valve setpoint...");
+			
+			byte payload[] = new byte[5];
+			payload[0] = A52001.rorg.getRorgValue();
+			payload[1] = (byte)0x80;
+			payload[2] = (byte)0xff;
+			payload[3] = (byte)0x81;
+			payload[4] = (byte)0x04;
+			
+			connection.sendRadioCommand(device.getAddress(), payload);
+			System.out.println("Sent command...");
+		}
+		
 
 		// ----------- actuation test ------------
-
+		/*
 		// get the device by high-level uid
 		EnOceanDevice device = connection.getDevice(25896966);
 
@@ -185,8 +211,8 @@ public class TestApp
 			D2010A eep = (D2010A) device.getEEP();
 			eep.addEEP26AttributeListener(D2010A.CHANNEL, EEP26Switching.NAME, new SimpleContactSwitchListener());
 
-			/*eep.actuatorSetMeasurement(connection, device.getAddress(), true,
-					true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);*/
+			//eep.actuatorSetMeasurement(connection, device.getAddress(), true,
+			//		true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -204,6 +230,7 @@ public class TestApp
 				}
 			}
 		}
+		*/
 	}
 
 	public void interactiveDemo(EnJConnection connection) throws IOException,
