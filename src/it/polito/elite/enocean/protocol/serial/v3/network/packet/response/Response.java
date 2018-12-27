@@ -111,7 +111,7 @@ public class Response extends ESP3Packet
 		else
 			stringThis.append("RET_UNKNOWN_FORMAT");
 		stringThis.append(" , rawPacket: ");
-		stringThis.append(ByteUtils.toHexString(this.getPacketAsBytes()));
+		stringThis.append(ByteUtils.toHexString(this.getPacketAsBytes(), true));
 		stringThis.append(" ]");
 		return stringThis.toString();
 	}

@@ -37,6 +37,11 @@ public class ByteUtils
 	 */
 	public static String toHexString(byte byteArray[])
 	{
+		return toHexString(byteArray, false);
+	}
+
+	public static String toHexString(byte byteArray[], boolean spaced)
+	{
 		// prepare the string buffer for holding the final byte representation
 		StringBuffer hexBytes = new StringBuffer();
 
@@ -45,7 +50,13 @@ public class ByteUtils
 
 		// convert each byte
 		for (int i = 0; i < byteArray.length; i++)
+		{
+			if (spaced)
+			{
+				hexBytes.append(" ");
+			}
 			hexBytes.append(String.format("%02x", byteArray[i]));
+		}
 		// render the buffer as a string
 		return hexBytes.toString();
 	}

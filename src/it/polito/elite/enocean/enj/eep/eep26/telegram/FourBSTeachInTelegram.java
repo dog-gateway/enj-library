@@ -95,11 +95,11 @@ public class FourBSTeachInTelegram extends FourBSTelegram
 			this.withEEP = true;
 		else
 			this.withEEP = false;
-		
-		//get the learn status
+
+		// get the learn status
 		byte learnStatus = (byte) (this.payload[3] & (byte) 0x10);
-		
-		if(learnStatus == 0)
+
+		if (learnStatus == 0)
 			this.isQuery = true;
 		else
 			this.isQuery = false;
@@ -217,5 +217,6 @@ public class FourBSTeachInTelegram extends FourBSTelegram
 			teachIn = true;
 
 		return teachIn;
-}
+
+	}
 }

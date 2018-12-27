@@ -17,8 +17,9 @@
  */
 package it.polito.elite.enocean.enj.link;
 
-import gnu.io.SerialPort;
 import it.polito.elite.enocean.enj.util.ByteUtils;
+
+import gnu.io.SerialPort;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -64,7 +65,7 @@ public class PacketTransmitter implements Runnable
 
 	// the run enabling flag
 	private boolean runnable;
-	
+
 	private Logger logger;
 
 	/**
@@ -83,13 +84,12 @@ public class PacketTransmitter implements Runnable
 	 * @param expectedResponse
 	 *            The expected response semphore.
 	 */
-	public PacketTransmitter(
-			ConcurrentLinkedQueue<PacketQueueItem> highPriorityTxQueue,
-			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue,
-			SerialPort serialPort, Semaphore expectedResponse)
+	public PacketTransmitter(ConcurrentLinkedQueue<PacketQueueItem> highPriorityTxQueue,
+			ConcurrentLinkedQueue<PacketQueueItem> lowPriorityTxQueue, SerialPort serialPort,
+			Semaphore expectedResponse)
 	{
 		super();
-		
+
 		this.logger = Logger.getLogger(PacketTransmitter.class.getName());
 
 		// store a reference to the high priority transmission queue
@@ -155,7 +155,7 @@ public class PacketTransmitter implements Runnable
 
 					// send the packet
 					byte packetBytes[] = currentMessage.getPkt().getPacketAsBytes();
-					this.logger.info("Sending: "+ByteUtils.toHexString(packetBytes));
+					this.logger.info("Sending: " + ByteUtils.toHexString(packetBytes, true));
 					serialOut.write(packetBytes);
 
 				}
@@ -194,7 +194,7 @@ public class PacketTransmitter implements Runnable
 							// is true at the ESP3 specification level or not.
 
 							// check if transmission is possible
-							if ((currentMessage!=null)&&(currentMessage.getRetransmissionCounter() > 0))
+							if ((currentMessage != null) && (currentMessage.getRetransmissionCounter() > 0))
 							{
 								// ok can transmit
 								try
@@ -207,19 +207,16 @@ public class PacketTransmitter implements Runnable
 
 									// transmit the packet
 									byte packetBytes[] = currentMessage.getPkt().getPacketAsBytes();
-									this.logger.info("Sending: "+ByteUtils.toHexString(packetBytes));
+									this.logger.info("Sending: " + ByteUtils.toHexString(packetBytes, true));
 									serialOut.write(packetBytes);
 
 									// decrease the retransmission count
-									currentMessage
-											.decreaseReTransmissionCount();
+									currentMessage.decreaseReTransmissionCount();
 								}
 								catch (InterruptedException e)
 								{
 									// TODO add a logging system here
-									System.err
-											.println("Error while acquiring the expected response semaphore: "
-													+ e);
+									System.err.println("Error while acquiring the expected response semaphore: " + e);
 								}
 
 							}
@@ -250,8 +247,7 @@ public class PacketTransmitter implements Runnable
 								time = System.currentTimeMillis();
 
 								// transmit the packet
-								serialOut.write(currentMessage.getPkt()
-										.getPacketAsBytes());
+								serialOut.write(currentMessage.getPkt().getPacketAsBytes());
 
 								// decrease the retransmission count
 								currentMessage.decreaseReTransmissionCount();
@@ -260,10 +256,8 @@ public class PacketTransmitter implements Runnable
 							{
 								// log the error
 								// TODO use a logging system her
-								System.out
-										.println("Packet transmission failed after "
-												+ PacketQueueItem.MAX_RETRANSMISSION
-												+ " transmission attempts.");
+								System.out.println("Packet transmission failed after "
+										+ PacketQueueItem.MAX_RETRANSMISSION + " transmission attempts.");
 
 								// free the expected response semaphore
 								// this causes a subsequent packet drop from the
@@ -295,7 +289,8 @@ public class PacketTransmitter implements Runnable
 	 * Return the current state of the transmitter, if true the transmitter is
 	 * enabled, and, if started, can trasmit packets.
 	 * 
-	 * @return the runnable flag, true if the transmitter can run, false, otherwise.
+	 * @return the runnable flag, true if the transmitter can run, false,
+	 *         otherwise.
 	 */
 	public boolean isRunnable()
 	{
@@ -304,8 +299,10 @@ public class PacketTransmitter implements Runnable
 
 	/**
 	 * Stops this packet transmitter.
+	 * 
 	 * @param runnable
-	 *            the runnable flag, true if the transmitter can run, false, otherwise.
+	 *            the runnable flag, true if the transmitter can run, false,
+	 *            otherwise.
 	 */
 	public void setRunnable(boolean runnable)
 	{

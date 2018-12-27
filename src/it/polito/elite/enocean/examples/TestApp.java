@@ -59,13 +59,11 @@ public class TestApp
 	public static void main(String[] args) throws InterruptedException
 	{
 		// a utility object for managing command line arguments...
-		Options opt = new Options(
-				new String[] {
-						"-p port",
-						"The serial port to which the EnOcean dongle / adapter is connected",
-						"-f persistent-device-file",
-						"The file on which persisting devices", "-m mode",
-						"the testmode, either [interactive,demo], default is demo" },
+		Options opt = new Options(new String[] { "-p port",
+				"The serial port to which the EnOcean dongle / adapter is connected",
+				"-f persistent-device-file",
+				"The file on which persisting devices", "-m mode",
+				"the testmode, either [interactive,demo], default is demo" },
 				"java TestApp", args);
 
 		// create an instance of TestApp
@@ -88,8 +86,10 @@ public class TestApp
 
 				// create the connection layer
 				EnJConnection connection = new EnJConnection(linkLayer,
-						((persistentFileName != null) && (!persistentFileName
-								.isEmpty())) ? persistentFileName : null,
+						((persistentFileName != null)
+								&& (!persistentFileName.isEmpty()))
+										? persistentFileName
+										: null,
 						listener);
 
 				// connect the link
@@ -128,8 +128,8 @@ public class TestApp
 			}
 			catch (Exception e)
 			{
-				System.err
-						.println("The given port does not exist or no device is plugged in"
+				System.err.println(
+						"The given port does not exist or no device is plugged in"
 								+ e);
 			}
 		}
@@ -144,11 +144,11 @@ public class TestApp
 	{
 		// ---------- Explicit teach-in ---------
 		// the device to learn
-		//System.out.println("Enabling explicit teach-in for 018ea450");
+		// System.out.println("Enabling explicit teach-in for 018ea450");
 		connection.enableTeachIn("018ea450", "A5-04-01", 10000);
-		
-		//System.out.println("Enabling explicit teach-in for 018ea450");
-		//connection.enableTeachIn("018ea450", "A5-20-01", 60000);
+
+		// System.out.println("Enabling explicit teach-in for 018ea450");
+		// connection.enableTeachIn("018ea450", "A5-20-01", 60000);
 
 		Thread.sleep(11000);
 
@@ -163,78 +163,65 @@ public class TestApp
 		// teach-in for 2s
 		System.out.println("Enabling smart teach-in for 10s");
 		connection.setSmartTeachIn(true);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
+		System.out
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
 		connection.enableTeachIn(10000);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
+		System.out
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
 
 		Thread.sleep(10000);
-		
-		connection.setSmartTeachIn(false);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
 
-		//Thread.sleep(10000);
-		
+		connection.setSmartTeachIn(false);
+		System.out
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
+
+		// Thread.sleep(10000);
+
 		// ----------- valve test
 		EnOceanDevice device = connection.getDevice(26125392);
 		if (device != null)
 		{
-			//A52001 eep = (A52001)device.getEEP();
-			
-			//test set point
+			// test set point
 			System.out.println("Test set valve setpoint...");
-			
+
 			byte payload[] = new byte[5];
 			payload[0] = A52001.rorg.getRorgValue();
-			payload[1] = (byte)0x80;
-			payload[2] = (byte)0xff;
-			payload[3] = (byte)0x81;
-			payload[4] = (byte)0x04;
-			
+			payload[1] = (byte) 0x80;
+			payload[2] = (byte) 0xff;
+			payload[3] = (byte) 0x81;
+			payload[4] = (byte) 0x04;
+
 			connection.sendRadioCommand(device.getAddress(), payload);
 			System.out.println("Sent command...");
 		}
-		
 
 		// ----------- actuation test ------------
 		/*
-		// get the device by high-level uid
-		EnOceanDevice device = connection.getDevice(25896966);
-
-		// check not null
-		if (device != null)
-		{
-
-			// get the device eep
-			D2010A eep = (D2010A) device.getEEP();
-			eep.addEEP26AttributeListener(D2010A.CHANNEL, EEP26Switching.NAME, new SimpleContactSwitchListener());
-
-			//eep.actuatorSetMeasurement(connection, device.getAddress(), true,
-			//		true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
-
-			for (int i = 0; i < 10; i++)
-			{
-				System.out.println("Sending command");
-
-				// if the device is not null, toggle its status
-				if (device != null)
-				{
-
-					// toggle the status
-					eep.actuatorSetOuput(connection, device.getAddress(),
-							((i % 2) == 0) ? true : false);
-
-					Thread.sleep(3000);
-				}
-			}
-		}
-		*/
+		 * // get the device by high-level uid EnOceanDevice device =
+		 * connection.getDevice(25896966);
+		 * 
+		 * // check not null if (device != null) {
+		 * 
+		 * // get the device eep D2010A eep = (D2010A) device.getEEP();
+		 * eep.addEEP26AttributeListener(D2010A.CHANNEL, EEP26Switching.NAME,
+		 * new SimpleContactSwitchListener());
+		 * 
+		 * //eep.actuatorSetMeasurement(connection, device.getAddress(), true,
+		 * // true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
+		 * 
+		 * for (int i = 0; i < 10; i++) { System.out.println("Sending command");
+		 * 
+		 * // if the device is not null, toggle its status if (device != null) {
+		 * 
+		 * // toggle the status eep.actuatorSetOuput(connection,
+		 * device.getAddress(), ((i % 2) == 0) ? true : false);
+		 * 
+		 * Thread.sleep(3000); } } }
+		 */
 	}
 
-	public void interactiveDemo(EnJConnection connection) throws IOException,
-			InterruptedException
+	public void interactiveDemo(EnJConnection connection)
+			throws IOException, InterruptedException
 	{
 		// handle interactive mode
 
@@ -263,16 +250,16 @@ public class TestApp
 				case TestApp.HELP:
 				{
 					// print the command help
-					System.out.println(TestApp.class.getSimpleName()
-							+ " command help:");
+					System.out.println(
+							TestApp.class.getSimpleName() + " command help:");
 
 					// help command
-					System.out
-							.println("help - provides information about available commands");
+					System.out.println(
+							"help - provides information about available commands");
 
 					// demo
-					System.out
-							.println("demo - execute the hardcoded demo mode, for internal usage only");
+					System.out.println(
+							"demo - execute the hardcoded demo mode, for internal usage only");
 
 					break;
 				}

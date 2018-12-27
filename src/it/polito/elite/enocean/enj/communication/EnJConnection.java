@@ -17,6 +17,15 @@
  */
 package it.polito.elite.enocean.enj.communication;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Timer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+
 import it.polito.elite.enocean.enj.application.devices.EnJPersistentDeviceSet;
 import it.polito.elite.enocean.enj.communication.timing.tasks.CancelTeachInTask;
 import it.polito.elite.enocean.enj.communication.timing.tasks.EnJDeviceChangeDeliveryTask;
@@ -43,15 +52,6 @@ import it.polito.elite.enocean.protocol.serial.v3.network.packet.ESP3Packet;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.event.Event;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.radio.Radio;
 import it.polito.elite.enocean.protocol.serial.v3.network.packet.response.Response;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Timer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 /**
  * The EnOcean for Java (EnJ) connection layer. It decouples link-level
@@ -83,7 +83,7 @@ public class EnJConnection implements PacketListener
 
 	// the set of device listeners to keep updated about device events
 	private Set<EnJDeviceListener> deviceListeners;
-	
+
 	private Set<EnJTeachInListener> teachInListeners;
 
 	// the executor service to run device update tasks
@@ -160,8 +160,8 @@ public class EnJConnection implements PacketListener
 
 		// initialize the set of device listeners
 		this.deviceListeners = new HashSet<>();
-		
-		//initialize the set of teach-in listeners
+
+		// initialize the set of teach-in listeners
 		this.teachInListeners = new HashSet<>();
 
 		// initialize the update delivery executor
@@ -233,7 +233,7 @@ public class EnJConnection implements PacketListener
 	{
 		return this.deviceListeners.remove(listener);
 	}
-	
+
 	/**
 	 * Adds a teach in listener to the set of listeners to be notified about
 	 * teach-in status
@@ -248,8 +248,8 @@ public class EnJConnection implements PacketListener
 	}
 
 	/**
-	 * Removes a teach-in listener from the set of listeners to be notified about
-	 * teach-in events.
+	 * Removes a teach-in listener from the set of listeners to be notified
+	 * about teach-in events.
 	 * 
 	 * @param listener
 	 *            The {@link EnJDeviceListener} to remove.
@@ -332,14 +332,14 @@ public class EnJConnection implements PacketListener
 			this.teachIn = true;
 
 			// start the teach in reset timer
-			this.teachInTimer
-					.schedule(new CancelTeachInTask(this), teachInTime);
+			this.teachInTimer.schedule(new CancelTeachInTask(this),
+					teachInTime);
 
 			// TODO place logger here
 			this.logger.info("Teach-in enabled");
-			
-			//notify listeners
-			for(EnJTeachInListener listener : this.teachInListeners)
+
+			// notify listeners
+			for (EnJTeachInListener listener : this.teachInListeners)
 				listener.teachInEnabled(isSmartTeachInEnabled());
 		}
 	}
@@ -371,9 +371,9 @@ public class EnJConnection implements PacketListener
 
 		// TODO place logger here
 		this.logger.info("Teach-in disabled");
-		
-		//notify listeners
-		for(EnJTeachInListener listener : this.teachInListeners)
+
+		// notify listeners
+		for (EnJTeachInListener listener : this.teachInListeners)
 			listener.teachInDisabled();
 	}
 
@@ -446,11 +446,10 @@ public class EnJConnection implements PacketListener
 			this.addNewDevice(deviceAddress, null, eepId);
 		}
 	}
-	
-	
 
 	/**
 	 * Returns the set of currently known devices
+	 * 
 	 * @return the knownDevices
 	 */
 	public Collection<EnOceanDevice> getKnownDevices()
@@ -519,22 +518,23 @@ public class EnJConnection implements PacketListener
 		}
 		catch (Exception e)
 		{
-			this.logger.warning("Error while handling received packet"+ e);
+			this.logger.warning("Error while handling received packet" + e);
 		}
 	}
 
 	private void handleRadioPacket(Radio pkt)
 	{
 		this.logger.info("Received: "
-				+ ByteUtils.toHexString(pkt.getPacketAsBytes()));
-		// this.logger.info("Payload: "+ByteUtils.toHexString(pkt.getDataPayload()));
+				+ ByteUtils.toHexString(pkt.getPacketAsBytes(), true));
+		// this.logger.info("Payload:
+		// "+ByteUtils.toHexString(pkt.getDataPayload()));
 		EEP26Telegram telegram = EEP26TelegramFactory.getEEP26Telegram(pkt);
 
 		if (telegram != null)
 		{
 
-			if ((this.teachIn)
-					&& (telegram.getTelegramType() == EEP26TelegramType.UTETeachIn))
+			if ((this.teachIn) && (telegram
+					.getTelegramType() == EEP26TelegramType.UTETeachIn))
 			{
 				this.handleUTETeachIn((UTETeachInTelegram) telegram);
 			}
@@ -602,18 +602,16 @@ public class EnJConnection implements PacketListener
 						if (!deviceEEP.handleProfileUpdate(telegram))
 						{
 							// log the error
-							this.logger
-									.warning("Profile update for"
-											+ ByteUtils.toHexString(device
-													.getAddress())
-											+ " was not handled successfully");
+							this.logger.warning("Profile update for"
+									+ ByteUtils.toHexString(device.getAddress())
+									+ " was not handled successfully");
 						}
 					}
 					else
 					{
 						// log the error
-						this.logger
-								.warning("No suitable EEP found for the given device...");
+						this.logger.warning(
+								"No suitable EEP found for the given device...");
 					}
 				}
 			}
@@ -641,8 +639,8 @@ public class EnJConnection implements PacketListener
 			if (this.registry.isEEPSupported(pkt.getEEP()))
 			{
 				// build the response packet
-				response = pkt
-						.buildResponse(UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
+				response = pkt.buildResponse(
+						UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
 
 				// build the device
 				this.addNewDevice(pkt.getAddress(), pkt.getManId(),
@@ -650,8 +648,8 @@ public class EnJConnection implements PacketListener
 			}
 			else
 				// build the response packet
-				response = pkt
-						.buildResponse(UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
+				response = pkt.buildResponse(
+						UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
 		}
 		else if (pkt.isTeachInDeletionRequest())
 		{
@@ -660,14 +658,14 @@ public class EnJConnection implements PacketListener
 
 			// check if response is required
 			// build the response packet
-			response = pkt
-					.buildResponse(UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_DELETION_ACCEPTED);
+			response = pkt.buildResponse(
+					UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_DELETION_ACCEPTED);
 		}
 		else if (pkt.isNotSpecifiedTeachIn())
 		{
 			// currently not supported
-			response = pkt
-					.buildResponse(UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
+			response = pkt.buildResponse(
+					UTETeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
 		}
 
 		if ((pkt.isResponseRequired()) && (response != null)
@@ -792,6 +790,7 @@ public class EnJConnection implements PacketListener
 						// build the response packet
 						response = bs4TeachInTelegram.buildResponse(
 								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL_WITH_EEP);
+
 					}
 					else
 					{
@@ -854,7 +853,7 @@ public class EnJConnection implements PacketListener
 		}
 
 		return device;
-}
+	}
 
 	private void notifyEnJDeviceListeners(EnOceanDevice device,
 			EnJDeviceChangeType changeType)
@@ -889,9 +888,8 @@ public class EnJConnection implements PacketListener
 		// dump the address of the device to be taught in
 		String msg = "toTeachIn: ";
 		for (int i = 0; i < 4; i++)
-			msg = msg
-					+ String.format("%02x",
-							this.deviceToTeachIn.getAddress()[i]);
+			msg = msg + String.format("%02x",
+					this.deviceToTeachIn.getAddress()[i]);
 		this.logger.info(msg);
 
 		// dump the address of the device sending the data message
