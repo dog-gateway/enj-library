@@ -111,4 +111,9 @@ public abstract class EEP26Telegram
 	{
 		return rorg;
 	}
+
+	public ESP3Packet getRawPacket()
+	{
+		return rawPacket;
+	}
 }

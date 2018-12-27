@@ -150,7 +150,7 @@ public class TestApp
 		//System.out.println("Enabling explicit teach-in for 018ea450");
 		//connection.enableTeachIn("018ea450", "A5-20-01", 60000);
 
-		// Thread.sleep(11000);
+		Thread.sleep(11000);
 
 		// 0187ae92
 		// System.out.println("Enabling explicit teach-in for 0187ae92");
@@ -161,19 +161,19 @@ public class TestApp
 		// ---------- Smart teach-in -------------
 
 		// teach-in for 2s
-		/*System.out.println("Enabling smart teach-in for 2s");
+		System.out.println("Enabling smart teach-in for 10s");
 		connection.setSmartTeachIn(true);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
-		connection.enableTeachIn(12000);
+		connection.enableTeachIn(10000);
 		System.out.println("SmartTeachIn: "
 				+ connection.isSmartTeachInEnabled());
 
-		Thread.sleep(12000);
-
+		Thread.sleep(10000);
+		
 		connection.setSmartTeachIn(false);
 		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());*/
+				+ connection.isSmartTeachInEnabled());
 
 		//Thread.sleep(10000);
 		

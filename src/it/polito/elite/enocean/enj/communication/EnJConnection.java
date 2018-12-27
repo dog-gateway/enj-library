@@ -772,39 +772,89 @@ public class EnJConnection implements PacketListener
 				FourBSTeachInTelegram bs4TeachInTelegram = new FourBSTeachInTelegram(
 						bs4Telegram);
 
-				// --------- Teach-in variation 2 ------
+				FourBSTelegram response = null;
+
+				// --------- Teach-in variation 2/3 ------
 				if (bs4TeachInTelegram.isWithEEP())
 				{
-					// build a new 4BS device,
-					this.addNewDevice(bs4TeachInTelegram.getAddress(),
-							bs4TeachInTelegram.getManId(), new EEPIdentifier(
-									bs4TeachInTelegram.getRorg(),
-									bs4TeachInTelegram.getEEPFunc(),
-									bs4TeachInTelegram.getEEPType()));
+					EEPIdentifier eep = new EEPIdentifier(
+							bs4TeachInTelegram.getRorg(),
+							bs4TeachInTelegram.getEEPFunc(),
+							bs4TeachInTelegram.getEEPType());
+
+					// check the eep
+					if (this.registry.isEEPSupported(eep))
+					{
+						// build a new 4BS device,
+						this.addNewDevice(bs4TeachInTelegram.getAddress(),
+								bs4TeachInTelegram.getManId(), eep);
+
+						// build the response packet
+						response = bs4TeachInTelegram.buildResponse(
+								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL_WITH_EEP);
+					}
+					else
+					{
+						// build the response packet
+						response = bs4TeachInTelegram.buildResponse(
+								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
+					}
+
+					// send a response if the teachIn packet was a query
+					// actually according to the EEP26 profile specification
+					// there is almost no means
+					// to distinguish between a Variation 2 and a Variation 3
+					// 4BS teach-in
+					if (bs4TeachInTelegram.isQuery())
+						// send the packet back to the transceiver, with high
+						// priority as a maximum 500ms latency is allowed.
+						this.linkLayer.send(response.getRawPacket(), true);
 				}
 				else if (this.deviceToTeachIn != null)
 				{
+					// ---- Teach-in variation 1/3 ----
 					device = this.explicitTeachIn(bs4TeachInTelegram);
+
+					if (device != null)
+					{
+						// build the response packet
+						response = bs4TeachInTelegram.buildResponse(
+								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_SUCCESSFUL);
+					}
+					else
+					{
+						// build the response packet
+						response = bs4TeachInTelegram.buildResponse(
+								FourBSTeachInTelegram.BIDIRECTIONAL_TEACH_IN_REFUSED);
+					}
+
+					// send a response if the teachIn packet was a query
+					// actually according to the EEP26 profile specification
+					// there is almost no means
+					// to distinguish between a Variation 1 and a Variation 3
+					// 4BS teach-in
+					if (bs4TeachInTelegram.isQuery())
+						// send the packet back to the transceiver, with high
+						// priority as a maximum 500ms latency is allowed.
+						this.linkLayer.send(response.getRawPacket(), true);
 				}
 				else
 				{
-					// log not supported
-					this.logger
-							.warning("Neither implicit or explicit learn succeeded; bi-directional teach-in currently not supported for 4BS telegrams.");
+					this.logger.warning(
+							"Unfortunately neither implicit or explicit learn succeeded;");
 
 					// log the address
 					String msg = "";
 					for (int i = 0; i < 4; i++)
-						msg = msg
-								+ String.format("%02x",
-										bs4TeachInTelegram.getAddress()[i]);
+						msg = msg + String.format("%02x",
+								bs4TeachInTelegram.getAddress()[i]);
 					this.logger.info("Device address:" + msg);
 				}
 			}
 		}
 
 		return device;
-	}
+}
 
 	private void notifyEnJDeviceListeners(EnOceanDevice device,
 			EnJDeviceChangeType changeType)
