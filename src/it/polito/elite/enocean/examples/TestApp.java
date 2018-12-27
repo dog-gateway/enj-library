@@ -161,7 +161,7 @@ public class TestApp
 		// ---------- Smart teach-in -------------
 
 		// teach-in for 2s
-		System.out.println("Enabling smart teach-in for 10s");
+		/*System.out.println("Enabling smart teach-in for 10s");
 		connection.setSmartTeachIn(true);
 		System.out
 				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
@@ -173,27 +173,14 @@ public class TestApp
 
 		connection.setSmartTeachIn(false);
 		System.out
-				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());*/
 
 		// Thread.sleep(10000);
 
 		// ----------- valve test
-		EnOceanDevice device = connection.getDevice(26125392);
-		if (device != null)
-		{
-			// test set point
-			System.out.println("Test set valve setpoint...");
-
-			byte payload[] = new byte[5];
-			payload[0] = A52001.rorg.getRorgValue();
-			payload[1] = (byte) 0x80;
-			payload[2] = (byte) 0xff;
-			payload[3] = (byte) 0x81;
-			payload[4] = (byte) 0x04;
-
-			connection.sendRadioCommand(device.getAddress(), payload);
-			System.out.println("Sent command...");
-		}
+		//EnOceanDevice device = connection.getDevice(26125392);
+		//A52001 eep = (A52001)device.getEEP();
+		//eep.sendValvePositionMessage(connection, device.getAddress(), 70);
 
 		// ----------- actuation test ------------
 		/*
