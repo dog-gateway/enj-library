@@ -22,12 +22,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import it.polito.elite.enocean.enj.communication.EnJConnection;
+import it.polito.elite.enocean.enj.eep.EEPAttribute;
+import it.polito.elite.enocean.enj.eep.EEPAttributeChangeListener;
 import it.polito.elite.enocean.enj.eep.eep26.A5.A520.A52001;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D2010A;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D201UnitOfMeasure;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26TemperatureLinear;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26ValvePosition;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.examples.util.Options;
@@ -139,16 +142,16 @@ public class TestApp
 		}
 	}
 
-	public void performDemo(EnJConnection connection)
+	public void performDemo(final EnJConnection connection)
 			throws InterruptedException
 	{
 		// ---------- Explicit teach-in ---------
 		// the device to learn
 		// System.out.println("Enabling explicit teach-in for 018ea450");
-		connection.enableTeachIn("018ea450", "A5-04-01", 10000);
+		// connection.enableTeachIn("018ea450", "A5-04-01", 10000);
 
 		// System.out.println("Enabling explicit teach-in for 018ea450");
-		// connection.enableTeachIn("018ea450", "A5-20-01", 60000);
+		connection.enableTeachIn("018ea450", "A5-20-01", 60000);
 
 		Thread.sleep(11000);
 
@@ -161,26 +164,39 @@ public class TestApp
 		// ---------- Smart teach-in -------------
 
 		// teach-in for 2s
-		/*System.out.println("Enabling smart teach-in for 10s");
-		connection.setSmartTeachIn(true);
-		System.out
-				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
-		connection.enableTeachIn(10000);
-		System.out
-				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
-
-		Thread.sleep(10000);
-
-		connection.setSmartTeachIn(false);
-		System.out
-				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());*/
+		/*
+		 * System.out.println("Enabling smart teach-in for 10s");
+		 * connection.setSmartTeachIn(true); System.out
+		 * .println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
+		 * connection.enableTeachIn(10000); System.out .println("SmartTeachIn: "
+		 * + connection.isSmartTeachInEnabled());
+		 * 
+		 * Thread.sleep(10000);
+		 * 
+		 * connection.setSmartTeachIn(false); System.out
+		 * .println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
+		 */
 
 		// Thread.sleep(10000);
 
 		// ----------- valve test
-		//EnOceanDevice device = connection.getDevice(26125392);
-		//A52001 eep = (A52001)device.getEEP();
-		//eep.sendValvePositionMessage(connection, device.getAddress(), 70);
+		final EnOceanDevice device = connection.getDevice(26125392);
+		device.getEEP().addEEP26AttributeListener(0, EEP26ValvePosition.NAME,
+				new EEPAttributeChangeListener()
+				{
+
+					@Override
+					public void handleAttributeChange(int channelId,
+							EEPAttribute<?> attribute)
+					{
+						A52001 eep = (A52001) device.getEEP();
+						eep.sendValvePositionMessage(connection,
+								device.getAddress(), 70);
+
+					}
+				});
+		// A52001 eep = (A52001)device.getEEP();
+		// eep.sendValvePositionMessage(connection, device.getAddress(), 70);
 
 		// ----------- actuation test ------------
 		/*
