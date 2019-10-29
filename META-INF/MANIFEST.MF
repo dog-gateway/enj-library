@@ -107,4 +107,5 @@ Ignore-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
 Private-Package: it.polito.elite.enocean.test
 Created-By: Apache Maven Bundle Plugin
 Build-Jdk: 1.8.0_144
+Automatic-Module-Name: it.polito.elite.enocean.library
 
