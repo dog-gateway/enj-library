@@ -17,18 +17,18 @@
  */
 package it.polito.elite.enocean.examples;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import it.polito.elite.enocean.enj.communication.EnJConnection;
-import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109;
 import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D2010A;
-import it.polito.elite.enocean.enj.eep.eep26.D2.D201.D201UnitOfMeasure;
+import it.polito.elite.enocean.enj.eep.eep26.F6.F602.F60201;
+import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26RockerSwitch2RockerAction;
 import it.polito.elite.enocean.enj.eep.eep26.attributes.EEP26Switching;
 import it.polito.elite.enocean.enj.link.EnJLink;
 import it.polito.elite.enocean.enj.model.EnOceanDevice;
 import it.polito.elite.enocean.examples.util.Options;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * @author bonino
@@ -41,6 +41,8 @@ public class TestApp
 	protected static final String INTERACTIVE_MODE = "interactive";
 	protected static final String HELP = "help";
 	protected static final String DEMO = "demo";
+	protected static final String ROCKER_SWITCH = "rocker";
+	protected static final String SMART_TEACHIN = "teachin";
 
 	/**
 	 * 
@@ -57,13 +59,11 @@ public class TestApp
 	public static void main(String[] args) throws InterruptedException
 	{
 		// a utility object for managing command line arguments...
-		Options opt = new Options(
-				new String[] {
-						"-p port",
-						"The serial port to which the EnOcean dongle / adapter is connected",
-						"-f persistent-device-file",
-						"The file on which persisting devices", "-m mode",
-						"the testmode, either [interactive,demo], default is demo" },
+		Options opt = new Options(new String[] { "-p port",
+				"The serial port to which the EnOcean dongle / adapter is connected",
+				"-f persistent-device-file",
+				"The file on which persisting devices", "-m mode",
+				"the testmode, either [interactive,demo], default is demo" },
 				"java TestApp", args);
 
 		// create an instance of TestApp
@@ -86,8 +86,10 @@ public class TestApp
 
 				// create the connection layer
 				EnJConnection connection = new EnJConnection(linkLayer,
-						((persistentFileName != null) && (!persistentFileName
-								.isEmpty())) ? persistentFileName : null,
+						((persistentFileName != null)
+								&& (!persistentFileName.isEmpty()))
+										? persistentFileName
+										: null,
 						listener);
 
 				// connect the link
@@ -107,27 +109,32 @@ public class TestApp
 				// handle plain old demo mode
 				// TODO: generalize the demo mode to work in generic usage
 				// scenarios
-				if (mode.equals(TestApp.DEMO_MODE))
+				switch (mode)
 				{
-					app.performDemo(connection);
-				}
-				else if (mode.equals(TestApp.INTERACTIVE_MODE))
-				{
-					// handle the interactive mode
-					app.interactiveDemo(connection);
+					case TestApp.DEMO_MODE:
+					{
+						app.performDemo(connection);
+						break;
+					}
+					case TestApp.INTERACTIVE_MODE:
+					{
+						// handle the interactive mode
+						app.interactiveDemo(connection);
 
-					// disconnect from the adapter
-					linkLayer.disconnect();
+						// disconnect from the adapter
+						linkLayer.disconnect();
 
-					// stop the application
-					System.exit(0);
+						// stop the application
+						System.exit(0);
+						break;
+					}
 				}
 
 			}
 			catch (Exception e)
 			{
-				System.err
-						.println("The given port does not exist or no device is plugged in"
+				System.err.println(
+						"The given port does not exist or no device is plugged in"
 								+ e);
 			}
 		}
@@ -140,6 +147,8 @@ public class TestApp
 	public void performDemo(EnJConnection connection)
 			throws InterruptedException
 	{
+		// test-only fill it with you own experiments...
+
 		// ---------- Explicit teach-in ---------
 		// the device to learn
 		// System.out.println("Enabling explicit teach-in for 018a781f");
@@ -154,21 +163,7 @@ public class TestApp
 		// Thread.sleep(11000);
 
 		// ---------- Smart teach-in -------------
-
-		// teach-in for 2s
-		System.out.println("Enabling smart teach-in for 2s");
-		connection.setSmartTeachIn(true);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
-		connection.enableTeachIn(12000);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
-
-		Thread.sleep(12000);
-
-		connection.setSmartTeachIn(false);
-		System.out.println("SmartTeachIn: "
-				+ connection.isSmartTeachInEnabled());
+		this.smartTeachIn(connection);
 
 		Thread.sleep(2000);
 
@@ -183,10 +178,13 @@ public class TestApp
 
 			// get the device eep
 			D2010A eep = (D2010A) device.getEEP();
-			eep.addEEP26AttributeListener(D2010A.CHANNEL, EEP26Switching.NAME, new SimpleContactSwitchListener());
+			eep.addEEP26AttributeListener(D2010A.CHANNEL, EEP26Switching.NAME,
+					new SimpleContactSwitchListener());
 
-			/*eep.actuatorSetMeasurement(connection, device.getAddress(), true,
-					true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);*/
+			/*
+			 * eep.actuatorSetMeasurement(connection, device.getAddress(), true,
+			 * true, true, 0, 0, D201UnitOfMeasure.kW, 10, 1);
+			 */
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -206,8 +204,8 @@ public class TestApp
 		}
 	}
 
-	public void interactiveDemo(EnJConnection connection) throws IOException,
-			InterruptedException
+	public void interactiveDemo(EnJConnection connection)
+			throws IOException, InterruptedException
 	{
 		// handle interactive mode
 
@@ -236,16 +234,16 @@ public class TestApp
 				case TestApp.HELP:
 				{
 					// print the command help
-					System.out.println(TestApp.class.getSimpleName()
-							+ " command help:");
+					System.out.println(
+							TestApp.class.getSimpleName() + " command help:");
 
 					// help command
-					System.out
-							.println("help - provides information about available commands");
+					System.out.println(
+							"help - provides information about available commands");
 
 					// demo
-					System.out
-							.println("demo - execute the hardcoded demo mode, for internal usage only");
+					System.out.println(
+							"demo - execute the hardcoded demo mode, for internal usage only");
 
 					break;
 				}
@@ -254,11 +252,65 @@ public class TestApp
 				{
 					// perform the demo
 					this.performDemo(connection);
-
+					break;
+				}
+				case TestApp.ROCKER_SWITCH:
+				{
+					this.demoRockerSwitch(connection);
+					break;
+				}
+				case TestApp.SMART_TEACHIN:
+				{
+					this.smartTeachIn(connection);
 					break;
 				}
 			}
 		}
+	}
+
+	private void demoRockerSwitch(EnJConnection connection)
+			throws InterruptedException
+	{
+		// get the device by high-level uid
+		// replace the numeric UID with the one visualized on the console during
+		// the smart teach-in.
+		EnOceanDevice device = connection.getDevice(2739189);
+
+		// check not null
+		if (device != null)
+		{
+			// get the enocean profile of the rocker switch
+			F60201 eep = (F60201) device.getEEP();
+
+			// showcase how to add a listener
+			eep.addEEP26AttributeListener(F60201.CHANNEL_1,
+					EEP26RockerSwitch2RockerAction.NAME,
+					new SimpleRockerSwitchListener());
+
+			// wait 10s for commands
+			System.out.println("Waiting 10s for button pressures");
+			Thread.sleep(10000);
+		}
+
+	}
+
+	private void smartTeachIn(EnJConnection connection)
+			throws InterruptedException
+	{
+		// teach-in for 2s
+		System.out.println("Enabling smart teach-in for 2s");
+		connection.setSmartTeachIn(true);
+		System.out
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
+		connection.enableTeachIn(12000);
+		System.out
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
+
+		Thread.sleep(12000);
+
+		connection.setSmartTeachIn(false);
+		System.out
+				.println("SmartTeachIn: " + connection.isSmartTeachInEnabled());
 	}
 
 }
