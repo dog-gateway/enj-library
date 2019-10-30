@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: it.polito.elite.enocean.library
 Built-By: bonino
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1509617860985
+Bnd-LastModified: 1572425235219
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.google.common.base;version="14.0",com.google.commo
  n.collect;version="14.0",gnu.io
@@ -106,6 +106,5 @@ Ignore-Package: it.polito.elite.enocean.protocol.serial.v3.network.pac
  .radioadvanced
 Private-Package: it.polito.elite.enocean.test
 Created-By: Apache Maven Bundle Plugin
-Build-Jdk: 1.8.0_144
-Automatic-Module-Name: it.polito.elite.enocean.library
+Build-Jdk: 1.8.0_212
 
