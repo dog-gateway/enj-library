@@ -101,6 +101,7 @@ public class EEPRegistry
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A502.A50230.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A504.A50401.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A507.A50701.class);
+		eeps.add(it.polito.elite.enocean.enj.eep.eep26.A5.A538.A53808.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20106.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20108.class);
 		eeps.add(it.polito.elite.enocean.enj.eep.eep26.D2.D201.D20109.class);
